@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Indivíduos{% endblock %} 
+
+{% block content %}
+
+<h2>Indivíduos</h2>
+
+<table class="table table-bordered table-sm">
+  <thead class="table-dark">
+    <tr>
+      <th>#</th>
+      <th>Nome</th>
+      <th>Data nasc</th>
+      <th>Cód. Preso</th>
+      <th>Orcrim</th>
+      <th>Presídio</th>
+      <th>Situação</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for individuo in object_list %}
+    <tr>
+        <td>
+          {% if individuo.foto %} {# Verifique se a imagem existe antes de tentar exibi-la #}
+            <img src="{{ individuo.foto.url }}" alt="{{ individuo.nome }}" width="50" height="50">
+          {% else %}
+            <span>Sem foto</span>
+          {% endif %}
+        </td>
+        <td>
+          <a href="{% url "individuo_detail" individuo.pk %}">{{ individuo.nome }}</a>
+        </td>
+        <td>{{ individuo.data_nasc|date:"d/m/Y" }}</td>
+        <td>{{ individuo.codigo_detento }}</td>
+        <td>{{ individuo.orcrim }}</td>
+        <td>{{ individuo.casa_prisional }}</td>
+        <td>{{ individuo.get_situacao_penal_display }}</td>
+        <td>
+            <a href="{% url 'individuo_edit' pk=individuo.pk %}">Editar</a>
+            <a href="{% url 'individuo_delete' pk=individuo.pk %}">Excluir</a>
+        </td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="2">Nenhum indivíduo encontrado.</td>
+    </tr>
+    {% endfor %}
+</tbody>
+</table>
+<a href="{% url 'individuo_add' %}" class="btn btn-primary mb-3">+ indivíduo</a>
+{% endblock content %}

@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Cadastrar{% endblock %}
+
+{% block content %}
+    
+
+<div class="container my-5"> {# Adiciona um container com margem para centralizar e dar respiro #}
+    <div class="row justify-content-center"> {# Centraliza o conteúdo na linha #}
+        <div class="col-md-8 col-lg-6"> {# Define a largura do formulário em telas médias e grandes #}
+            <div class="card shadow-sm"> {# Adiciona um cartão com sombra para um visual mais moderno #}
+                <div class="card-header bg-primary text-white text-center"> {# Cabeçalho do cartão #}
+                    <h3 class="mb-0">Cadastro de ORCRIM</h3> {# Título mais específico e como cabeçalho de cartão #}
+                </div>
+                <div class="card-body"> {# Corpo do cartão para o formulário #}
+                    <form method="post" class="needs-validation" novalidate> {# Adiciona classes para validação Bootstrap #}
+                        {% csrf_token %}
+
+                        {% for field in form %}
+                            <div class="mb-3"> {# Adiciona margem inferior para cada campo #}
+                                {{ field.label_tag }}
+                                {{ field }}
+                                {% if field.help_text %}
+                                    <div class="form-text text-muted">{{ field.help_text }}</div> {# Estilo para texto de ajuda #}
+                                {% endif %}
+                                {% for error in field.errors %}
+                                    <div class="invalid-feedback d-block"> {# Estilo para erros de validação #}
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% endfor %}
+
+                        <hr> {# Separador visual antes dos botões #}
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-center"> {# Botões centralizados e com espaçamento #}
+                            <button type="submit" class="btn btn-success btn-lg">Salvar</button> {# Botão maior e com texto mais claro #}
+                            <a href="{% url 'orcrim_list' %}" class="btn btn-secondary btn-lg">Cancelar</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block extra_body_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Bootstrap form validation
+        var form = document.querySelector('.needs-validation');
+        form.addEventListener('submit', function(event) {
+            if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            form.classList.add('was-validated');
+        }, false);
+    });
+</script>
+{% endblock extra_body_js %}

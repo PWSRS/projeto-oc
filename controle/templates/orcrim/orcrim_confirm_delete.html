@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Excluir ORCRIM{% endblock %} 
+
+{% block content %}
+    <h1>Exclusão ORCRIM</h1>
+    <p>Tem certeza que deseja excluir a ORCRIM "{{ orcrim.nome }}"?</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Confirmar Exclusão</button>
+        <a href="{% url 'orcrim_list' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+{% endblock content %}

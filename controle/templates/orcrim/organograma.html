@@ -1,0 +1,190 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Organograma{% endblock %}
+
+{% block extra_head_css %}
+    <link rel="stylesheet" href="{% static 'controle/css/organograma.css' %}">
+{% endblock %}
+
+{% block content %}
+    <h1>Organograma por Organização Criminosa</h1>
+
+<div style="margin-bottom: 20px;">
+    <label for="selecaoOrcrim">Selecione a Orcrim:</label>
+    <select id="selecaoOrcrim"></select>
+</div>
+
+<div id="legenda-situacao-penal">
+  <h4>Situação Penal</h4>
+  <div class="legenda-item">
+    <span class="cor-legenda" style="background-color: red;"></span>
+    Recolhido
+  </div>
+  <div class="legenda-item">
+    <span class="cor-legenda" style="background-color: orange;"></span>
+    Foragido / Procurado
+  </div>
+  <div class="legenda-item">
+    <span class="cor-legenda" style="background-color: green;"></span>
+    Liberdade
+  </div>
+  <div class="legenda-item">
+    <span class="cor-legenda" style="background-color: yellow;"></span>
+    Recolhido Tornozeleira
+  </div>
+  <div class="legenda-item">
+    <span class="cor-legenda" style="background-color: gray;"></span>
+    Removido
+  </div>
+</div>
+
+<div id="organograma"></div>
+
+{% endblock content %}
+
+{% block extra_body_js %}
+<script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const selecaoOrcrim = document.getElementById('selecaoOrcrim');
+        const container = document.getElementById('organograma');
+        
+        const situacaoCores = {
+            'recolhido': 'red',
+            'foragido': 'orange',
+            'procurado': 'orange',
+            'liberdade': 'green',
+            'recolhido_tornozeleira': 'yellow',
+            'removido': 'gray',
+        };
+
+        const nivelCores = {
+            'lider': '#FFD700', // Dourado
+            'influente': '#C0C0C0', // Prateado
+            'sem_expressao': '#CD7F32', // Bronze
+        };
+
+        // 1. Preenche o select com as Orcrims
+        async function preencherOrcrims() {
+            try {
+                const response = await fetch('/api/orcrim/');
+                const orcrims = await response.json();
+
+                const defaultOption = document.createElement('option');
+                defaultOption.value = '';
+                defaultOption.textContent = 'Selecione uma Orcrim...';
+                selecaoOrcrim.appendChild(defaultOption);
+
+                orcrims.forEach(orcrim => {
+                    const option = document.createElement('option');
+                    option.value = orcrim.id;
+                    option.textContent = orcrim.nome;
+                    selecaoOrcrim.appendChild(option);
+                });
+
+                selecaoOrcrim.addEventListener('change', (event) => {
+                    const orcrimId = event.target.value;
+                    if (orcrimId) {
+                        carregarOrganograma(orcrimId);
+                    } else {
+                        container.innerHTML = '';
+                    }
+                });
+            } catch (error) {
+                console.error('Erro ao buscar Orcrims:', error);
+            }
+        }
+
+        // 2. Carrega e desenha o organograma
+        async function carregarOrganograma(orcrimId) {
+            try {
+                const response = await fetch(`/api/orcrim/${orcrimId}/individuos/`);
+                const individuos = await response.json();
+
+                const nodes = [];
+                const edges = [];
+
+                const lideresIds = individuos.filter(i => i.nivel_orcrim === 'lider').map(i => i.id);
+                const influentesIds = individuos.filter(i => i.nivel_orcrim === 'influente').map(i => i.id);
+
+                let noPaiParaInfluentes = lideresIds.length > 0 ? lideresIds[0] : null;
+                let noPaiParaSemExpressao = influentesIds.length > 0 ? influentesIds[0] : (lideresIds.length > 0 ? lideresIds[0] : null);
+
+                if (!noPaiParaInfluentes && !noPaiParaSemExpressao) {
+                    console.log("Não há líderes ou influentes para criar o organograma hierárquico.");
+                    container.innerHTML = '<p>Não há membros de hierarquia superior para criar o organograma.</p>';
+                    return;
+                }
+
+                individuos.forEach(individuo => {
+                    nodes.push({
+                        id: individuo.id,
+                        label: `${individuo.nome}${individuo.alcunha ? '\n(' + individuo.alcunha + ')' : ''}`,
+                        image: individuo.foto || '{% static 'images/default_photo.png' %}',
+                        shape: 'circularImage',
+                        // AQUI ESTÁ A ALTERAÇÃO: usa a cor da situação penal
+                        color: { border: situacaoCores[individuo.situacao_penal] || 'gray' }, 
+                        level: individuo.nivel_orcrim === 'lider' ? 1 : (individuo.nivel_orcrim === 'influente' ? 2 : 3),
+                        borderWidth: 6,
+                    });
+
+                    if (individuo.nivel_orcrim === 'influente' && noPaiParaInfluentes) {
+                        edges.push({ from: noPaiParaInfluentes, to: individuo.id });
+                    }
+                    if (individuo.nivel_orcrim === 'sem_expressao' && noPaiParaSemExpressao) {
+                        edges.push({ from: noPaiParaSemExpressao, to: individuo.id });
+                    }
+                });
+
+                const data = {
+                    nodes: new vis.DataSet(nodes),
+                    edges: new vis.DataSet(edges)
+                };
+
+                const options = {
+                    layout: {
+                        hierarchical: {
+                            direction: 'UD',
+                            sortMethod: 'directed',
+                            levelSeparation: 200,
+                            nodeSpacing: 300,
+                        }
+                    },
+                    physics: false,
+                    nodes: {
+                        size: 50,
+                        font: { size: 14, color: '#000000' },
+                    },
+                    edges: {
+                        color: {
+                            color: 'lightgray', 
+                            highlight: 'gray',
+                            hover: 'gray',
+                            inherit: 'from',
+                            opacity: 1.0
+                        },
+                        width: 2,
+                        smooth: {
+                            type: 'cubicBezier', // Para linhas curvas
+                            forceDirection: 'vertical',
+                            roundness: 0.5
+                        },
+                        arrows: {
+                            to: {
+                                enabled: false,
+                            }
+                        }
+                    }
+                };
+                
+                container.innerHTML = '';
+                const network = new vis.Network(container, data, options);
+            } catch (error) {
+                console.error('Erro ao carregar o organograma:', error);
+            }
+        }
+        preencherOrcrims();
+    });
+</script>
+{% endblock extra_body_js %}

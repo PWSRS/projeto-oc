@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Presídios{% endblock %} 
+
+{% block content %}
+
+<h2>Casas Prisionais</h2>
+
+<table class="table table-bordered table-sm">
+  <thead class="table-dark">
+    <tr>
+      <th>Denominação</th>
+      <th>Sigla</th>
+      <th>Cidade</th>
+      <th>Delegacia</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for casaprisional in object_list %}
+    <tr>
+        <td>{{ casaprisional.nome }}</td>
+        <td>{{ casaprisional.sigla }}</td>
+        <td>{{ casaprisional.cidade }}</td>
+        <td>{{ casaprisional.get_delegacia_penitenciaria_display }}</td>
+        <td>
+            <a href="{% url 'casaprisional_edit' pk=casaprisional.pk %}">Editar</a>
+            <a href="{% url 'casaprisional_delete' pk=casaprisional.pk %}">Excluir</a>
+        </td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="2">Nenhuma Casa Prisional encontrada.</td>
+    </tr>
+    {% endfor %}
+</tbody>
+</table>
+<a href="{% url 'casaprisional_add' %}" class="btn btn-primary mb-3">+ Presídio</a>
+{% endblock content %}

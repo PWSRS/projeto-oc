@@ -1,0 +1,402 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+    {% if form.instance.pk %}Editar Indivíduo{% else %}Cadastrar Indivíduo{% endif %}
+{% endblock %}
+
+{% block extra_head %}
+
+{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-9 col-lg-10">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white text-center">
+                    <h3 class="mb-0">
+                        {% if form.instance.pk %}Editar Indivíduo{% else %}Cadastrar Indivíduo{% endif %}
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <form method="post" class="needs-validation" novalidate enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="foto-container">
+                                    <h5 class="mb-2">Foto do Agente</h5>
+                                        <div class="foto-placeholder">
+                                            <i class="bi bi-person-circle"></i>
+                                        </div>
+                                        <div>
+                                            {{ form.foto }}
+                                                <small class="form-text text-muted d-block mt-1">Selecionar foto</small>
+                                            {{ form.foto.errors }}
+                                        </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                {{ form.nome.label_tag }}
+                                {{ form.nome }}
+                                {% for error in form.nome.errors %}
+                                    <div class="invalid-feedback d-block">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                {{ form.rg_cpf.label_tag }}
+                                {{ form.rg_cpf }}
+                                {% for error in form.rg_cpf.errors %}
+                                    <div class="invalid-feedback d-block">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                {{ form.data_nasc.label_tag }}
+                                {{ form.data_nasc }}
+                                {% for error in form.alcunha.errors %}
+                                    <div class="invalid-feedback d-block">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                {{ form.alcunha.label_tag }}
+                                {{ form.alcunha }}
+                                {% for error in form.alcunha.errors %}
+                                    <div class="invalid-feedback d-block">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                {{ form.codigo_detento.label_tag }}
+                                {{ form.codigo_detento }}
+                                {% for error in form.codigo_detento.errors %}
+                                    <div class="invalid-feedback d-block">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                {{ form.orcrim.label_tag }}
+                                {{ form.orcrim }}
+                                {% for error in form.orcrim.errors %}
+                                    <div class="invalid-feedback d-block">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+
+                            <div class="col-md-8 mb-3">
+                                {{ form.situacao_penal.label_tag }}
+                                {{ form.situacao_penal }}
+                                {% for error in form.situacao_penal.errors %}
+                                    <div class="invalid-feedback d-block">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                {{ form.regime.label_tag }}
+                                {{ form.regime }}
+                                {% for error in form.regime.errors %}
+                                    <div class="invalid-feedback d-block">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+
+                            <div class="col-md-8 mb-3">
+                                {{ form.casa_prisional.label_tag }}
+                                {{ form.casa_prisional }}
+                                {% for error in form.prisional.errors %}
+                                    <div class="invalid-feedback d-block">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+
+                            <div class="col-md-3 mb-3">
+                                {{ form.pavilhao.label_tag }}
+                                {{ form.pavilhao }}
+                                {% for error in form.pavilhao.errors %}
+                                    <div class="invalid-feedback d-block">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+
+                            <div class="col-md-3 mb-3">
+                                {{ form.galeria.label_tag }}
+                                {{ form.galeria }}
+                                {% for error in form.galeria.errors %}
+                                    <div class="invalid-feedback d-block">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+
+                            <div class="col-md-3 mb-3">
+                                {{ form.cela.label_tag }}
+                                {{ form.cela }}
+                                {% for error in form.cela.errors %}
+                                    <div class="invalid-feedback d-block">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+
+                            <div class="col-md-3 mb-3">
+                                {{ form.alojamento.label_tag }}
+                                {{ form.alojamento }}
+                                {% for error in form.alojamento.errors %}
+                                    <div class="invalid-feedback d-block">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+
+                            <div class="col-md-12 mb-3">
+                                {{ form.observacao.label_tag }}
+                                {{ form.observacao }}
+                                {% for error in form.observacao.errors %}
+                                    <div class="invalid-feedback d-block">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                {{ form.nivel_ocrim.label_tag }}
+                                {{ form.nivel_orcrim }}
+                                {% for error in form.nivel_orcrim.errors %}
+                                    <div class="invalid-feedback d-block">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+
+                            <div class="col-md-6 mb-3 form-check form-switch">
+                                {{ form.grau_importancia }}
+                                {{ form.grau_importancia.label_tag }}
+                                {% if form.grau_importancia.help_text %}<div class="form-text text-muted">{{ form.grau_importancia.help_text }}</div>{% endif %}
+                                {% for error in form.grau_importancia.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
+                            </div>
+
+                        </div>
+                        <hr>
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                            <button type="submit" class="btn btn-success btn-lg">Salvar</button>
+                            <a href="{% url 'individuo_list' %}" class="btn btn-secondary btn-lg">Cancelar</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block extra_body_js %}
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+<script>
+$(document).ready(function() {
+    // Referências aos selects
+    const casaSelect = $('#id_casa_prisional');
+    const pavilhaoSelect = $('#id_pavilhao');
+    const galeriaSelect = $('#id_galeria');
+    const celaSelect = $('#id_cela');
+    const alojamentoSelect = $('#id_alojamento');
+
+    // Função para limpar um select
+    function clearSelect(select) {
+        select.empty().append('<option value="">---------</option>');
+    }
+
+    // Função para controlar visibilidade/desabilitação dos selects
+    function updateSelectsVisibility(tipo) {
+        console.log('Atualizando visibilidade - Tipo:', tipo);
+        // Resetar visibilidade e estado
+        pavilhaoSelect.prop('disabled', false).parent().show();
+        galeriaSelect.prop('disabled', false).parent().show();
+        celaSelect.prop('disabled', false).parent().show();
+        alojamentoSelect.prop('disabled', false).parent().show();
+
+        if (tipo === 'completa' || tipo === 'modular') {
+            alojamentoSelect.prop('disabled', true).parent().hide(); // Oculta alojamento
+        } else if (tipo === 'intermediaria' || tipo === 'sem_pavilhao') {
+            pavilhaoSelect.prop('disabled', true).parent().hide();
+            alojamentoSelect.prop('disabled', true).parent().hide(); // Oculta alojamento
+        } else if (tipo === 'apenas_alojamento') {
+            pavilhaoSelect.prop('disabled', true).parent().hide();
+            galeriaSelect.prop('disabled', true).parent().hide();
+            celaSelect.prop('disabled', true).parent().hide();
+        }
+    }
+
+    // Evento ao mudar casa prisional
+    casaSelect.on('change', function() {
+        const casaId = $(this).val();
+        console.log('Casa selecionada:', casaId);
+
+        // Limpa todos os selects dependentes
+        clearSelect(pavilhaoSelect);
+        clearSelect(galeriaSelect);
+        clearSelect(celaSelect);
+        clearSelect(alojamentoSelect);
+
+        if (!casaId) {
+            updateSelectsVisibility('completa');
+            return;
+        }
+
+        // Salva valores atuais para modo de edição
+        const currentPav = pavilhaoSelect.val();
+        const currentGal = galeriaSelect.val();
+        const currentCel = celaSelect.val();
+        const currentAlo = alojamentoSelect.val();
+
+        // Busca tipo de estrutura
+        fetch(`/ajax/tipo_estrutura/?casa_id=${casaId}`)
+            .then(response => {
+                if (!response.ok) throw new Error(`Erro HTTP em tipo_estrutura: ${response.status}`);
+                return response.json();
+            })
+            .then(data => {
+                const tipo = data.tipo_estrutura || 'completa';
+                console.log('Tipo de estrutura:', tipo);
+                updateSelectsVisibility(tipo);
+
+                if (tipo === 'sem_pavilhao' || tipo === 'intermediaria') {
+                    // Carrega galerias e celas diretamente
+                    fetch(`/ajax/galerias_por_casa/?casa_id=${casaId}`)
+                        .then(response => response.json())
+                        .then(galerias => {
+                            console.log('Galerias recebidas:', galerias);
+                            galerias.forEach(g => galeriaSelect.append(`<option value="${g.id}">${g.nome}</option>`));
+                            galeriaSelect.val(currentGal);
+                            console.log('Galerias carregadas:', galerias.length);
+                        })
+                        .catch(err => console.error('Erro ao carregar galerias:', err));
+
+                    fetch(`/ajax/celas_por_casa/?casa_id=${casaId}`)
+                        .then(response => response.json())
+                        .then(celas => {
+                            console.log('Celas recebidas:', celas);
+                            celas.forEach(c => celaSelect.append(`<option value="${c.id}">${c.numero}</option>`));
+                            celaSelect.val(currentCel);
+                            console.log('Celas carregadas:', celas.length);
+                        })
+                        .catch(err => console.error('Erro ao carregar celas:', err));
+                } else if (tipo === 'apenas_alojamento') {
+                    // Carrega apenas alojamentos
+                    fetch(`/ajax/alojamentos_por_casa/?casa_id=${casaId}`)
+                        .then(response => {
+                            if (!response.ok) throw new Error(`Erro HTTP em alojamentos: ${response.status}`);
+                            return response.json();
+                        })
+                        .then(alojamentos => {
+                            console.log('Alojamentos recebidos:', alojamentos);
+                            if (alojamentos.error) {
+                                console.warn('Erro retornado pelo servidor:', alojamentos.error);
+                                alojamentoSelect.append('<option value="">Erro: Nenhum alojamento disponível</option>');
+                            } else if (alojamentos.length === 0) {
+                                console.warn('Nenhum alojamento encontrado para casa_id:', casaId);
+                                alojamentoSelect.append('<option value="">Nenhum alojamento disponível</option>');
+                            } else {
+                                alojamentos.forEach(a => {
+                                    const nome = a.nome || 'Alojamento sem nome';
+                                    alojamentoSelect.append(`<option value="${a.id}">${nome}</option>`);
+                                });
+                                alojamentoSelect.val(currentAlo);
+                            }
+                            console.log('Alojamentos carregados:', alojamentos.length || 0);
+                        })
+                        .catch(err => {
+                            console.error('Erro ao carregar alojamentos:', err);
+                            alojamentoSelect.append('<option value="">Erro ao carregar alojamentos</option>');
+                        });
+                } else {
+                    // Carrega pavilhões (completa ou modular)
+                    fetch(`/ajax/pavilhoes/?casa_id=${casaId}`)
+                        .then(response => response.json())
+                        .then(pavilhoes => {
+                            console.log('Pavilhôes recebidos:', pavilhoes);
+                            pavilhoes.forEach(p => pavilhaoSelect.append(`<option value="${p.id}">${p.nome}</option>`));
+                            pavilhaoSelect.val(currentPav);
+                            console.log('Pavilhôes carregados:', pavilhoes.length);
+                        })
+                        .catch(err => console.error('Erro ao carregar pavilhões:', err));
+                }
+            })
+            .catch(err => console.error('Erro ao buscar tipo_estrutura:', err));
+    });
+
+    // Evento ao mudar pavilhão
+    pavilhaoSelect.on('change', function() {
+        const pavilhaoId = $(this).val();
+        console.log('Pavilhão selecionado:', pavilhaoId);
+
+        clearSelect(galeriaSelect);
+        clearSelect(celaSelect);
+        clearSelect(alojamentoSelect);
+
+        if (!pavilhaoId) return;
+
+        const currentGal = galeriaSelect.val();
+        fetch(`/ajax/galerias/?pavilhao_id=${pavilhaoId}`)
+            .then(response => response.json())
+            .then(galerias => {
+                console.log('Galerias recebidas:', galerias);
+                galerias.forEach(g => galeriaSelect.append(`<option value="${g.id}">${g.nome}</option>`));
+                galeriaSelect.val(currentGal);
+                console.log('Galerias carregadas:', galerias.length);
+            })
+            .catch(err => console.error('Erro ao carregar galerias:', err));
+    });
+
+    // Evento ao mudar galeria
+    galeriaSelect.on('change', function() {
+        const galeriaId = $(this).val();
+        console.log('Galeria selecionada:', galeriaId);
+
+        clearSelect(celaSelect);
+        clearSelect(alojamentoSelect);
+
+        if (!galeriaId) return;
+
+        const currentCel = celaSelect.val();
+        fetch(`/ajax/celas/?galeria_id=${galeriaId}`)
+            .then(response => response.json())
+            .then(celas => {
+                console.log('Celas recebidas:', celas);
+                celas.forEach(c => celaSelect.append(`<option value="${c.id}">${c.numero}</option>`));
+                celaSelect.val(currentCel);
+                console.log('Celas carregadas:', celas.length);
+            })
+            .catch(err => console.error('Erro ao carregar celas:', err));
+    });
+
+    // Evento ao mudar cela
+    celaSelect.on('change', function() {
+        const celaId = $(this).val();
+        console.log('Cela selecionada:', celaId);
+
+        clearSelect(alojamentoSelect);
+
+        if (!celaId) return;
+
+        const currentAlo = alojamentoSelect.val();
+        fetch(`/ajax/alojamentos/?cela_id=${celaId}`)
+            .then(response => response.json())
+            .then(alojamentos => {
+                console.log('Alojamentos recebidas:', alojamentos);
+                if (alojamentos.error) {
+                    console.warn('Erro retornado pelo servidor:', alojamentos.error);
+                    alojamentoSelect.append('<option value="">Erro: Nenhum alojamento disponível</option>');
+                } else if (alojamentos.length === 0) {
+                    console.warn('Nenhum alojamento encontrado para cela_id:', celaId);
+                    alojamentoSelect.append('<option value="">Nenhum alojamento disponível</option>');
+                } else {
+                    alojamentos.forEach(a => {
+                        const nome = a.nome || 'Alojamento sem nome';
+                        alojamentoSelect.append(`<option value="${a.id}">${nome}</option>`);
+                    });
+                    alojamentoSelect.val(currentAlo);
+                }
+                console.log('Alojamentos carregados:', alojamentos.length || 0);
+            })
+            .catch(err => {
+                console.error('Erro ao carregar alojamentos:', err);
+                alojamentoSelect.append('<option value="">Erro ao carregar alojamentos</option>');
+            });
+    });
+
+    // Inicializa para modo de edição
+    if (casaSelect.val()) {
+        console.log('Inicializando modo de edição com casa:', casaSelect.val());
+        casaSelect.trigger('change');
+    }
+});
+</script>
+{% endblock extra_body_js %}

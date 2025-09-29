@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Excluir Presídio{% endblock %} 
+
+{% block content %}
+    <h1>Exclusão de Presídio</h1>
+    <p>Tem certeza que deseja excluir a Casa Prisional "{{ casaprisional.nome }}"?</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Confirmar Exclusão</button>
+        <a href="{% url 'casaprisional_list' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+{% endblock content %}

@@ -1,0 +1,40 @@
+{% load static %}
+
+{% block content %}
+
+{% if messages %}
+<div class="container mt-3">
+    <div class="alert-container">
+        {% for message in messages %}
+            {% if message.tags == "success" %}
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% elif message.tags == "error" %}
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% elif message.tags == "warning" %}
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% elif message.tags == "info" %}
+                <div class="alert alert-info alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% else %}
+                <!-- Mensagem padrão, se não for sucesso, erro, etc -->
+                <div class="alert alert-light alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+{% endblock content %}

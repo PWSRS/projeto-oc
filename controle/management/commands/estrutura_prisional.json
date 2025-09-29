@@ -1,0 +1,34 @@
+{
+    "cidade": "Charqueadas",
+    "casa_prisional": {
+        "nome": "Penitenciária de Alta Segurança de Charqueadas",
+        "sigla": "PASC",
+        "delegacia_penitenciaria": "unid_esp"
+    },
+    "estrutura": {
+        "Pavilhão A": {
+            "Galeria 1": {
+                "Cela 101": [
+                    "Alojamento 1",
+                    "Alojamento 2"
+                ],
+                "Cela 102": [
+                    "Alojamento 3"
+                ]
+            },
+            "Galeria 2": {
+                "Cela 201": [
+                    "Alojamento 4"
+                ]
+            }
+        },
+        "Pavilhão B": {
+            "Galeria 3": {
+                "Cela 301": [
+                    "Alojamento 5",
+                    "Alojamento 6"
+                ]
+            }
+        }
+    }
+}

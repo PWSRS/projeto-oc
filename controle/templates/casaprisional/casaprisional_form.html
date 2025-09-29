@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Cadastrar{% endblock %}
+<style>
+    #id_cidade{
+    border: 1px solid #0f5dacff; /* Adapte a cor conforme necessário */
+    border-radius: .25rem; /* Adapte o arredondamento conforme necessário */
+}
+</style>
+{% block content %}
+
+<div class="container my-5"> {# Adiciona um container com margem para centralizar e dar respiro #}
+    <div class="row justify-content-center"> {# Centraliza o conteúdo na linha #}
+        <div class="col-md-8 col-lg-6"> {# Define a largura do formulário em telas médias e grandes #}
+            <div class="card shadow-sm"> {# Adiciona um cartão com sombra para um visual mais moderno #}
+                <div class="card-header bg-primary text-white text-center"> {# Cabeçalho do cartão #}
+                    <h3 class="mb-0">Casas Prisionais</h3> {# Título mais específico e como cabeçalho de cartão #}
+                </div>
+                <div class="card-body"> {# Corpo do cartão para o formulário #}
+                    <form method="post" class="needs-validation" novalidate> {# Adiciona classes para validação Bootstrap #}
+                        {% csrf_token %}
+                        
+                        {% for field in form %}
+                            <div class="mb-3"> {# Adiciona margem inferior para cada campo #}
+                                {{ field.label_tag }}
+                                {{ field }}
+                                {% if field.help_text %}
+                                    <div class="form-text text-muted">{{ field.help_text }}</div> {# Estilo para texto de ajuda #}
+                                {% endif %}
+                                {% for error in field.errors %}
+                                    <div class="invalid-feedback d-block"> {# Estilo para erros de validação #}
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% endfor %}
+
+                        <hr> {# Separador visual antes dos botões #}
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-center"> {# Botões centralizados e com espaçamento #}
+                            <button type="submit" class="btn btn-success btn-lg">Salvar</button> {# Botão maior e com texto mais claro #}
+                            <a href="{% url 'casaprisional_list' %}" class="btn btn-secondary btn-lg">Cancelar</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block extra_body_js %}
+
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script>
+        // Cascata para casa prisional
+        $('#id_casa_prisional').on('change', function() {
+            var casaId = $(this).val();
+            if (!casaId) {
+                // Limpa dependentes se vazio
+                $('#id_pavilhao, #id_galeria, #id_cela, #id_alojamento').val(null).trigger('change');
+                return;
+            }
+
+            $.get(`/ajax/pavilhoes/?casa_id=${casaId}`)
+                .done(function(data) {
+                    var pavilhaoSelect = $('#id_pavilhao');
+                    pavilhaoSelect.empty().append('<option value="">---------</option>');
+                    $.each(data, function(index, p) {
+                        pavilhaoSelect.append(`<option value="${p.id}">${p.nome}</option>`);
+                    });
+                    // Destrói e reinicia Select2
+                    if (pavilhaoSelect.hasClass('select2-hidden-accessible')) {
+                        pavilhaoSelect.select2('destroy');
+                    }
+                    initSelect2('#id_pavilhao');
+
+                    // Limpa e reinicia dependentes
+                    $('#id_galeria, #id_cela, #id_alojamento').empty().append('<option value="">---------</option>').val(null).trigger('change');
+                    initSelect2('#id_galeria');
+                    initSelect2('#id_cela');
+                    initSelect2('#id_alojamento');
+                })
+                .fail(function() {
+                    console.error('Erro ao carregar pavilhões');
+                    alert('Erro ao carregar pavilhões. Tente novamente.');
+                });
+        });
+
+        // Cascata para pavilhão (similar)
+        $('#id_pavilhao').on('change', function() {
+            var pavilhaoId = $(this).val();
+            if (!pavilhaoId) {
+                $('#id_galeria, #id_cela, #id_alojamento').val(null).trigger('change');
+                return;
+            }
+
+            $.get(`/ajax/galerias/?pavilhao_id=${pavilhaoId}`)
+                .done(function(data) {
+                    var galeriaSelect = $('#id_galeria');
+                    galeriaSelect.empty().append('<option value="">---------</option>');
+                    $.each(data, function(index, g) {
+                        galeriaSelect.append(`<option value="${g.id}">${g.nome}</option>`);
+                    });
+                    // Destrói e reinicia
+                    if (galeriaSelect.hasClass('select2-hidden-accessible')) {
+                        galeriaSelect.select2('destroy');
+                    }
+                    initSelect2('#id_galeria');
+
+                    // Limpa e reinicia
+                    $('#id_cela, #id_alojamento').empty().append('<option value="">---------</option>').val(null).trigger('change');
+                    initSelect2('#id_cela');
+                    initSelect2('#id_alojamento');
+                })
+                .fail(function() {
+                    console.error('Erro ao carregar galerias');
+                    alert('Erro ao carregar galerias. Tente novamente.');
+                });
+        });
+
+        // Validação Bootstrap (unificada em jQuery)
+        $('.needs-validation').on('submit', function(event) {
+            if (!this.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            $(this).addClass('was-validated');
+        });
+    });
+</script>
+{% endblock extra_body_js %}

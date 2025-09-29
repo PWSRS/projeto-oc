@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Página Não Encontrada - 404{% endblock %}
+
+{% block content %}
+<div class="container text-center py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <img src="{% static 'alunos/img/ARI.png' %}" alt="Logo ARI Sul" class="img-fluid mb-4" style="max-width: 130px;">
+            <h1 class="display-1 text-danger">404</h1>
+            <h2 class="mb-4">Página Não Encontrada</h2>
+            <p class="lead">Ops! Parece que a página que você está procurando não existe ou foi movida.</p>
+            <p>
+                Não se preocupe, isso pode acontecer. Tente navegar de volta para a página inicial ou use a barra de navegação para encontrar o que procura.
+            </p>
+            <a href="{% url 'home' %}" class="btn btn-primary mt-3">Voltar para a Página Inicial</a>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block extra_head %}
+    <style>
+        body {
+            background-color: #f8f9fa; /* Um fundo claro para a página de erro */
+        }
+        .container {
+            margin-top: 50px;
+        }
+        .display-1 {
+            font-size: 8rem;
+            font-weight: bold;
+        }
+        h2 {
+            color: #343a40;
+        }
+        .lead {
+            color: #6c757d;
+        }
+    </style>
+{% endblock extra_head %}

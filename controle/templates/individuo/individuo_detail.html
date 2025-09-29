@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Disponetalhes{% endblock %} 
+
+{% block content %}
+
+<title>Detalhes do Indivíduo</title>
+
+<body>
+    <h1>Detalhes do Indivíduo: <strong>{{ individuo.nome }}</strong></h1> {# Adicionado o nome da categoria aqui para melhor contexto #}
+
+    <div class="detail-item">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                <th>#</th>
+                <th>Nome</th>
+                <th>RG/CPF</th>
+                <th>Cód. Preso</th>
+                <th>Orcrim</th>
+                <th>Situação</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        {% if individuo.foto %}
+                            <img src="{{ individuo.foto.url }}" alt="{{ individuo.nome }}" class="img-thumbnail" style="max-width: 100px;"> {# Ajustei o estilo da imagem #}
+                        {% else %}
+                            <span>Sem Foto</span>
+                        {% endif %}
+                    </td>
+                    <td><strong>{{ individuo.nome }}</strong></td>
+                    <td>{{ individuo.rg_cpf }}</td> {# Assumindo que este campo se chama rg_cpf #}
+                    <td>{{ individuo.codigo_detento }}</td> {# Assumindo que este campo se chama codigo_preso #}
+                    <td>{{ individuo.orcrim.nome }}</td> {# Acessando o nome da Orcrim associada #}
+                    <td>{{ individuo.get_situacao_penal_display }}</td> {# Assumindo que este campo se chama situacao #}
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <a href="{% url 'individuo_list' %}" class="btn btn-secondary mt-3">Voltar</a> {# Ajustei o texto do botão #}
+    
+{% endblock content %}

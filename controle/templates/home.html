@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}ARI Sul{% endblock %} {# Opcional: para customizar o título da aba #}
+
+{% block content %} {# <-- INÍCIO DO BLOCO DE CONTEÚDO #}
+
+    <div class="text-center">
+        <img src="{% static 'controle/img/ARI.png' %}" class="img-fluid" style="max-width: 130px;">
+ 
+        <h1 class="text-warning-emphasis inicio">Agência Regional de Inteligência - ARI Sul</h1>
+        <h2 class="text-danger-emphasis inicio">Organizações Criminosas (ORCRIM)</h2>
+        <h3 class="text-danger-emphasis inicio">Sistema Penitenciário Gaúcho</h3>
+    </div>
+{% endblock content %} {# <-- FIM DO BLOCO DE CONTEÚDO #}
+
+{# Se você tiver algum JS específico para a home.html, coloque aqui: #}
+{% block extra_body_js %}
+<script>
+    // Seus scripts específicos para a home.html, se houver
+</script>
+{% endblock extra_body_js %}

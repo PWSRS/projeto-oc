@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Detalhes dos Presídios{% endblock %}
+
+{% block content %}
+    <h3>Escolha o Presídio</h3>
+    <table class="table table-bordered table-sm">
+        <thead class="table-dark">
+            <tr>
+                <th>Presídio</th>
+                <th>Galeria</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if presidios %}
+                {% for presidio in presidios %}
+                    {% if presidio.galeria_set.all %}
+                        {% for galeria in presidio.galeria_set.all %}
+                            <tr>
+                                <td>{{ presidio.sigla }} - {{ presidio.nome }}</td>
+                                <td>{{ galeria.nome }}</td>
+                                <td>
+                                    <a href="{% url 'listar_detentos_por_galeria' galeria.id %}">
+                                        <i class="bi bi-person-vcard"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td>{{ presidio.sigla }} - {{ presidio.nome }}</td>
+                            <td colspan="2">Nenhuma galeria cadastrada neste presídio.</td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="3">Nenhum presídio cadastrado.</td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+{% endblock %}

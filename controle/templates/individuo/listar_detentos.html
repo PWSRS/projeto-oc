@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Disponetalhes{% endblock %} 
+
+{% block content %}
+    <h3 class="text-center">Detentos na Galeria {{ galeria.nome }} - {{ galeria.casa_prisional.nome }} ({{ galeria.casa_prisional.sigla }})</h3>
+       <a href="{% url 'selecionar_presidio' %}"><i class="bi bi-arrow-return-left"></i> Voltar</a>
+    {% if detentos %}
+        <table class="table table-bordered table-sm">
+            <thead class="table-dark">
+                <tr>
+                    <th>Foto</th>
+                    <th>Nome</th>
+                    <th>RG/CPF</th>
+                    <th>Data de Nascimento</th>
+                    <th>Alcunha</th>
+                    <th>Situação Penal</th>
+                    <th>Orcrim</th>
+                    <th>Regime</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for detento in detentos %}
+                    <tr>
+                        <td>
+                            {% if detento.foto %}
+                                <img src="{{ detento.foto.url }}" alt="Foto de {{ detento.nome }}" width="100">
+                            {% else %}
+                                Sem foto
+                            {% endif %}
+                        </td>
+                        <td>{{ detento.nome }}</td>
+                        <td>{{ detento.rg_cpf }}</td>
+                        <td>{{ detento.data_nasc|date:"d/m/Y" }}</td>
+                        <td>{{ detento.alcunha|default:"N/A" }}</td>
+                        <td>{{ detento.get_situacao_penal_display }}</td>  <!-- Usa o display se choices estiverem definidos -->
+                        <td>{{ detento.orcrim|default:"N/A" }}</td>
+                        <td>{{ detento.get_regime_display }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Nenhum detento encontrado nesta galeria.</p>
+    {% endif %}
+ 
+{% endblock %}

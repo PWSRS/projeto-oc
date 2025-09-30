@@ -8,7 +8,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include("controle.urls")),
     path("", views.home, name="home"),
-    path("organograma/", include("controle.urls")),
+    # path("organograma/", include("controle.urls")),
 ]
 
 # Adiciona URLs para servir arquivos de mídia durante o desenvolvimento

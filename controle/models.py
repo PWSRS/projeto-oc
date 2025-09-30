@@ -49,6 +49,7 @@ TIPO_ESTRUTURA_CHOICES = [
         "intermediaria",
         "Intermediária (Galeria, Cela)",
     ),  # Sem pavilhão, alojamento/módulo
+    ("pavilhao", "Pavilhão"),  # Detalhar se necessário
     ("modular", "Módulo"),  # Detalhar se necessário
     ("apenas_alojamento", "Apenas Alojamento"),  # Sem pavilhão/galeria/cela
 ]

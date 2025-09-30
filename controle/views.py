@@ -218,9 +218,6 @@ def tipo_estrutura_view(request):
 
 
 # TODO Busca por presídio (listar todos os detentos, com campo de busca por alcunha/nome)
-# TODO Lista tabular ou template com foto e demais dados
-# TODO Listar por galeria todos os detentos vinculados - OK
-# TODO Subir para o GitHub - OK
 
 
 def listar_por_galeria(request, galeria_id):

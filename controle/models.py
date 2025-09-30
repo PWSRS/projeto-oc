@@ -126,7 +126,7 @@ class Pavilhao(models.Model):
         verbose_name_plural = "Pavilhões"
 
     def __str__(self):
-        return self.nome
+        return f"{self.nome} - {self.casa_prisional.nome}"
 
 
 class Galeria(models.Model):
@@ -143,7 +143,7 @@ class Galeria(models.Model):
         verbose_name_plural = "Galerias"
 
     def __str__(self):
-        return self.nome
+        return f"{self.nome} - {self.casa_prisional.nome}"
 
 
 class Cela(models.Model):

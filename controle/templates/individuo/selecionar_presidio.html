@@ -5,41 +5,39 @@
 
 {% block content %}
     <h3>Escolha o Presídio</h3>
-    <table class="table table-bordered table-sm">
-        <thead class="table-dark">
-            <tr>
-                <th>Presídio</th>
-                <th>Galeria</th>
-                <th>Ações</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% if presidios %}
-                {% for presidio in presidios %}
-                    {% if presidio.galeria_set.all %}
-                        {% for galeria in presidio.galeria_set.all %}
-                            <tr>
-                                <td>{{ presidio.sigla }} - {{ presidio.nome }}</td>
-                                <td>{{ galeria.nome }}</td>
-                                <td>
-                                    <a href="{% url 'listar_detentos_por_galeria' galeria.id %}">
-                                        <i class="bi bi-person-vcard"></i>
-                                    </a>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    {% else %}
-                        <tr>
-                            <td>{{ presidio.sigla }} - {{ presidio.nome }}</td>
-                            <td colspan="2">Nenhuma galeria cadastrada neste presídio.</td>
-                        </tr>
-                    {% endif %}
-                {% endfor %}
-            {% else %}
-                <tr>
-                    <td colspan="3">Nenhum presídio cadastrado.</td>
-                </tr>
-            {% endif %}
-        </tbody>
-    </table>
+    <div class="accordion accordion-flush" id="presidiosAccordion">
+        {% if presidios %}
+            {% for presidio in presidios %}
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse-{{ presidio.id }}" aria-expanded="false" aria-controls="flush-collapse-{{ presidio.id }}">
+                            {{ presidio.sigla }} - {{ presidio.nome }}
+                        </button>
+                    </h2>
+                    <div id="flush-collapse-{{ presidio.id }}" class="accordion-collapse collapse" data-bs-parent="#presidiosAccordion">
+                        <div class="accordion-body">
+                            {% if presidio.galeria_set.all %}
+                                <ul class="list-group list-group-flush">
+                                    {% for galeria in presidio.galeria_set.all %}
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            {{ galeria.nome }}
+                                            <a href="{% url 'listar_detentos_por_galeria' galeria.id %}" class="btn btn-sm btn-outline-primary">
+                                                <i class="bi bi-person-vcard"></i> Ver Detentos
+                                            </a>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                <p>Nenhuma galeria cadastrada neste presídio.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="alert alert-warning" role="alert">
+                Nenhum presídio cadastrado.
+            </div>
+        {% endif %}
+    </div>
 {% endblock %}

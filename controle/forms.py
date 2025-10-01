@@ -39,7 +39,6 @@ class IndividuoForm(forms.ModelForm):
             "cela",
             "alojamento",
             "observacao",
-            "grau_importancia",
             "nivel_orcrim",
         ]
 
@@ -60,11 +59,6 @@ class IndividuoForm(forms.ModelForm):
             "foto": forms.ClearableFileInput(attrs={"class": "form-control"}),
             "situacao_penal": forms.Select(attrs={"class": "form-control"}),
             "orcrim": forms.Select(attrs={"class": "form-control"}),
-            "grau_importancia": forms.CheckboxInput(
-                attrs={
-                    "class": "form-check-input",
-                }
-            ),
             "nivel_orcrim": forms.Select(attrs={"class": "form-control"}),
             "regime": forms.Select(attrs={"class": "form-control"}),
             "casa_prisional": forms.Select(attrs={"class": "form-control"}),

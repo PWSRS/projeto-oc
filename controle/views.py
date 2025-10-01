@@ -132,6 +132,7 @@ class IndividuoDetailView(DetailView):
 class OrcrimListView(ListView):
     model = Orcrim
     template_name = "orcrim/orcrim_list.html"
+    paginate_by = 10  # Paginação: 10 orcrims por página
 
 
 class OrcrimCreateView(CreateView):

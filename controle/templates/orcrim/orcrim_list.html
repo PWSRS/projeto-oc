@@ -23,8 +23,8 @@
         <td class="text-center">{{ orcrim.sigla|default:"-" }}</td>
         <td class="text-center">{{ orcrim.get_area_abrangencia_display }}</td>
         <td class="text-center">
-            <a href="{% url 'orcrim_edit' pk=orcrim.pk %}">Editar</a>
-            <a href="{% url 'orcrim_delete' pk=orcrim.pk %}">Excluir</a>
+            <a href="{% url 'orcrim_edit' pk=orcrim.pk %}"><i class="bi bi-pencil-square link-warning"></i></a>
+            <a href="{% url 'orcrim_delete' pk=orcrim.pk %}"><i class="bi bi-person-x link-danger"></i></a>
         </td>
     </tr>
     {% empty %}

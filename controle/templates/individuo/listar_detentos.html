@@ -34,7 +34,23 @@
                         <td class="text-center">{{ detento.rg_cpf }}</td>
                         <td class="text-center">{{ detento.data_nasc|date:"d/m/Y" }}</td>
                         <td class="text-center">{{ detento.alcunha|default:"N/A" }}</td>
-                        <td class="text-center">{{ detento.get_situacao_penal_display }}</td>  <!-- Usa o display se choices estiverem definidos -->
+                        <td class="text-center">
+                            {% with detento.situacao_penal as status %}
+                            {% if status == 'liberdade' %}
+                            <span class="badge text-bg-success">{{ detento.get_situacao_penal_display }}</span>
+                            {% elif status == 'recolhido' %}
+                            <span class="badge text-bg-danger">{{ detento.get_situacao_penal_display }}</span>
+                            {% elif status == 'recolhido_tornozeleira' %}
+                            <span class="badge text-bg-warning">{{ detento.get_situacao_penal_display }}</span>
+                            {% elif status == 'foragido' %}
+                            <span class="badge text-bg-info">{{ detento.get_situacao_penal_display }}</span>
+                            {% elif status == 'removido' %}
+                            <span class="badge text-bg-secondary">{{ detento.get_situacao_penal_display }}</span>
+                            {% else %}
+                            <span class="badge text-bg-light">{{ detento.get_situacao_penal_display }}</span>
+                            {% endif %}
+                            {% endwith %}
+                        </td>
                         <td class="text-center">{{ detento.orcrim|default:"N/A" }}</td>
                         <td class="text-center">{{ detento.get_regime_display }}</td>
                     </tr>

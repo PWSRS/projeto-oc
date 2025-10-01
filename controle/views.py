@@ -1,4 +1,5 @@
 from django.shortcuts import render, get_object_or_404
+from django.db.models import Q
 from rest_framework import generics
 from .models import Individuo
 from .serializers import IndividuoSerializer, OrcrimSerializer
@@ -73,6 +74,31 @@ def individuos_por_orcrim(request, orcrim_id):
 class IndividuoListView(ListView):
     model = Individuo
     template_name = "individuo/individuo_list.html"
+    context_object_name = "object_list"
+
+    def get_queryset(self):
+        # 1. Obtém o queryset base (todos os indivíduos)
+        queryset = super().get_queryset()
+
+        # 2. Obtém o termo de busca e remove espaços extras (trim)
+        query = self.request.GET.get("q")
+
+        # 3. Limpa a query e só continua se houver algo para buscar
+        if query:
+            # Remove espaços no início e fim e converte para string
+            cleaned_query = str(query).strip()
+        else:
+            cleaned_query = None
+
+        # 4. Se a query limpa tiver conteúdo, aplica o filtro
+        if cleaned_query:
+            # Filtra onde o 'nome' OU a 'alcunha' contêm o termo (case-insensitive)
+            queryset = queryset.filter(
+                Q(nome__icontains=cleaned_query) | Q(alcunha__icontains=cleaned_query)
+            ).distinct()
+
+        # Se cleaned_query for None ou "", ele retorna o queryset completo.
+        return queryset
 
 
 class IndividuoCreateView(CreateView):

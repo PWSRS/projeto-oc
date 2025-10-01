@@ -11,6 +11,20 @@
   </div>
 </div>
 <br>
+<div class="container-fluid">
+    <form id="search-form" class="d-flex" role="search" method="GET"> 
+        <input 
+            class="form-control me-2" 
+            type="search" 
+            placeholder="Pesquisa por nome ou alcunha" 
+            aria-label="Search"
+            name="q"
+            id="search-input" value="{{ request.GET.q|default:'' }}"
+        />
+        <button class="btn btn-outline-success" type="submit">Pesquisar</button>
+    </form>
+</div>
+<br>
 <table class="table table-bordered table-sm">
   <thead class="table-dark text-center">
     <tr class="align-middle">
@@ -55,4 +69,31 @@
 </tbody>
 </table>
 <a href="{% url 'individuo_add' %}" class="btn btn-primary mb-3">+ indivíduo</a>
+{% block extra_body_js %}
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('search-input');
+    const form = document.querySelector('.d-flex');
+    
+    // 1. Damos um ID ao input para o JS encontrar ele facilmente
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            // Se o valor do campo de busca estiver vazio (após remover espaços)
+            if (this.value.trim() === '') {
+                // Limpa o formulário e envia (ou simplesmente redireciona)
+                
+                // Opção mais simples: Envia o formulário com o campo vazio
+                // A sua View já sabe tratar o campo vazio, retornando a lista completa.
+                //form.submit();
+                
+                // OU, se você quiser apenas garantir que a URL volte ao estado base:
+                window.location.href = window.location.pathname; 
+            }
+        });
+    }
+});
+</script>
+{% endblock extra_body_js %}
+
 {% endblock content %}

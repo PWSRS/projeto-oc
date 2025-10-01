@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from rest_framework import generics
 from .models import Individuo
 from .serializers import IndividuoSerializer, OrcrimSerializer
@@ -218,6 +218,36 @@ def tipo_estrutura_view(request):
 
 
 # TODO Busca por presídio (listar todos os detentos, com campo de busca por alcunha/nome)
-# TODO Lista tabular ou template com foto e demais dados
-# TODO Listar por galeria todos os detentos vinculados
-# TODO Subir para o GitHub
+
+
+def listar_por_galeria(request, galeria_id):
+    galeria = Galeria.objects.get(id=galeria_id)
+    alojamentos = Alojamento.objects.filter(cela__galeria=galeria)
+    individuos = Individuo.objects.filter(alojamento__in=alojamentos)
+
+    context = {
+        "galeria": galeria,
+        "individuos": individuos,
+    }
+    return render(request, "individuo/individuo_por_galeria.html", context)
+
+
+def selecionar_presidio(request):
+    # Lista todos os presídios
+    presidios = CasaPrisional.objects.all()
+    context = {
+        "presidios": presidios,
+    }
+    return render(request, "individuo/selecionar_presidio.html", context)
+
+
+def listar_detentos_por_galeria(request, galeria_id):
+    # Obtém a galeria ou retorna 404 se não existir
+    galeria = get_object_or_404(Galeria, id=galeria_id)
+    # Filtra detentos diretamente pela galeria (usando o campo ForeignKey em Individuo)
+    detentos = Individuo.objects.filter(galeria=galeria)
+    context = {
+        "galeria": galeria,
+        "detentos": detentos,
+    }
+    return render(request, "individuo/listar_detentos.html", context)

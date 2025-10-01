@@ -97,4 +97,7 @@ urlpatterns = [
         views.individuos_por_orcrim,
         name="individuos_por_orcrim",
     ),
+    # URL para listar indivíduos por galeria
+    path('selecionar-presidio/', views.selecionar_presidio, name='selecionar_presidio'),
+    path('galeria/<int:galeria_id>/detentos/', views.listar_detentos_por_galeria, name='listar_detentos_por_galeria'),
 ]

@@ -49,6 +49,7 @@ TIPO_ESTRUTURA_CHOICES = [
         "intermediaria",
         "Intermediária (Galeria, Cela)",
     ),  # Sem pavilhão, alojamento/módulo
+    ("pavilhao", "Pavilhão"),  # Detalhar se necessário
     ("modular", "Módulo"),  # Detalhar se necessário
     ("apenas_alojamento", "Apenas Alojamento"),  # Sem pavilhão/galeria/cela
 ]
@@ -125,7 +126,7 @@ class Pavilhao(models.Model):
         verbose_name_plural = "Pavilhões"
 
     def __str__(self):
-        return self.nome
+        return f"{self.nome} - {self.casa_prisional.nome}"
 
 
 class Galeria(models.Model):
@@ -142,7 +143,7 @@ class Galeria(models.Model):
         verbose_name_plural = "Galerias"
 
     def __str__(self):
-        return self.nome
+        return f"{self.nome} - {self.casa_prisional.nome}"
 
 
 class Cela(models.Model):

@@ -25,7 +25,7 @@
     <tr>
         <td>
           {% if individuo.foto %} {# Verifique se a imagem existe antes de tentar exibi-la #}
-            <img src="{{ individuo.foto.url }}" alt="{{ individuo.nome }}" width="50" height="50">
+            <img src="{{ individuo.foto.url }}" alt="{{ individuo.nome }}" style="width: 50px; height: 50px; object-fit: cover;" class="img-thumbnail">
           {% else %}
             <span>Sem foto</span>
           {% endif %}

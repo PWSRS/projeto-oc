@@ -193,15 +193,38 @@ $(document).ready(function() {
         celaSelect.prop('disabled', false).parent().show();
         alojamentoSelect.prop('disabled', false).parent().show();
 
-        if (tipo === 'completa' || tipo === 'modular') {
-            alojamentoSelect.prop('disabled', true).parent().hide(); // Oculta alojamento
-        } else if (tipo === 'intermediaria' || tipo === 'sem_pavilhao') {
-            pavilhaoSelect.prop('disabled', true).parent().hide();
-            alojamentoSelect.prop('disabled', true).parent().hide(); // Oculta alojamento
-        } else if (tipo === 'apenas_alojamento') {
+        if (tipo === 'pavilhao') {
+            console.log('Aplicando lógica para pavilhao');
+            // Apenas pavilhão ativo, outros desabilitados e ocultos
+            galeriaSelect.prop('disabled', true).parent().hide();
+            celaSelect.prop('disabled', true).parent().hide();
+            alojamentoSelect.prop('disabled', true).parent().hide();
+            clearSelect(galeriaSelect);
+            clearSelect(celaSelect);
+            clearSelect(alojamentoSelect);
+        } else if (tipo === 'modular') {
+            console.log('Aplicando lógica para modular');
+            // Desabilita todos os selects para estrutura modular
             pavilhaoSelect.prop('disabled', true).parent().hide();
             galeriaSelect.prop('disabled', true).parent().hide();
             celaSelect.prop('disabled', true).parent().hide();
+            alojamentoSelect.prop('disabled', true).parent().hide();
+        } else if (tipo === 'completa') {
+            console.log('Aplicando lógica para completa');
+            alojamentoSelect.prop('disabled', true).parent().hide(); // Oculta apenas alojamento
+        } else if (tipo === 'intermediaria' || tipo === 'sem_pavilhao') {
+            console.log('Aplicando lógica para intermediaria/sem_pavilhao');
+            pavilhaoSelect.prop('disabled', true).parent().hide();
+            alojamentoSelect.prop('disabled', true).parent().hide(); // Oculta alojamento
+        } else if (tipo === 'apenas_alojamento') {
+            console.log('Aplicando lógica para apenas_alojamento');
+            pavilhaoSelect.prop('disabled', true).parent().hide();
+            galeriaSelect.prop('disabled', true).parent().hide();
+            celaSelect.prop('disabled', true).parent().hide();
+        } else {
+            console.warn('Tipo de estrutura desconhecido:', tipo);
+            // Tratar tipo desconhecido como 'completa' por padrão
+            alojamentoSelect.prop('disabled', true).parent().hide();
         }
     }
 
@@ -217,6 +240,7 @@ $(document).ready(function() {
         clearSelect(alojamentoSelect);
 
         if (!casaId) {
+            console.log('Nenhuma casa selecionada, aplicando padrão completa');
             updateSelectsVisibility('completa');
             return;
         }
@@ -235,17 +259,45 @@ $(document).ready(function() {
             })
             .then(data => {
                 const tipo = data.tipo_estrutura || 'completa';
-                console.log('Tipo de estrutura:', tipo);
+                console.log('Tipo de estrutura retornado:', tipo);
                 updateSelectsVisibility(tipo);
 
-                if (tipo === 'sem_pavilhao' || tipo === 'intermediaria') {
+                if (tipo === 'pavilhao' || tipo === 'completa') {
+                    console.log('Carregando pavilhões para casa_id:', casaId);
+                    // Carrega pavilhões
+                    fetch(`/ajax/pavilhoes/?casa_id=${casaId}`)
+                        .then(response => {
+                            if (!response.ok) throw new Error(`Erro HTTP em pavilhões: ${response.status}`);
+                            return response.json();
+                        })
+                        .then(pavilhoes => {
+                            console.log('Pavilhôes recebidos:', pavilhoes);
+                            if (pavilhoes.length === 0) {
+                                console.warn('Nenhum pavilhão encontrado para casa_id:', casaId);
+                                pavilhaoSelect.append('<option value="">Nenhum pavilhão disponível</option>');
+                            } else {
+                                pavilhoes.forEach(p => pavilhaoSelect.append(`<option value="${p.id}">${p.nome}</option>`));
+                                pavilhaoSelect.val(currentPav);
+                            }
+                            console.log('Pavilhôes carregados:', pavilhoes.length);
+                        })
+                        .catch(err => {
+                            console.error('Erro ao carregar pavilhões:', err);
+                            pavilhaoSelect.append('<option value="">Erro ao carregar pavilhões</option>');
+                        });
+                } else if (tipo === 'sem_pavilhao' || tipo === 'intermediaria') {
+                    console.log('Carregando galerias e celas para casa_id:', casaId);
                     // Carrega galerias e celas diretamente
                     fetch(`/ajax/galerias_por_casa/?casa_id=${casaId}`)
                         .then(response => response.json())
                         .then(galerias => {
                             console.log('Galerias recebidas:', galerias);
-                            galerias.forEach(g => galeriaSelect.append(`<option value="${g.id}">${g.nome}</option>`));
-                            galeriaSelect.val(currentGal);
+                            if (galerias.length === 0) {
+                                galeriaSelect.append('<option value="">Nenhuma galeria disponível</option>');
+                            } else {
+                                galerias.forEach(g => galeriaSelect.append(`<option value="${g.id}">${g.nome}</option>`));
+                                galeriaSelect.val(currentGal);
+                            }
                             console.log('Galerias carregadas:', galerias.length);
                         })
                         .catch(err => console.error('Erro ao carregar galerias:', err));
@@ -254,12 +306,17 @@ $(document).ready(function() {
                         .then(response => response.json())
                         .then(celas => {
                             console.log('Celas recebidas:', celas);
-                            celas.forEach(c => celaSelect.append(`<option value="${c.id}">${c.numero}</option>`));
-                            celaSelect.val(currentCel);
+                            if (celas.length === 0) {
+                                celaSelect.append('<option value="">Nenhuma cela disponível</option>');
+                            } else {
+                                celas.forEach(c => celaSelect.append(`<option value="${c.id}">${c.numero}</option>`));
+                                celaSelect.val(currentCel);
+                            }
                             console.log('Celas carregadas:', celas.length);
                         })
                         .catch(err => console.error('Erro ao carregar celas:', err));
                 } else if (tipo === 'apenas_alojamento') {
+                    console.log('Carregando alojamentos para casa_id:', casaId);
                     // Carrega apenas alojamentos
                     fetch(`/ajax/alojamentos_por_casa/?casa_id=${casaId}`)
                         .then(response => {
@@ -287,18 +344,8 @@ $(document).ready(function() {
                             console.error('Erro ao carregar alojamentos:', err);
                             alojamentoSelect.append('<option value="">Erro ao carregar alojamentos</option>');
                         });
-                } else {
-                    // Carrega pavilhões (completa ou modular)
-                    fetch(`/ajax/pavilhoes/?casa_id=${casaId}`)
-                        .then(response => response.json())
-                        .then(pavilhoes => {
-                            console.log('Pavilhôes recebidos:', pavilhoes);
-                            pavilhoes.forEach(p => pavilhaoSelect.append(`<option value="${p.id}">${p.nome}</option>`));
-                            pavilhaoSelect.val(currentPav);
-                            console.log('Pavilhôes carregados:', pavilhoes.length);
-                        })
-                        .catch(err => console.error('Erro ao carregar pavilhões:', err));
                 }
+                // Para 'modular', não carrega nada, pois todos os selects estão desabilitados
             })
             .catch(err => console.error('Erro ao buscar tipo_estrutura:', err));
     });
@@ -319,8 +366,12 @@ $(document).ready(function() {
             .then(response => response.json())
             .then(galerias => {
                 console.log('Galerias recebidas:', galerias);
-                galerias.forEach(g => galeriaSelect.append(`<option value="${g.id}">${g.nome}</option>`));
-                galeriaSelect.val(currentGal);
+                if (galerias.length === 0) {
+                    galeriaSelect.append('<option value="">Nenhuma galeria disponível</option>');
+                } else {
+                    galerias.forEach(g => galeriaSelect.append(`<option value="${g.id}">${g.nome}</option>`));
+                    galeriaSelect.val(currentGal);
+                }
                 console.log('Galerias carregadas:', galerias.length);
             })
             .catch(err => console.error('Erro ao carregar galerias:', err));
@@ -341,8 +392,12 @@ $(document).ready(function() {
             .then(response => response.json())
             .then(celas => {
                 console.log('Celas recebidas:', celas);
-                celas.forEach(c => celaSelect.append(`<option value="${c.id}">${c.numero}</option>`));
-                celaSelect.val(currentCel);
+                if (celas.length === 0) {
+                    celaSelect.append('<option value="">Nenhuma cela disponível</option>');
+                } else {
+                    celas.forEach(c => celaSelect.append(`<option value="${c.id}">${c.numero}</option>`));
+                    celaSelect.val(currentCel);
+                }
                 console.log('Celas carregadas:', celas.length);
             })
             .catch(err => console.error('Erro ao carregar celas:', err));
@@ -350,6 +405,7 @@ $(document).ready(function() {
 
     // Evento ao mudar cela
     celaSelect.on('change', function() {
+        const casaId = casaSelect.val();
         const celaId = $(this).val();
         console.log('Cela selecionada:', celaId);
 
@@ -358,7 +414,7 @@ $(document).ready(function() {
         if (!celaId) return;
 
         const currentAlo = alojamentoSelect.val();
-        fetch(`/ajax/alojamentos/?cela_id=${celaId}`)
+        fetch(`/ajax/alojamentos_por_casa/?casa_id=${casaId}`)
             .then(response => response.json())
             .then(alojamentos => {
                 console.log('Alojamentos recebidas:', alojamentos);

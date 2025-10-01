@@ -75,6 +75,7 @@ class IndividuoListView(ListView):
     model = Individuo
     template_name = "individuo/individuo_list.html"
     context_object_name = "object_list"
+    paginate_by = 15  # Paginação: 10 indivíduos por página
 
     def get_queryset(self):
         # 1. Obtém o queryset base (todos os indivíduos)

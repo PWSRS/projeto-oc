@@ -11,18 +11,29 @@
   </div>
 </div>
 <br>
-<div class="container-fluid">
-    <form id="search-form" class="d-flex" role="search" method="GET"> 
+<div class="container-fluid d-flex justify-content-between align-items-center mb-3">
+    
+    <form id="search-form" class="d-flex flex-grow-1 me-3" role="search" method="GET"> 
         <input 
             class="form-control me-2" 
             type="search" 
             placeholder="Pesquisa por nome ou alcunha" 
             aria-label="Search"
             name="q"
-            id="search-input" value="{{ request.GET.q|default:'' }}"
+            id="search-input" 
+            value="{{ request.GET.q|default:'' }}"
         />
-        <button class="btn btn-outline-success" type="submit">Pesquisar</button>
+        <div class="btn-group" role="group">
+            <button class="btn btn-outline-success" type="submit">Pesquisar</button>
+            <a href="{% url 'individuo_list' %}" class="btn btn-outline-secondary" title="Limpar Busca">
+                Limpar
+            </a>
+        </div>
     </form>
+
+    <a href="{% url 'individuo_add' %}" class="btn btn-primary" title="Adicionar Novo Indivíduo">
+        + indivíduo
+    </a>
 </div>
 <br>
 <table class="table table-bordered table-sm">
@@ -68,7 +79,54 @@
     {% endfor %}
 </tbody>
 </table>
-<a href="{% url 'individuo_add' %}" class="btn btn-primary mb-3">+ indivíduo</a>
+
+{% if is_paginated %}
+<nav aria-label="Paginação da Lista">
+    <ul class="pagination justify-content-center">
+
+        {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}page={{ page_obj.previous_page_number }}" aria-label="Anterior">
+                    <span aria-hidden="true">&laquo;</span> Anterior
+                </a>
+            </li>
+        {% else %}
+            <li class="page-item disabled">
+                <span class="page-link"><span aria-hidden="true">&laquo;</span> Anterior</span>
+            </li>
+        {% endif %}
+
+        {% for i in page_obj.paginator.page_range %}
+            {% if page_obj.number == i %}
+                <li class="page-item active" aria-current="page">
+                    <span class="page-link">{{ i }}</span>
+                </li>
+            {% elif i > page_obj.number|add:'-3' and i < page_obj.number|add:'3' %}
+                <li class="page-item">
+                    <a class="page-link" href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}page={{ i }}">{{ i }}</a>
+                </li>
+            {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}page={{ page_obj.next_page_number }}" aria-label="Próxima">
+                    Próxima <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        {% else %}
+            <li class="page-item disabled">
+                <span class="page-link">Próxima <span aria-hidden="true">&raquo;</span></span>
+            </li>
+        {% endif %}
+    </ul>
+</nav>
+
+<div class="text-center mb-4">
+    <small>Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}. Total de {{ page_obj.paginator.count }} detentos.</small>
+</div>
+{% endif %}
+
 {% block extra_body_js %}
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
 <script>

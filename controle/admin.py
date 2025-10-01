@@ -121,7 +121,7 @@ class IndividuoAdmin(admin.ModelAdmin):
 
 # Admin para Orcrim
 class OrcrimAdmin(admin.ModelAdmin):
-    list_display = ("sigla", "nome", "area_abrangencia", "area_atuacao")
+    list_display = ("sigla", "nome", "area_abrangencia")
     search_fields = ("nome", "sigla")
 
 

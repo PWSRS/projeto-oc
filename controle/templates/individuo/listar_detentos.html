@@ -8,8 +8,8 @@
        <a href="{% url 'selecionar_presidio' %}"><i class="bi bi-arrow-return-left"></i> Voltar</a>
     {% if detentos %}
         <table class="table table-bordered table-sm">
-            <thead class="table-dark">
-                <tr>
+            <thead class="table-dark text-center">
+                <tr class="align-middle">
                     <th>Foto</th>
                     <th>Nome</th>
                     <th>RG/CPF</th>
@@ -23,7 +23,7 @@
             <tbody>
                 {% for detento in detentos %}
                     <tr>
-                        <td>
+                        <td class="text-center">
                             {% if detento.foto %}
                                 <img src="{{ detento.foto.url }}" alt="Foto de {{ detento.nome }}" width="50" height="50">
                             {% else %}
@@ -31,12 +31,12 @@
                             {% endif %}
                         </td>
                         <td>{{ detento.nome }}</td>
-                        <td>{{ detento.rg_cpf }}</td>
-                        <td>{{ detento.data_nasc|date:"d/m/Y" }}</td>
-                        <td>{{ detento.alcunha|default:"N/A" }}</td>
-                        <td>{{ detento.get_situacao_penal_display }}</td>  <!-- Usa o display se choices estiverem definidos -->
-                        <td>{{ detento.orcrim|default:"N/A" }}</td>
-                        <td>{{ detento.get_regime_display }}</td>
+                        <td class="text-center">{{ detento.rg_cpf }}</td>
+                        <td class="text-center">{{ detento.data_nasc|date:"d/m/Y" }}</td>
+                        <td class="text-center">{{ detento.alcunha|default:"N/A" }}</td>
+                        <td class="text-center">{{ detento.get_situacao_penal_display }}</td>  <!-- Usa o display se choices estiverem definidos -->
+                        <td class="text-center">{{ detento.orcrim|default:"N/A" }}</td>
+                        <td class="text-center">{{ detento.get_regime_display }}</td>
                     </tr>
                 {% endfor %}
             </tbody>

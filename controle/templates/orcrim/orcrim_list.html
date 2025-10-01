@@ -8,23 +8,21 @@
 <h2>Organizações Criminosas</h2>
 
 <table class="table table-bordered table-sm">
-  <thead class="table-dark">
-    <tr>
+  <thead class="table-dark text-center">
+    <tr class="align-middle">
       <th>Denominação</th>
       <th>Sigla</th>
       <th>Abrangência</th>
-      <th>Onde atua</th>
       <th>Ações</th>
     </tr>
   </thead>
   <tbody>
     {% for orcrim in object_list %}
-    <tr>
-        <td>{{ orcrim.nome }}</td>
-        <td>{{ orcrim.sigla }}</td>
-        <td>{{ orcrim.get_area_abrangencia_display }}</td>
-        <td>{{ orcrim.area_atuacao }}</td>
-        <td>
+    <tr class="align-middle">
+        <td class="text-center">{{ orcrim.nome }}</td>
+        <td class="text-center">{{ orcrim.sigla|default:"-" }}</td>
+        <td class="text-center">{{ orcrim.get_area_abrangencia_display }}</td>
+        <td class="text-center">
             <a href="{% url 'orcrim_edit' pk=orcrim.pk %}">Editar</a>
             <a href="{% url 'orcrim_delete' pk=orcrim.pk %}">Excluir</a>
         </td>

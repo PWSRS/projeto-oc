@@ -80,8 +80,7 @@ class Orcrim(models.Model):
         choices=ORCRIM_ABRANGENCIA_CHOICES,
         verbose_name="Área de Abrangência",
     )
-    # Fazer um select com as cidades
-    area_atuacao = models.TextField(null=True, blank=True)
+
 
     class Meta:
         verbose_name = "Orcrim"
@@ -136,6 +135,13 @@ class Galeria(models.Model):
     )
     nome = models.CharField(
         max_length=100, verbose_name="Galeria", null=True, blank=True
+    )
+    orcrim = models.ForeignKey(
+        "Orcrim",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        verbose_name="Orcrim Relacionada",
     )
 
     class Meta:

@@ -8,8 +8,8 @@
 <h2>Indivíduos</h2>
 
 <table class="table table-bordered table-sm">
-  <thead class="table-dark">
-    <tr>
+  <thead class="table-dark text-center">
+    <tr class="align-middle">
       <th>#</th>
       <th>Nome</th>
       <th>Data nasc</th>
@@ -22,7 +22,7 @@
   </thead>
   <tbody>
     {% for individuo in object_list %}
-    <tr>
+    <tr class="align-middle">
         <td>
           {% if individuo.foto %} {# Verifique se a imagem existe antes de tentar exibi-la #}
             <img src="{{ individuo.foto.url }}" alt="{{ individuo.nome }}" style="width: 50px; height: 50px; object-fit: cover;" class="img-thumbnail">
@@ -33,12 +33,12 @@
         <td>
           <a href="{% url "individuo_detail" individuo.pk %}">{{ individuo.nome }}</a>
         </td>
-        <td>{{ individuo.data_nasc|date:"d/m/Y" }}</td>
-        <td>{{ individuo.codigo_detento }}</td>
-        <td>{{ individuo.orcrim }}</td>
-        <td>{{ individuo.casa_prisional }}</td>
-        <td>{{ individuo.get_situacao_penal_display }}</td>
-        <td>
+        <td class="text-center">{{ individuo.data_nasc|date:"d/m/Y" }}</td>
+        <td class="text-center">{{ individuo.codigo_detento }}</td>
+        <td class="text-center">{{ individuo.orcrim }}</td>
+        <td class="text-center">{{ individuo.casa_prisional }}</td>
+        <td class="text-center">{{ individuo.get_situacao_penal_display }}</td>
+        <td class="text-center">
             <a href="{% url 'individuo_edit' pk=individuo.pk %}">Editar</a>
             <a href="{% url 'individuo_delete' pk=individuo.pk %}">Excluir</a>
         </td>

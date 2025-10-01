@@ -82,7 +82,7 @@
                                     <div class="invalid-feedback d-block">{{ error }}</div>
                                 {% endfor %}
                             </div>
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-3 mb-3">
                                 <h7>Nível</h7>
                                 {{ form.nivel_ocrim.label_tag }}
                                 {{ form.nivel_orcrim }}
@@ -99,7 +99,7 @@
                                 {% endfor %}
                             </div>
 
-                            <div class="col-md-2 mb-3">
+                            <div class="col-md-3 mb-3">
                                 {{ form.regime.label_tag }}
                                 {{ form.regime }}
                                 {% for error in form.regime.errors %}
@@ -107,7 +107,7 @@
                                 {% endfor %}
                             </div>
 
-                            <div class="col-md-2 mb-3">
+                            <div class="col-md-4 mb-3">
                                 {{ form.casa_prisional.label_tag }}
                                 {{ form.casa_prisional }}
                                 {% for error in form.prisional.errors %}

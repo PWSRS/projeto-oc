@@ -126,11 +126,6 @@ class OrcrimForm(forms.ModelForm):
                     "class": "form-control",
                 }
             ),
-            "area_atuacao": forms.TextInput(
-                attrs={
-                    "class": "form-control",
-                }
-            ),
         }
 
 

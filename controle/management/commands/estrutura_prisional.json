@@ -7,27 +7,17 @@
     },
     "estrutura": {
         "Pavilhão A": {
-            "Galeria 1": {
-                "Cela 101": [
-                    "Alojamento 1",
-                    "Alojamento 2"
-                ],
-                "Cela 102": [
-                    "Alojamento 3"
-                ]
+            "Galeria 1ª": {
+                "Cela 101": [],
+                "Cela 102": []
             },
-            "Galeria 2": {
-                "Cela 201": [
-                    "Alojamento 4"
-                ]
+            "Galeria 2ª": {
+                "Cela 201": ["Alojamento 4"]
             }
         },
         "Pavilhão B": {
             "Galeria 3": {
-                "Cela 301": [
-                    "Alojamento 5",
-                    "Alojamento 6"
-                ]
+                "Cela 301": []
             }
         }
     }

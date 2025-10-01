@@ -8,25 +8,31 @@
 <title>Detalhes do Indivíduo</title>
 
 <body>
-    <h1>Detalhes do Indivíduo: <strong>{{ individuo.nome }}</strong></h1> {# Adicionado o nome da categoria aqui para melhor contexto #}
+    <div class="card">
+        <div class="card-body text-bg-info p-3 text-center">
+            <h3>Detalhes do Indivíduo: <strong>{{ individuo.nome }}</strong></h3>
+        </div>
+    </div>
+    <br>
+    
 
     <div class="detail-item">
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                <th>#</th>
-                <th>Nome</th>
-                <th>RG/CPF</th>
-                <th>Cód. Preso</th>
-                <th>Orcrim</th>
-                <th>Situação</th>
+        <table class="table table-bordered table-sm text-center">
+            <thead class="table-dark text-cente">
+                <tr class="align-middle">
+                    <th>#</th>
+                    <th>Nome</th>
+                    <th>RG/CPF</th>
+                    <th>Cód. Preso</th>
+                    <th>Orcrim</th>
+                    <th>Situação</th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
+                <tr class="align-middle">
                     <td>
                         {% if individuo.foto %}
-                            <img src="{{ individuo.foto.url }}" alt="{{ individuo.nome }}" class="img-thumbnail" style="max-width: 100px;"> {# Ajustei o estilo da imagem #}
+                            <img src="{{ individuo.foto.url }}" alt="{{ individuo.nome }}" style="width: 70px; height: 70px; object-fit: cover;" class="img-thumbnail"> {# Ajustei o estilo da imagem #}
                         {% else %}
                             <span>Sem Foto</span>
                         {% endif %}

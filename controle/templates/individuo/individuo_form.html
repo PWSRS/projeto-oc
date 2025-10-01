@@ -23,17 +23,16 @@
                     <form method="post" class="needs-validation" novalidate enctype="multipart/form-data">
                         {% csrf_token %}
                         <div class="row">
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-3 mb-3">
                                 <div class="foto-container">
-                                    <h5 class="mb-2">Foto do Agente</h5>
-                                        <div class="foto-placeholder">
-                                            <i class="bi bi-person-circle"></i>
-                                        </div>
-                                        <div>
-                                            {{ form.foto }}
-                                                <small class="form-text text-muted d-block mt-1">Selecionar foto</small>
-                                            {{ form.foto.errors }}
-                                        </div>
+                                    <div class="foto-placeholder">
+                                        <i class="bi bi-person-circle"></i>
+                                    </div>
+                                    <div>
+                                        {{ form.foto }}
+                                            <small class="form-text text-muted d-block mt-1">Selecionar foto</small>
+                                        {{ form.foto.errors }}
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-md-6 mb-3">
@@ -44,7 +43,7 @@
                                 {% endfor %}
                             </div>
 
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-3 mb-3">
                                 {{ form.rg_cpf.label_tag }}
                                 {{ form.rg_cpf }}
                                 {% for error in form.rg_cpf.errors %}
@@ -52,7 +51,7 @@
                                 {% endfor %}
                             </div>
                             
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-3 mb-3">
                                 {{ form.data_nasc.label_tag }}
                                 {{ form.data_nasc }}
                                 {% for error in form.alcunha.errors %}
@@ -68,7 +67,7 @@
                                 {% endfor %}
                             </div>
 
-                            <div class="col-md-4 mb-3">
+                            <div class="col-md-3 mb-3">
                                 {{ form.codigo_detento.label_tag }}
                                 {{ form.codigo_detento }}
                                 {% for error in form.codigo_detento.errors %}
@@ -76,15 +75,23 @@
                                 {% endfor %}
                             </div>
 
-                            <div class="col-md-4 mb-3">
+                            <div class="col-md-3 mb-3">
                                 {{ form.orcrim.label_tag }}
                                 {{ form.orcrim }}
                                 {% for error in form.orcrim.errors %}
                                     <div class="invalid-feedback d-block">{{ error }}</div>
                                 {% endfor %}
                             </div>
+                            <div class="col-md-6 mb-3">
+                                <h7>Nível</h7>
+                                {{ form.nivel_ocrim.label_tag }}
+                                {{ form.nivel_orcrim }}
+                                {% for error in form.nivel_orcrim.errors %}
+                                    <div class="invalid-feedback d-block">{{ error }}</div>
+                                {% endfor %}
+                            </div>
 
-                            <div class="col-md-8 mb-3">
+                            <div class="col-md-3 mb-3">
                                 {{ form.situacao_penal.label_tag }}
                                 {{ form.situacao_penal }}
                                 {% for error in form.situacao_penal.errors %}
@@ -92,7 +99,7 @@
                                 {% endfor %}
                             </div>
 
-                            <div class="col-md-4 mb-3">
+                            <div class="col-md-2 mb-3">
                                 {{ form.regime.label_tag }}
                                 {{ form.regime }}
                                 {% for error in form.regime.errors %}
@@ -100,7 +107,7 @@
                                 {% endfor %}
                             </div>
 
-                            <div class="col-md-8 mb-3">
+                            <div class="col-md-2 mb-3">
                                 {{ form.casa_prisional.label_tag }}
                                 {{ form.casa_prisional }}
                                 {% for error in form.prisional.errors %}
@@ -108,7 +115,7 @@
                                 {% endfor %}
                             </div>
 
-                            <div class="col-md-3 mb-3">
+                            <div class="col-md-2 mb-3">
                                 {{ form.pavilhao.label_tag }}
                                 {{ form.pavilhao }}
                                 {% for error in form.pavilhao.errors %}
@@ -116,7 +123,7 @@
                                 {% endfor %}
                             </div>
 
-                            <div class="col-md-3 mb-3">
+                            <div class="col-md-2 mb-3">
                                 {{ form.galeria.label_tag }}
                                 {{ form.galeria }}
                                 {% for error in form.galeria.errors %}
@@ -124,7 +131,7 @@
                                 {% endfor %}
                             </div>
 
-                            <div class="col-md-3 mb-3">
+                            <div class="col-md-2 mb-3">
                                 {{ form.cela.label_tag }}
                                 {{ form.cela }}
                                 {% for error in form.cela.errors %}
@@ -132,7 +139,7 @@
                                 {% endfor %}
                             </div>
 
-                            <div class="col-md-3 mb-3">
+                            <div class="col-md-2 mb-3">
                                 {{ form.alojamento.label_tag }}
                                 {{ form.alojamento }}
                                 {% for error in form.alojamento.errors %}
@@ -147,22 +154,6 @@
                                     <div class="invalid-feedback d-block">{{ error }}</div>
                                 {% endfor %}
                             </div>
-
-                            <div class="col-md-6 mb-3">
-                                {{ form.nivel_ocrim.label_tag }}
-                                {{ form.nivel_orcrim }}
-                                {% for error in form.nivel_orcrim.errors %}
-                                    <div class="invalid-feedback d-block">{{ error }}</div>
-                                {% endfor %}
-                            </div>
-
-                            <div class="col-md-6 mb-3 form-check form-switch">
-                                {{ form.grau_importancia }}
-                                {{ form.grau_importancia.label_tag }}
-                                {% if form.grau_importancia.help_text %}<div class="form-text text-muted">{{ form.grau_importancia.help_text }}</div>{% endif %}
-                                {% for error in form.grau_importancia.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
-                            </div>
-
                         </div>
                         <hr>
                         <div class="d-grid gap-2 d-md-flex justify-content-md-center">

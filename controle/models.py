@@ -221,9 +221,6 @@ class Individuo(models.Model):
         Alojamento, on_delete=models.SET_NULL, null=True, blank=True
     )
     observacao = models.CharField(max_length=150, null=True, blank=True)
-    grau_importancia = models.BooleanField(
-        default=False, verbose_name="Grau de importância"
-    )
     nivel_orcrim = models.CharField(
         max_length=20,
         choices=NIVEL_CHOICES,

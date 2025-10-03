@@ -97,7 +97,7 @@
                     }
                 });
             } catch (error) {
-                console.error('Erro ao buscar Orcrims:', error);
+                console.error('Erro ao buscar Orcrim:', error);
             }
         }
 
@@ -118,7 +118,7 @@
 
                 if (!noPaiParaInfluentes && !noPaiParaSemExpressao) {
                     console.log("Não há líderes ou influentes para criar o organograma hierárquico.");
-                    container.innerHTML = '<p>Não há membros de hierarquia superior para criar o organograma.</p>';
+                    container.innerHTML = '<p>Não há registros na base de dados para criar o organograma.</p>';
                     return;
                 }
 

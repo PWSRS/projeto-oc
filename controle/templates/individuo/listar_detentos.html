@@ -4,7 +4,12 @@
 {% block title %}Disponetalhes{% endblock %} 
 
 {% block content %}
+<div class="card">
+  <div class="card-body text-bg-primary p-3 text-center">
     <h3 class="text-center">Detentos na Galeria {{ galeria.nome }} - {{ galeria.casa_prisional.nome }} ({{ galeria.casa_prisional.sigla }})</h3>
+  </div>
+</div>
+<br>    
        <a href="{% url 'selecionar_presidio' %}"><i class="bi bi-arrow-return-left"></i> Voltar</a>
     {% if detentos %}
         <table class="table table-bordered table-sm">

@@ -4,7 +4,12 @@
 {% block title %}Detalhes dos Presídios{% endblock %}
 
 {% block content %}
-    <h3 class="text-center">Selecione um Presídio</h3>
+<div class="card">
+  <div class="card-body text-bg-primary p-3 text-center">
+    <h3>Casas Prisionais</h3>
+  </div>
+</div>
+<br>
     <div class="accordion accordion-flush" id="presidiosAccordion">
         {% if presidios %}
             {% for presidio in presidios %}

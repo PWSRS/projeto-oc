@@ -1,13 +1,4 @@
-{% block content %}
-  <style>
-    body{
-      padding-top: 56px;
-    }
-  </style>
-{% endblock content %}
-
-
-<nav class="navbar navbar-expand-lg bg-dark fixed-top" data-bs-theme="dark">
+<nav class="navbar navbar-expand-lg bg-dark fixed-top" id="main-navbar" data-bs-theme="dark">
   <div class="container-fluid">
     <a class="navbar-brand" href="#">ARI - Sul</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
@@ -16,16 +7,13 @@
     </button>
 
     <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav">
+      <ul class="navbar-nav w-100">
 
         <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="{% url 'home' %}">Home</a>
         </li>
-
-        <!-- Indivíduos -->
         <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownIndividuos" role="button"
-             data-bs-toggle="dropdown" aria-expanded="false">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownIndividuos" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Indivíduos
           </a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdownIndividuos">
@@ -33,10 +21,9 @@
             <li><a class="dropdown-item" href="{% url 'individuo_list' %}">Listar</a></li>
           </ul>
         </li>
-        <!-- Organizações Criminosas -->
+
         <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownOrcrim" role="button"
-             data-bs-toggle="dropdown" aria-expanded="false">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownOrcrim" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Organizações Criminosas
           </a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdownOrcrim">
@@ -45,16 +32,37 @@
             <li><a class="dropdown-item" href="{% url 'organograma' %}">Organograma</a></li>
           </ul>
         </li>
-        <!-- Casas Prisionais -->
+
         <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownCasaPrisional" role="button"
-             data-bs-toggle="dropdown" aria-expanded="false">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownCasaPrisional" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Casas Prisionais
           </a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdownCasaPrisional">
-            <!--<li><a class="dropdown-item" href="{% url 'casaprisional_add' %}">Cadastrar</a></li>
-            <li><a class="dropdown-item" href="{% url 'casaprisional_list' %}">Listar</a></li>-->
             <li><a class="dropdown-item" href="{% url 'selecionar_presidio' %}">Detentos por galeria</a></li>
+          </ul>
+        </li>
+
+        <li class="nav-item dropdown ms-auto">
+          <a class="nav-link dropdown-toggle" href="#" id="bd-theme" role="button"
+             data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-circle-half"></i> Modo
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="bd-theme">
+            <li>
+              <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="light">
+                <i class="bi bi-sun"></i> Light
+              </button>
+            </li>
+            <li>
+              <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="dark">
+                <i class="bi bi-moon-stars"></i> Escuro
+              </button>
+            </li>
+            <li>
+              <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="auto">
+                <i class="bi bi-circle-half"></i> Auto
+              </button>
+            </li>
           </ul>
         </li>
       </ul>

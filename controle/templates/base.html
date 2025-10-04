@@ -1,76 +1,220 @@
 {% load static %}
 
 <!doctype html>
-<html lang="pt-BR" class="h-100"> {# ADICIONADO: class="h-100" para que a tag html ocupe 100% da altura #}
+{# REMOVIDO: data-bs-theme="light" aqui. O JS aplicará o tema correto. #}
+<html lang="pt-BR" class="h-100"> 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}Sistema{% endblock %}</title>
 
-    {# Bootstrap CSS #}
-    <!--<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet">-->
-     <link href="{% static 'controle/css/bootstrap.min.css' %}" rel="stylesheet">
-    {# Bootstrap Icons #}
+    {# Bootstrap CSS (Local) #}
+    <link href="{% static 'controle/css/bootstrap.min.css' %}" rel="stylesheet">
+    {# Bootstrap Icons (CDN) - Essencial para os ícones do seletor de modo #}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-    {# Opcional: Font Awesome para ícones de redes sociais (se estiver usando no footer) #}
+    {# Font Awesome (Opcional) #}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    
+    {# Select2 CSS (CDN) #}
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
-    {# Bloco para CSS e outras coisas específicas do head que templates filhos podem adicionar #}
+    {# BLOCÃO DE ESTILO PERSONALIZADO: Inclui a compensação do padding e o CSS para os temas light/dark #}
     {% block extra_head_css %}
-      
-    {% endblock %} 
+<style>
+    body {
+        /* Compensa o navbar fixo, garantindo que o conteúdo não fique escondido */
+        padding-top: 56px; 
+        /* Transição suave para mudança de tema (opcional) */
+        transition: background-color 0.3s, color 0.3s;
+    }
+
+    /* ---------------------------------------------------- */
+    /* 1. DEFINIÇÃO DAS VARIÁVEIS DE TEMA NO BODY/HTML      */
+    /* ---------------------------------------------------- */
+
+    /* Variáveis de tema Light (Padrão Bootstrap) */
+    .theme-light, [data-bs-theme="light"] {
+        --bs-body-bg: var(--bs-white); 
+        --bs-body-color: var(--bs-dark); 
+    }
+
+    /* Variáveis de tema Dark (Personalizadas) */
+    .theme-dark, [data-bs-theme="dark"] {
+        --bs-body-bg: #212529; /* Cor de fundo escura (como bg-dark) */
+        --bs-body-color: #f8f9fa; /* Cor de texto clara (como text-light) */
+    }
+    
+    /* APLICAÇÃO: Define as cores de fundo e texto do corpo */
+    body.theme-light { background-color: var(--bs-body-bg); color: var(--bs-body-color); }
+    body.theme-dark { background-color: var(--bs-body-bg); color: var(--bs-body-color); }
+
+
+    /* ---------------------------------------------------- */
+    /* 2. CORREÇÃO DE COMPONENTES NO MODO DARK              */
+    /* (Para evitar que Cards, Modais, etc. fiquem brancos) */
+    /* ---------------------------------------------------- */
+
+    /* Altera a cor de fundo e texto de componentes comuns no modo escuro */
+    body.theme-dark .card,
+    body.theme-dark .modal-content,
+    body.theme-dark .list-group-item,
+    body.theme-dark .offcanvas {
+        background-color: var(--bs-dark) !important; /* Força o fundo escuro */
+        color: var(--bs-white) !important; /* Força o texto claro */
+        border-color: rgba(255, 255, 255, 0.125); /* Ajusta a cor da borda */
+    }
+
+    /* Garante que o cabeçalho e rodapé de modais/cards também fiquem escuros */
+    body.theme-dark .card-header,
+    body.theme-dark .card-footer,
+    body.theme-dark .modal-header,
+    body.theme-dark .modal-footer {
+        background-color: #2c3034 !important; /* Um tom um pouco mais claro que o fundo principal */
+        border-color: rgba(255, 255, 255, 0.125);
+    }
+    
+    /* Garante que o texto dentro de componentes escuros permaneça claro */
+    body.theme-dark .card *,
+    body.theme-dark .modal-content * {
+        /* Usa 'inherit' para herdar a cor do elemento pai mais próximo, se possível */
+        color: inherit; 
+    }
+
+    /* Ajusta cores de input/formulário para melhor contraste no modo dark */
+    body.theme-dark .form-control,
+    body.theme-dark .form-select {
+        background-color: #343a40; /* Fundo do campo mais escuro */
+        color: var(--bs-white);
+        border-color: #495057;
+    }
+    /* Placeholder claro no modo dark */
+    body.theme-dark .form-control::placeholder {
+        color: #adb5bd;
+    }
+    
+</style>
+{% endblock %} 
 
 </head>
-<body class="d-flex flex-column h-100"> {# ADICIONADO: class="d-flex flex-column h-100" #}
+{# O JS cuidará de adicionar as classes theme-dark ou theme-light no body, se não for "auto" #}
+<body class="d-flex flex-column h-100"> 
 
-    {# Inclua seu navbar aqui se ele for comum a TODAS as páginas que estenderem este base.html #}
+    {# Navbar é incluído (presume-se que ele contenha o seletor de modo) #}
     {% block main_navbar %}
         {% include "navbar.html" %} 
     {% endblock main_navbar %}
 
-    <main class="flex-shrink-0 flex-grow-1 teste"> {# ALTERADO: de class="container mt-4" para class="flex-shrink-0" #}
-        <div class="container mt-4"> {# O container e margem foram movidos para dentro da tag main #}
-            {# Inclua suas mensagens aqui, normalmente antes ou logo no início do conteúdo principal #}
+    <main class="flex-shrink-0 flex-grow-1"> 
+        <div class="container mt-4"> 
+            {# Mensagens (alerta) #}
             {% include "messages.html" %} 
+            
             {% block content %}
-                {# Conteúdo principal da página (ex: formulários, tabelas) irá aqui #}
+                {# Conteúdo principal #}
             {% endblock %}
         </div>
     </main>
-
-    {# Seu rodapé. Ele já está fora da tag <main> e possui mt-5 e p-4, o que é bom. #}
     
-    <footer class="bg-dark text-white mt-auto p-4 text-center esconder-na-impressao" style="height: 20px"> {# ADICIONADO: class="mt-auto" para que o footer fique no final da página #}
+    {# Footer #}
+    <footer class="bg-dark text-white mt-auto p-3 text-center esconder-na-impressao">
         <div class="container-fluid">
+            {# Removida a altura fixa (style="height: 20px"), pois p-3 e mt-auto já o posicionam corretamente. #}
             <p class="mb-0">&copy; {% now "Y" %} ORCRIM - ARI Sul. Todos os direitos reservados.</p>
         </div>
     </footer>
     
 
-    {# Bootstrap JavaScript (UM SÓ AQUI) #}
-    <!--<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>-->
-    <script src="{% static 'controle/js/bootstrap.bundle.min.js' %}"></script>
-    {# 1. Carregar jQuery - Use um CDN para simplicidade ou sirva localmente com {% static %} #}
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-
-    {# 2. Carregar jQuery Mask Plugin - Use um CDN para simplicidade ou sirva localmente com {% static %} #}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+    {# ORDEM CORRETA DE SCRIPTS: jQuery > Plugins > Bootstrap JS > Scripts Personalizados #}
     
+    {# 1. jQuery #}
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" 
+            integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" 
+            crossorigin="anonymous"></script>
+
+    {# 2. Plugins (Máscara, Select2) #}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
+    {# 3. Bootstrap JavaScript (Local) #}
+    <script src="{% static 'controle/js/bootstrap.bundle.min.js' %}"></script>
+    
+    {# 4. Scripts Personalizados (Tema, Mensagens) #}
     {% block extra_body_js %}
+        {# Lógica de Tema - Envolvida em uma função IIFE (Immediately Invoked Function Expression) #}
+        <script>
+            (() => {
+                'use strict';
+                const STORAGE_KEY = 'theme-preference';
+
+                const getStoredTheme = () => localStorage.getItem(STORAGE_KEY);
+                const setStoredTheme = theme => localStorage.setItem(STORAGE_KEY, theme);
+
+                const getPreferredTheme = () => {
+                    const storedTheme = getStoredTheme();
+                    if (storedTheme) {
+                        return storedTheme;
+                    }
+                    // Retorna 'dark' ou 'light' com base na preferência do sistema
+                    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+                };
+                
+                // FUNÇÃO PRINCIPAL
+                const setTheme = theme => {
+                    const actualTheme = theme === 'auto' ? getPreferredTheme() : theme;
+                    const isDark = actualTheme === 'dark';
+                    const body = document.body;
+                    const navbar = document.getElementById('main-navbar'); 
+
+                    // 1. Aplica o tema ao BODY e ao HTML (para customização do Bootstrap)
+                    body.classList.remove('theme-light', 'theme-dark');
+                    body.classList.add(`theme-${actualTheme}`);
+                    document.documentElement.setAttribute('data-bs-theme', actualTheme);
+
+                    // 2. Aplica o tema ao Navbar (substituindo classes bg-*)
+                    if (navbar) {
+                        navbar.classList.remove('bg-light', 'bg-dark');
+                        navbar.classList.add(isDark ? 'bg-dark' : 'bg-light');
+                        navbar.setAttribute('data-bs-theme', actualTheme);
+                    }
+                };
+
+                // Execução Imediata: Carrega o tema preferido
+                setTheme(getPreferredTheme());
+
+                // Observa a mudança de tema do sistema operacional
+                window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+                    const storedTheme = getStoredTheme();
+                    // Só re-aplica se o tema for 'auto'
+                    if (storedTheme === 'auto') {
+                      setTheme('auto');
+                    }
+                });
+
+                // Event Listener para os botões do dropdown
+                document.addEventListener('DOMContentLoaded', () => {
+                    document.querySelectorAll('[data-bs-theme-value]').forEach(toggle => {
+                        toggle.addEventListener('click', () => {
+                            const theme = toggle.getAttribute('data-bs-theme-value');
+                            setStoredTheme(theme);
+                            setTheme(theme);
+                        });
+                    });
+                });
+            })();
+        </script>
+
         {# Script para remover mensagens de sucesso/erro automaticamente #}
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 setTimeout(function() {
                     var alertElement = document.querySelector('.alert');
                     if (alertElement) {
-                        alertElement.classList.add('fade');
-                        alertElement.classList.remove('show');
-                        alertElement.addEventListener('transitionend', function() {
-                            alertElement.remove();
+                        // Usa a função nativa do Bootstrap para fechar o alerta
+                        var bsAlert = new bootstrap.Alert(alertElement);
+                        bsAlert.close();
+
+                        // Opcional: Remover o elemento completamente do DOM após o fade-out
+                        alertElement.addEventListener('closed.bs.alert', function() {
+                             alertElement.remove();
                         });
                     }
                 }, 5000); // Mensagens desaparecem após 5 segundos

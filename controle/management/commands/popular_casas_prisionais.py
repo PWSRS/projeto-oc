@@ -13,6 +13,12 @@ class Command(BaseCommand):
                 "Charqueadas",
                 "unid_esp",  # deve ser o valor da escolha, não o texto
             ),
+            (
+                "Presídio Regional de Pelotas",
+                "PRP",
+                "Pelotas",
+                "5dpr",  # deve ser o valor da escolha, não o texto
+            ),
         ]
 
         self.stdout.write(

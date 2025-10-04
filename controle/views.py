@@ -245,9 +245,6 @@ def tipo_estrutura_view(request):
     return JsonResponse({"tipo_estrutura": casa.tipo_estrutura if casa else "completa"})
 
 
-# TODO Busca por presídio (listar todos os detentos, com campo de busca por alcunha/nome)
-
-
 def listar_por_galeria(request, galeria_id):
     galeria = Galeria.objects.get(id=galeria_id)
     alojamentos = Alojamento.objects.filter(cela__galeria=galeria)

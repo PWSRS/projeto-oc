@@ -52,14 +52,14 @@
   <tbody>
     {% for individuo in object_list %}
     <tr class="align-middle">
-        <td>
+        <td class="text-center">
           {% if individuo.foto %} {# Verifique se a imagem existe antes de tentar exibi-la #}
             <img src="{{ individuo.foto.url }}" alt="{{ individuo.nome }}" style="width: 50px; height: 50px; object-fit: cover;" class="img-thumbnail">
           {% else %}
             <span>Sem foto</span>
           {% endif %}
         </td>
-        <td>
+        <td class="text-center">
           <a href="{% url "individuo_detail" individuo.pk %}">{{ individuo.nome }}</a>
         </td>
         <td class="text-center">{{ individuo.data_nasc|date:"d/m/Y" }}</td>

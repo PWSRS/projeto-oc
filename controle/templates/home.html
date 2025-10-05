@@ -1,20 +1,68 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}ARI Sul{% endblock %} {# Opcional: para customizar o título da aba #}
+{% block title %}ARI Sul{% endblock %}
 
-{% block content %} {# <-- INÍCIO DO BLOCO DE CONTEÚDO #}
+{# ---------------------------------------------------------------- #}
+{# NOVO BLOCO: Para adicionar o CSS da imagem de fundo #}
+{% block extra_head_css %}
+    <style>
+        /* O CSS da imagem de fundo será colocado aqui ou em um arquivo externo */
+        .home-background {
+            /* Define a altura mínima: 100% da altura da viewport (tela) */
+            min-height: 100vh; 
+            /* Centraliza a imagem no elemento */
+            background-position: center center;
+            /* A imagem cobre o elemento sem repetição */
+            background-size: cover;
+            background-repeat: no-repeat;
+            /* Opcional: Define a imagem de fundo aqui ou no CSS externo */
+            background-image: url("{% static 'controle/img/casarao.jpg' %}");
+            
+            /* Usamos Flexbox para centralizar o conteúdo verticalmente */
+            display: flex;
+            align-items: center; /* Centraliza verticalmente */
+            justify-content: center; /* Centraliza horizontalmente */
+        }
+        
+        .content-overlay {
+            /* Adiciona o escurecimento (overlay) sobre a imagem */
+            background-color: rgba(0, 0, 0, 0.6); /* Preto com 60% de transparência */
+            padding: 50px;
+            border-radius: 10px;
+            text-align: center;
+            /* Ocupa a largura total para centralizar */
+            max-width: 900px; 
+            width: 100%;
+        }
+        
+        /* Ajusta as cores do texto para o overlay escuro */
+        .content-overlay h1, .content-overlay h2, .content-overlay h3 {
+            color: #EEE8AA !important; /* Força o texto a ser branco ou claro */
+            text-shadow: 2px 2px 4px #000000; /* Ajuda a destacar o texto */
+        }
+    </style>
+{% endblock %}
+{# ---------------------------------------------------------------- #}
 
-    <div class="text-center">
-        <img src="{% static 'controle/img/ARI.png' %}" class="img-fluid" style="max-width: 130px;">
- 
-        <h1 class="text-warning-emphasis inicio">Agência Regional de Inteligência - ARI Sul</h1>
-        <h2 class="text-danger-emphasis inicio">Organizações Criminosas (ORCRIM)</h2>
-        <h3 class="text-danger-emphasis inicio">Sistema Penitenciário Gaúcho</h3>
+
+{% block content %}
+
+    <div class="home-background">
+        
+        <div class="content-overlay">
+            <img src="{% static 'controle/img/ARI.png' %}" class="img-fluid mb-4" style="max-width: 130px;">
+            
+            <h1 class="inicio">Agência Regional de Inteligência - ARI Sul</h1>
+            <h2 class="inicio">Organizações Criminosas</h2>
+            <h3 class="inicio">Sistema Penitenciário Gaúcho</h3>
+        </div>
+        
     </div>
-{% endblock content %} {# <-- FIM DO BLOCO DE CONTEÚDO #}
 
-{# Se você tiver algum JS específico para a home.html, coloque aqui: #}
+{% endblock content %}
+
+{# Se você não quer o navbar fixo, talvez queira remover o padding-top do body, mas isso depende do seu "base.html" #}
 {% block extra_body_js %}
 <script>
     // Seus scripts específicos para a home.html, se houver

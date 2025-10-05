@@ -80,7 +80,9 @@ class Orcrim(models.Model):
         choices=ORCRIM_ABRANGENCIA_CHOICES,
         verbose_name="Área de Abrangência",
     )
-
+    logo_orcrim = models.ImageField(
+        upload_to="fotos/", blank=True, null=True, verbose_name="Logo da Orcrim"
+    )
 
     class Meta:
         verbose_name = "Orcrim"

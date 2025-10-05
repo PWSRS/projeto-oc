@@ -1,17 +1,20 @@
-:root {
-    --body-bg-color: #fff;
-    --body-color: #000;
-    
-}
-
-@media (prefers-color-scheme: dark) {
-    :root {
-        --body-bg-color: #121212;
-        --body-color: #e0e0e0;
-    }
-}
-
 body {
-    background-color: var(--body-bg-color);
-    color: var(--body-color);
+    /* Compensa o navbar fixo, garantindo que o conteúdo não fique escondido */
+    padding-top: 56px;
+    /* Transição suave para mudança de tema (opcional) */
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.card {
+    /* Define um grande raio para o card inteiro */
+    border-radius: 20px !important;
+    /* Remove a borda padrão do Bootstrap*/
+    border: none !important;
+    /* Adiciona sombra*/
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Garante que o corpo do card se ajuste perfeitamente */
+.card-body {
+    border-radius: 20px !important;
 }

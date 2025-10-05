@@ -136,7 +136,24 @@ JAZZMIN_SETTINGS = {
         "auth.user": "fas fa-user",
         "auth.Group": "fas fa-users",
         "controle.Individuo": "fas fa-user-secret",
+        "controle.Cidade": "fas fa-solid fa-city",
+        "controle.CasaPrisional": "fa-solid fa-building",
+        "controle.Pavilhao": "fa-solid fa-warehouse",
+        "controle.Galeria": "fa-solid fa-archway",
+        "controle.Cela": "fa-solid fa-door-closed",
+        "controle.Alojamento": "fa-solid fa-bed",
+        "controle.Orcrim": "fa-solid fa-users",
     },
+    "order_with_respect_to": [
+        "controle.Individuo",  # Este modelo aparecerá primeiro.
+        "auth",  # Coloca a App 'auth' (Usuários e Grupos) logo em seguida.
+        "controle.Orcrim",
+        "controle.CasaPrisional",
+        "controle.Pavilhao",
+        "controle.Galeria",
+        "controle.Cela",
+        "controle.Alojamento",
+    ],
     # Welcome text on the login screen
     "welcome_sign": "Bem-vindo(a) ao SCP",
     # Copyright on the footer

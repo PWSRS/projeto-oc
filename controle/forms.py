@@ -55,7 +55,12 @@ class IndividuoForm(forms.ModelForm):
                 attrs={"class": "form-control", "type": "date"}, format="%Y-%m-%d"
             ),
             "codigo_detento": forms.TextInput(attrs={"class": "form-control"}),
-            "alcunha": forms.TextInput(attrs={"class": "form-control"}),
+            "alcunha": forms.TextInput(
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "Separe por vírgulas as alcunhas.",
+                }
+            ),
             "foto": forms.ClearableFileInput(attrs={"class": "form-control"}),
             "situacao_penal": forms.Select(attrs={"class": "form-control"}),
             "orcrim": forms.Select(attrs={"class": "form-control"}),
@@ -126,6 +131,7 @@ class OrcrimForm(forms.ModelForm):
                     "class": "form-control",
                 }
             ),
+            "logo_orcrim": forms.ClearableFileInput(attrs={"class": "form-control"}),
         }
 
 

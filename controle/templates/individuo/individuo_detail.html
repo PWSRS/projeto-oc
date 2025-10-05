@@ -1,52 +1,84 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Detalhes{% endblock %} 
+{% block title %}Detalhes - {{ individuo.nome }}{% endblock %} 
 
 {% block content %}
-
 <title>Detalhes do Indivíduo</title>
 
-<body>
-    <div class="card">
-        <div class="card-body text-bg-info p-3 text-center">
-            <h3>Detalhes do Indivíduo: <strong>{{ individuo.nome }}</strong></h3>
-        </div>
+<div class="card shadow-lg mb-4">
+    <div class="card-header text-bg-info text-center">
+        <h3 class="mb-0">Detalhes de: <strong>{{ individuo.nome }}</strong></h3>
     </div>
-    <br>
     
+    <div class="card-body">
+        
+        <div class="text-center mb-4">
+            {% if individuo.foto %}
+                <img src="{{ individuo.foto.url }}" 
+                     alt="{{ individuo.nome }}" 
+                     class="img-fluid rounded-circle border border-5 border-info" 
+                     style="width: 150px; height: 150px; object-fit: cover;">
+            {% else %}
+                <div class="bg-light text-muted p-4 rounded-circle d-inline-block border border-3 border-secondary" style="width: 150px; height: 150px; line-height: 120px;">
+                    Sem Foto
+                </div>
+            {% endif %}
+            <h4 class="mt-3">{{ individuo.nome }}</h4>
+        </div>
+        
+        <hr>
+        
+        <dl class="row">
+            
+            <dt class="col-sm-3">Nome Completo</dt>
+            <dd class="col-sm-9"><strong>{{ individuo.nome}}</strong></dd>
 
-    <div class="detail-item">
-        <table class="table table-bordered table-sm text-center">
-            <thead class="table-dark text-cente">
-                <tr class="align-middle">
-                    <th>#</th>
-                    <th>Nome</th>
-                    <th>RG/CPF</th>
-                    <th>Cód. Preso</th>
-                    <th>Orcrim</th>
-                    <th>Situação</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr class="align-middle">
-                    <td>
-                        {% if individuo.foto %}
-                            <img src="{{ individuo.foto.url }}" alt="{{ individuo.nome }}" style="width: 70px; height: 70px; object-fit: cover;" class="img-thumbnail"> {# Ajustei o estilo da imagem #}
-                        {% else %}
-                            <span>Sem Foto</span>
-                        {% endif %}
-                    </td>
-                    <td><strong>{{ individuo.nome }}</strong></td>
-                    <td>{{ individuo.rg_cpf }}</td> {# Assumindo que este campo se chama rg_cpf #}
-                    <td>{{ individuo.codigo_detento }}</td> {# Assumindo que este campo se chama codigo_preso #}
-                    <td>{{ individuo.orcrim.nome }}</td> {# Acessando o nome da Orcrim associada #}
-                    <td>{{ individuo.get_situacao_penal_display }}</td> {# Assumindo que este campo se chama situacao #}
-                </tr>
-            </tbody>
-        </table>
+            <dt class="col-sm-3">RG/CPF</dt>
+            <dd class="col-sm-9">{{ individuo.rg_cpf|default:"Não Informado" }}</dd> 
+
+            <dt class="col-sm-3">Cód. Detento/Preso</dt>
+            <dd class="col-sm-9">{{ individuo.codigo_detento|default:"N/A" }}</dd>
+
+            <dt class="col-sm-3">Organização Criminosa</dt>
+            <dd class="col-sm-9">
+                {% if individuo.orcrim %}
+                    <strong>{{ individuo.orcrim.nome }}</strong>
+                {% else %}
+                    Sem Orcrim Associada
+                {% endif %}
+            </dd>
+
+            <dt class="col-sm-3">Situação Penal</dt>
+            <dd class="col-sm-9">
+                <span class="badge 
+                    {% if individuo.situacao_penal == 'recolhido' %} text-bg-danger
+                    {% elif individuo.situacao_penal == 'recolhido_tornozeleira' %} text-bg-primary
+                    {% elif individuo.situacao_penal == 'liberdade' %} text-bg-success
+                    {% elif individuo.situacao_penal == 'foragido' %} text-bg-warning
+                    {% elif individuo.situacao_penal == 'procurado' %} text-bg-warning
+                    {% elif individuo.situacao_penal == 'removido' %} text-bg-gray
+                    {% else %} text-bg-secondary
+                    {% endif %}">
+                    {{ individuo.get_situacao_penal_display }} {{ individuo.casa_prisional|default:'' }}
+                </span>
+            </dd>
+            
+            
+            <dt class="col-sm-3">Data de Nascimento</dt>
+            <dd class="col-sm-9">{{ individuo.data_nasc|date:"d/m/Y" }}</dd> 
+            
+            
+        </dl>
+        
     </div>
-
-    <a href="{% url 'individuo_list' %}" class="btn btn-secondary mt-3">Voltar</a> {# Ajustei o texto do botão #}
+    
+    <div class="card-footer text-end">
+        <a href="{% url 'individuo_list' %}" class="btn btn-secondary me-2">
+            <i class="fas fa-arrow-left"></i> Voltar
+        </a>
+        {# <a href="{% url 'individuo_update' individuo.pk %}" class="btn btn-primary">Editar</a> #}
+    </div>
+</div>
     
 {% endblock content %}

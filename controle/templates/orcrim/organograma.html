@@ -15,9 +15,14 @@
 </div>
 <br>
 
+
 <div style="margin-bottom: 20px;">
     <label for="selecaoOrcrim">Selecione a Orcrim:</label>
     <select id="selecaoOrcrim"></select>
+</div>
+
+<div id="logo-container">
+    <p class="text-muted"></p>
 </div>
 
 <div id="legenda-situacao-penal">
@@ -103,6 +108,8 @@
 
         // 2. Carrega e desenha o organograma
         async function carregarOrganograma(orcrimId) {
+            const logoContainer = document.getElementById('logo-container');
+            logoContainer.innerHTML = '';
             try {
                 const response = await fetch(`/api/orcrim/${orcrimId}/individuos/`);
                 const individuos = await response.json();
@@ -123,9 +130,23 @@
                 }
 
                 individuos.forEach(individuo => {
+                    let primeiraAlcunha = "";
+                    if (individuo.alcunha){
+                        const alcunhasArray = individuo.alcunha.split(/[,/;]/);
+                        primeiraAlcunha = alcunhasArray[0].trim();
+
+                        if(primeiraAlcunha === ""){
+                            primeiraAlcunha = null;
+                        }
+                    }
+
+                    const labelText = `${individuo.nome}${primeiraAlcunha ? '\n(' + primeiraAlcunha + ')' : ''}`;
+
+
+
                     nodes.push({
                         id: individuo.id,
-                        label: `${individuo.nome}${individuo.alcunha ? '\n(' + individuo.alcunha + ')' : ''}`,
+                        label: labelText,
                         image: individuo.foto || '{% static 'images/default_photo.png' %}',
                         shape: 'circularImage',
                         // AQUI ESTÁ A ALTERAÇÃO: usa a cor da situação penal

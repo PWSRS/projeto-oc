@@ -27,7 +27,7 @@
             </thead>
             <tbody>
                 {% for detento in detentos %}
-                    <tr>
+                    <tr class="align-middle">
                         <td class="text-center">
                             {% if detento.foto %}
                                 <img src="{{ detento.foto.url }}" alt="Foto de {{ detento.nome }}" width="50" height="50">
@@ -35,7 +35,7 @@
                                 Sem foto
                             {% endif %}
                         </td>
-                        <td>{{ detento.nome }}</td>
+                        <td class="text-center">{{ detento.nome }}</td>
                         <td class="text-center">{{ detento.rg_cpf }}</td>
                         <td class="text-center">{{ detento.data_nasc|date:"d/m/Y" }}</td>
                         <td class="text-center">{{ detento.alcunha|default:"N/A"}}</td>

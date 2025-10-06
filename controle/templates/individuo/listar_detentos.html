@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Disponetalhes{% endblock %} 
+{% block title %}Detalhes{% endblock %} 
 
 {% block content %}
 <div class="card">
@@ -12,7 +12,7 @@
 <br>    
        <a href="{% url 'selecionar_presidio' %}"><i class="bi bi-arrow-return-left"></i> Voltar</a>
     {% if detentos %}
-        <table class="table table-bordered table-sm">
+        <table class="table table-striped table-hover">
             <thead class="table-dark text-center">
                 <tr class="align-middle">
                     <th>Foto</th>

@@ -260,7 +260,9 @@ def listar_por_galeria(request, galeria_id):
 
 def selecionar_presidio(request):
     # Lista todos os presídios
-    presidios = CasaPrisional.objects.all()
+    presidios = CasaPrisional.objects.all().prefetch_related(
+        "galeria_set", "galeria_set__alojamento_set"
+    )
     context = {
         "presidios": presidios,
     }

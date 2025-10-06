@@ -185,6 +185,13 @@ class Alojamento(models.Model):
     )
     cela = models.ForeignKey(Cela, on_delete=models.CASCADE, null=True, blank=True)
     nome = models.CharField(max_length=100, verbose_name="Alojamento", blank=True)
+    orcrim = models.ForeignKey(
+        "Orcrim",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        verbose_name="Orcrim Relacionada",
+    )
 
     class Meta:
         verbose_name = "Alojamento"

@@ -3,8 +3,13 @@
 
 {% block title %}Detalhes - {{ individuo.nome }}{% endblock %} 
 
+{% block extra_head_css %}
+    <link rel="stylesheet" href="{% static 'controle/css/individuo_detail.css' %}">
+{% endblock %}
+
 {% block content %}
 <title>Detalhes do Indivíduo</title>
+
 
 <div class="card shadow-lg mb-4">
     <div class="card-header text-bg-info text-center">
@@ -17,68 +22,104 @@
             {% if individuo.foto %}
                 <img src="{{ individuo.foto.url }}" 
                      alt="{{ individuo.nome }}" 
-                     class="img-fluid rounded-circle border border-5 border-info" 
+                     class="img-fluid rounded-circle border border-5 border-light" 
                      style="width: 150px; height: 150px; object-fit: cover;">
             {% else %}
                 <div class="bg-light text-muted p-4 rounded-circle d-inline-block border border-3 border-secondary" style="width: 150px; height: 150px; line-height: 120px;">
                     Sem Foto
                 </div>
             {% endif %}
-            <h4 class="mt-3">{{ individuo.nome }}</h4>
         </div>
         
         <hr>
         
-        <dl class="row">
+        <div class="d-flex justify-content-between align-items-start">
             
-            <dt class="col-sm-3">Nome Completo</dt>
-            <dd class="col-sm-9"><strong>{{ individuo.nome}}</strong></dd>
+            <dl class="row w-75"> 
+                
+                <dt class="col-sm-4">RG/CPF</dt>
+                <dd class="col-sm-8">{{ individuo.rg_cpf|default:"Não Informado" }}</dd>
+                
+                <dt class="col-sm-4">Data de Nascimento</dt>
+                <dd class="col-sm-8">{{ individuo.data_nasc|date:"d/m/Y" }}</dd> 
 
-            <dt class="col-sm-3">RG/CPF</dt>
-            <dd class="col-sm-9">{{ individuo.rg_cpf|default:"Não Informado" }}</dd> 
-
-            <dt class="col-sm-3">Cód. Detento/Preso</dt>
-            <dd class="col-sm-9">{{ individuo.codigo_detento|default:"N/A" }}</dd>
-
-            <dt class="col-sm-3">Organização Criminosa</dt>
-            <dd class="col-sm-9">
-                {% if individuo.orcrim %}
-                    <strong>{{ individuo.orcrim.nome }}</strong>
-                {% else %}
-                    Sem Orcrim Associada
+                {% if individuo.alcunha %}
+                <dt class="col-sm-4">Alcunha</dt>
+                <dd class="col-sm-8">{{ individuo.alcunha}}</dd>
                 {% endif %}
-            </dd>
 
-            <dt class="col-sm-3">Situação Penal</dt>
-            <dd class="col-sm-9">
-                <span class="badge 
-                    {% if individuo.situacao_penal == 'recolhido' %} text-bg-danger
-                    {% elif individuo.situacao_penal == 'recolhido_tornozeleira' %} text-bg-primary
-                    {% elif individuo.situacao_penal == 'liberdade' %} text-bg-success
-                    {% elif individuo.situacao_penal == 'foragido' %} text-bg-warning
-                    {% elif individuo.situacao_penal == 'procurado' %} text-bg-warning
-                    {% elif individuo.situacao_penal == 'removido' %} text-bg-gray
-                    {% else %} text-bg-secondary
-                    {% endif %}">
-                    {{ individuo.get_situacao_penal_display }} {{ individuo.casa_prisional|default:'' }}
-                </span>
-            </dd>
+                <dt class="col-sm-4">Cód. Detento/Preso</dt>
+                <dd class="col-sm-8">{{ individuo.codigo_detento|default:"N/A" }}</dd>
+
+                <dt class="col-sm-4">Organização Criminosa</dt>
+                <dd class="col-sm-8">
+                    {% if individuo.orcrim %}
+                        <strong>{{ individuo.orcrim.nome }}</strong>
+                    {% else %}
+                        Sem Orcrim Associada
+                    {% endif %}
+                </dd>
+
+                <dt class="col-sm-4">Nível na Orcrim</dt>
+                <dd class="col-sm-8">{{ individuo.get_nivel_orcrim_display|default:"N/A" }}</dd>
+
+                <dt class="col-sm-4">Situação Penal</dt>
+                <dd class="col-sm-8">
+                    <span class="badge 
+                        {% if individuo.situacao_penal == 'recolhido' %} text-bg-danger
+                        {% elif individuo.situacao_penal == 'recolhido_tornozeleira' %} text-bg-primary
+                        {% elif individuo.situacao_penal == 'liberdade' %} text-bg-success
+                        {% elif individuo.situacao_penal == 'foragido' %} text-bg-warning
+                        {% elif individuo.situacao_penal == 'procurado' %} text-bg-warning
+                        {% elif individuo.situacao_penal == 'removido' %} text-bg-gray
+                        {% else %} text-bg-secondary
+                        {% endif %}">
+                        {{ individuo.get_situacao_penal_display }} {{ individuo.casa_prisional|default:'' }}
+                    </span>
+                </dd>
+
+                <dt class="col-sm-4">Regime</dt>
+                <dd class="col-sm-8">{{ individuo.get_regime_display|default:"" }}</dd>
+
+                {% if individuo.pavilhao%}
+                <dt class="col-sm-4">Pavilhão</dt>
+                <dd class="col-sm-8">{{ individuo.pavilhao|default:"" }}</dd>
+                {% endif %}
+
+                {% if individuo.galeria %}
+                <dt class="col-sm-4">Galeria</dt>
+                <dd class="col-sm-8">{{ individuo.galeria|default:"" }}</dd>
+                {% endif %}
+
+                {% if individuo.cela %}
+                <dt class="col-sm-4">Cela</dt>
+                <dd class="col-sm-8">{{ individuo.cela|default:"" }}</dd>
+                {% endif %}
+
+                {% if individuo.alojamento %}
+                <dt class="col-sm-4">Alojamento</dt>
+                <dd class="col-sm-8">{{ individuo.alojamento|default:"" }}</dd>
+                {% endif %}
+                
+            </dl>
             
+            <div id="logo-orcrim" class="flex-shrink-0 text-center ms-3">
+                {% if individuo.orcrim.logo_orcrim %}
+                    <p class="mb-1 text-muted small">Logo da Orcrim:</p>
+                    <img src="{{ individuo.orcrim.logo_orcrim.url }}" style="max-width: 200px; height: auto; border: 1px solid #ddd; padding: 5px;">
+                {% else %}
+                    <span class="text-muted small">Sem Logo</span>
+                {% endif %}
+            </div>
             
-            <dt class="col-sm-3">Data de Nascimento</dt>
-            <dd class="col-sm-9">{{ individuo.data_nasc|date:"d/m/Y" }}</dd> 
-            
-            
-        </dl>
-        
-    </div>
-    
+        </div>
+        </div>
     <div class="card-footer text-end">
         <a href="{% url 'individuo_list' %}" class="btn btn-secondary me-2">
             <i class="fas fa-arrow-left"></i> Voltar
         </a>
         {# <a href="{% url 'individuo_update' individuo.pk %}" class="btn btn-primary">Editar</a> #}
     </div>
-</div>
     
+</div>
 {% endblock content %}

@@ -3,44 +3,57 @@
     width: 100%;
     height: 600px;
     border: 1px solid lightgray;
+    border-radius: 10px;
+    padding-top: 100px;
 }
+/* 2. Define o estilo e a posição da legenda.
+*/
 #legenda-situacao-penal {
-    position: absolute;
-    bottom: 125px;
-    right: 20px;
-    background: white;
+    /* CRUCIAL: Tira o elemento do fluxo normal e o posiciona */
+    position: absolute; 
+    
+    /* Posição no canto superior direito */
+    top: 260px;
+    right: 100px;
+    
+    /* Estilo visual da caixa */
+    background-color: rgba(255, 255, 255, 0.9); /* Fundo branco semi-transparente */
     border: 1px solid #ccc;
     padding: 10px;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    font-family: sans-serif;
-    z-index: 10; /* Garante que a legenda fique acima do organograma */
+    border-radius: 10px;
+    
+    /* Garante que a legenda fique na frente do organograma */
+    z-index: 10; 
+    
+    /* Opções para que o texto não quebre */
+    white-space: nowrap; 
+    font-size: 0.9em;
 }
 
-#legenda-situacao-penal h4 {
-    margin-top: 0;
-    border-bottom: 1px solid #ccc;
-    padding-bottom: 5px;
-}
-
-.legenda-item {
+/* 3. Estilo dos itens da legenda
+*/
+#legenda-situacao-penal .legenda-item {
     display: flex;
     align-items: center;
     margin-bottom: 5px;
 }
 
-.cor-legenda {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%; /* Transforma em círculo */
-    border: 1px solid #888;
-    margin-right: 10px;
+/* 4. Estilo das bolinhas de cor
+*/
+#legenda-situacao-penal .cor-legenda {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 8px;
+    border: 1px solid #333; /* Para visibilidade, especialmente no caso da cor cinza/branca */
 }
+
 
 #logo-container {
     text-align: center;
     margin: 0 0 20px 0; /* Margem apenas abaixo do container */
-    min-height: 100px; /* Garante que o espaço não 'salte' ao carregar */
+    min-height: 5px; /* Garante que o espaço não 'salte' ao carregar */
     display: flex; /* Adiciona flex para centralização e alinhamento */
     justify-content: center;
     align-items: center;
@@ -52,4 +65,25 @@
     border: 3px solid #0d6efd; /* Borda azul para destaque */
     border-radius: 50%; /* Torna a imagem circular, se preferir */
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.card {
+    padding-top: 56px;
+    /* Define um grande raio para o card inteiro */
+    border-radius: 20px !important;
+    /* Remove a borda padrão do Bootstrap*/
+    border: none !important;
+    /* Adiciona sombra*/
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Garante que o corpo do card se ajuste perfeitamente */
+.card-body {
+    border-radius: 20px !important;
+}
+
+p{
+    font-size: 14px;
+    color: #e4573e !important; /* Cor cinza padrão do Bootstrap */
+    text-align: center;
 }

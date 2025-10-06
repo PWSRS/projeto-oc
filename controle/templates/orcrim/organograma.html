@@ -8,13 +8,14 @@
 {% endblock %}
 
 {% block content %}
+
 <div class="card">
-  <div class="card-body text-bg-info p-3 text-center">
-   <h3>Organograma por Organização Criminosa</h3>
+  <div class="card-body text-bg-primary p-3 text-center">
+    <h3>Organograma das Organizaçoes Criminosas</h3>
   </div>
 </div>
-<br>
 
+<br>
 
 <div style="margin-bottom: 20px;">
     <label for="selecaoOrcrim">Selecione a Orcrim:</label>
@@ -25,34 +26,37 @@
     <p class="text-muted"></p>
 </div>
 
-<div id="legenda-situacao-penal">
-  <h4>Situação Penal</h4>
-  <div class="legenda-item">
-    <span class="cor-legenda" style="background-color: red;"></span>
-    Recolhido
-  </div>
-  <div class="legenda-item">
-    <span class="cor-legenda" style="background-color: yellow;"></span>
-    Foragido / Procurado
-  </div>
-  <div class="legenda-item">
-    <span class="cor-legenda" style="background-color: green;"></span>
-    Liberdade
-  </div>
-  <div class="legenda-item">
-    <span class="cor-legenda" style="background-color: blue;"></span>
-    Recolhido Tornozeleira
-  </div>
-  <div class="legenda-item">
-    <span class="cor-legenda" style="background-color: gray;"></span>
-    Removido
-  </div>
+
+<div id="organograma-container"> 
+    
+    <div id="legenda-situacao-penal">
+      <h4>Situação Penal</h4>
+      <div class="legenda-item">
+        <span class="cor-legenda" style="background-color: red;"></span>
+        Recolhido
+      </div>
+      <div class="legenda-item">
+        <span class="cor-legenda" style="background-color: yellow;"></span>
+        Foragido / Procurado
+      </div>
+      <div class="legenda-item">
+        <span class="cor-legenda" style="background-color: green;"></span>
+        Liberdade
+      </div>
+      <div class="legenda-item">
+        <span class="cor-legenda" style="background-color: blue;"></span>
+        Recolhido Tornozeleira
+      </div>
+      <div class="legenda-item">
+        <span class="cor-legenda" style="background-color: gray;"></span>
+        Removido
+      </div>
+    </div>
+
+    <div id="organograma"></div>
+
 </div>
-
-<div id="organograma"></div>
-
 {% endblock content %}
-
 {% block extra_body_js %}
 <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
 <script>

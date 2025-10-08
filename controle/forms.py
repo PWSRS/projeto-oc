@@ -1,3 +1,4 @@
+import re
 from django import forms
 from .models import Individuo, Orcrim, CasaPrisional, Cidade, Pavilhao, Alojamento
 from django.db.models.signals import post_save
@@ -6,73 +7,37 @@ from django.core.exceptions import ValidationError
 
 
 class IndividuoForm(forms.ModelForm):
+
+    # MÉTODO DE LIMPEZA E VALIDAÇÃO DO CAMPO RG/CPF
     def clean_rg_cpf(self):
         rg_cpf = self.cleaned_data.get("rg_cpf")
 
         if rg_cpf:
-            # 1. Remove qualquer caractere que não seja número
-            rg_cpf_numerico = "".join(filter(str.isdigit, rg_cpf))
+            # 1. Limpeza garantida no back-end: remove todos os caracteres não-dígitos.
+            # Isso transforma "000.000.000-00" em "00000000000" (11 dígitos).
+            rg_cpf_limpo = re.sub(r"\D", "", rg_cpf)
 
-            # 2. Verifica se o campo tem 10 ou 11 dígitos
-            if len(rg_cpf_numerico) not in [10, 11]:
+            # 2. Verifica a validade do comprimento após a limpeza.
+            if len(rg_cpf_limpo) not in [10, 11]:
                 raise ValidationError(
                     "O campo RG/CPF deve ter 10 dígitos (para RG) ou 11 dígitos (para CPF)."
                 )
 
-        return rg_cpf_numerico
+            # 3. Retorna o valor limpo (10 ou 11 dígitos) que será salvo no banco.
+            return rg_cpf_limpo
 
-    class Meta:
-        model = Individuo
-        fields = [
-            "nome",
-            "rg_cpf",
-            "data_nasc",
-            "codigo_detento",
-            "alcunha",
-            "foto",
-            "situacao_penal",
-            "orcrim",
-            "regime",
-            "casa_prisional",
-            "pavilhao",
-            "galeria",
-            "cela",
-            "alojamento",
-            "observacao",
-            "nivel_orcrim",
-        ]
+        return rg_cpf  # Retorna None/NoneType se o campo for opcional e vazio
 
-        widgets = {
-            "nome": forms.TextInput(attrs={"class": "form-control"}),
-            "rg_cpf": forms.TextInput(
-                attrs={
-                    "class": "form-control",
-                    "pattern": r"[\d]{10,11}",
-                    "title": "Digite 10 dígitos para RG ou 11 para CPF (apenas números).",
-                }
-            ),
-            "data_nasc": forms.DateInput(
-                attrs={"class": "form-control", "type": "date"}, format="%Y-%m-%d"
-            ),
-            "codigo_detento": forms.TextInput(attrs={"class": "form-control"}),
-            "alcunha": forms.TextInput(
-                attrs={
-                    "class": "form-control",
-                    "placeholder": "Separe por vírgulas as alcunhas.",
-                }
-            ),
-            "foto": forms.ClearableFileInput(attrs={"class": "form-control"}),
-            "situacao_penal": forms.Select(attrs={"class": "form-control"}),
-            "orcrim": forms.Select(attrs={"class": "form-control"}),
-            "nivel_orcrim": forms.Select(attrs={"class": "form-control"}),
-            "regime": forms.Select(attrs={"class": "form-control"}),
-            "casa_prisional": forms.Select(attrs={"class": "form-control"}),
-            "pavilhao": forms.Select(attrs={"class": "form-control"}),
-            "galeria": forms.Select(attrs={"class": "form-control"}),
-            "cela": forms.Select(attrs={"class": "form-control"}),
-            "alojamento": forms.Select(attrs={"class": "form-control"}),
-            "observacao": forms.TextInput(attrs={"class": "form-control"}),
-        }
+    def clean_nome(self):
+        # 1. Pega o valor do campo 'nome'
+        nome = self.cleaned_data.get("nome")
+
+        if nome:
+            # 2. Converte para minúsculas e aplica a capitalização (Title Case)
+            nome_formatado = nome.title()
+            return nome_formatado
+
+        return nome
 
     def clean(self):
         cleaned_data = super().clean()
@@ -82,6 +47,7 @@ class IndividuoForm(forms.ModelForm):
         cela = cleaned_data.get("cela")
         alojamento = cleaned_data.get("alojamento")
 
+        # Lógica de validação de estrutura (Mantida como estava)
         if casa_prisional:
             tipo = casa_prisional.tipo_estrutura
 
@@ -117,6 +83,61 @@ class IndividuoForm(forms.ModelForm):
             # Adicione para 'modular' conforme necessário
 
         return cleaned_data
+
+    class Meta:
+        model = Individuo
+        fields = [
+            "nome",
+            "rg_cpf",
+            "data_nasc",
+            "codigo_detento",
+            "alcunha",
+            "foto",
+            "situacao_penal",
+            "orcrim",
+            "regime",
+            "casa_prisional",
+            "pavilhao",
+            "galeria",
+            "cela",
+            "alojamento",
+            "observacao",
+            "nivel_orcrim",
+        ]
+
+        widgets = {
+            "nome": forms.TextInput(attrs={"class": "form-control"}),
+            "rg_cpf": forms.TextInput(
+                attrs={
+                    "class": "form-control",
+                    # O pattern do HTML foi relaxado para aceitar a máscara,
+                    # mas o Python fará a limpeza final.
+                    "pattern": r"[\d\.\-]{10,14}",
+                    "title": "Digite 10 dígitos para RG ou 11 para CPF (apenas números, pontos e traços são removidos).",
+                }
+            ),
+            "data_nasc": forms.DateInput(
+                attrs={"class": "form-control", "type": "date"}, format="%Y-%m-%d"
+            ),
+            "codigo_detento": forms.TextInput(attrs={"class": "form-control"}),
+            "alcunha": forms.TextInput(
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "Separe por vírgulas as alcunhas.",
+                }
+            ),
+            "foto": forms.ClearableFileInput(attrs={"class": "form-control"}),
+            "situacao_penal": forms.Select(attrs={"class": "form-control"}),
+            "orcrim": forms.Select(attrs={"class": "form-control"}),
+            "nivel_orcrim": forms.Select(attrs={"class": "form-control"}),
+            "regime": forms.Select(attrs={"class": "form-control"}),
+            "casa_prisional": forms.Select(attrs={"class": "form-control"}),
+            "pavilhao": forms.Select(attrs={"class": "form-control"}),
+            "galeria": forms.Select(attrs={"class": "form-control"}),
+            "cela": forms.Select(attrs={"class": "form-control"}),
+            "alojamento": forms.Select(attrs={"class": "form-control"}),
+            "observacao": forms.TextInput(attrs={"class": "form-control"}),
+        }
 
 
 class OrcrimForm(forms.ModelForm):

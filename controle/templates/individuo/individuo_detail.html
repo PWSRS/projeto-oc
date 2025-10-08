@@ -1,5 +1,7 @@
 {% extends "base.html" %}
+{% load format_filters %}
 {% load static %}
+
 
 {% block title %}Detalhes - {{ individuo.nome }}{% endblock %} 
 
@@ -36,9 +38,14 @@
         <div class="d-flex justify-content-between align-items-start">
             
             <dl class="row w-75"> 
-                
-                <dt class="col-sm-4">RG/CPF</dt>
-                <dd class="col-sm-8">{{ individuo.rg_cpf|default:"Não Informado" }}</dd>
+                {% if individuo.rg_cpf|length == 10 %}
+                    <dt class="col-sm-4">RG</dt>
+                {% elif individuo.rg_cpf|length == 11 %}
+                    <dt class="col-sm-4">CPF</dt>
+                {% else %}
+                    <dt class="col-sm-4">RG/CPF</dt>
+                {% endif %}
+                <dd class="col-sm-8">{{ individuo.rg_cpf|formatar_cpf_rg|default:"Não Informado" }}</dd>
                 
                 <dt class="col-sm-4">Data de Nascimento</dt>
                 <dd class="col-sm-8">{{ individuo.data_nasc|date:"d/m/Y" }}</dd> 

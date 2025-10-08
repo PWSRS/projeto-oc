@@ -36,7 +36,7 @@
         Recolhido
       </div>
       <div class="legenda-item">
-        <span class="cor-legenda" style="background-color: yellow;"></span>
+        <span class="cor-legenda" style="background-color: orange;"></span>
         Foragido / Procurado
       </div>
       <div class="legenda-item">
@@ -69,7 +69,7 @@
             'foragido': 'orange',
             'procurado': 'orange',
             'liberdade': 'green',
-            'recolhido_tornozeleira': 'yellow',
+            'recolhido_tornozeleira': 'blue',
             'removido': 'gray',
         };
 
@@ -151,7 +151,7 @@
                     nodes.push({
                         id: individuo.id,
                         label: labelText,
-                        image: individuo.foto || '{% static 'images/default_photo.png' %}',
+                        image: individuo.foto || '{% static 'controle/img/image_default.png' %}',
                         shape: 'circularImage',
                         // AQUI ESTÁ A ALTERAÇÃO: usa a cor da situação penal
                         color: { border: situacaoCores[individuo.situacao_penal] || 'gray' }, 

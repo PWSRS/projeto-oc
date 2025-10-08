@@ -203,7 +203,7 @@ class Alojamento(models.Model):
 
 class Individuo(models.Model):
     nome = models.CharField(max_length=100, verbose_name="Nome Completo")
-    rg_cpf = models.CharField(max_length=11, verbose_name="RG/CPF", unique=True)
+    rg_cpf = models.CharField(max_length=14, verbose_name="RG/CPF", unique=True)
     data_nasc = models.DateField()
     alcunha = models.CharField(
         max_length=100, blank=True, null=True, verbose_name="Alcunha"

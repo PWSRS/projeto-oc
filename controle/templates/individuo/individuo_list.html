@@ -41,7 +41,7 @@
     <tr class="align-middle">
       <th>#</th>
       <th>Nome</th>
-      <th>Data nasc</th>
+      <th>Data Nasc.</th>
       <th>Cód. Preso</th>
       <th>Orcrim</th>
       <th>Presídio</th>
@@ -53,13 +53,23 @@
     {% for individuo in object_list %}
     <tr class="align-middle">
         <td class="text-center">
-          {% if individuo.foto %} {# Verifique se a imagem existe antes de tentar exibi-la #}
-            <img src="{{ individuo.foto.url }}" alt="{{ individuo.nome }}" style="width: 50px; height: 50px; object-fit: cover;" class="img-thumbnail">
-          {% else %}
-            <span>Sem foto</span>
-          {% endif %}
+            {% if individuo.foto %} {# Se existir uma foto associada ao indivíduo #}
+                <img 
+                    src="{{ individuo.foto.url }}" 
+                    alt="{{ individuo.nome }}" 
+                    style="width: 50px; height: 50px; object-fit: cover;" 
+                    class="img-thumbnail"
+                >
+            {% else %} {# Se não houver foto, use a imagem default #}
+                <img 
+                    src="{% static 'controle/img/image_default.png' %}" 
+                    alt="Sem foto" 
+                    style="width: 50px; height: 50px; object-fit: cover; background-color: #f8f9fa;" 
+                    class="img-thumbnail"
+                >
+            {% endif %}
         </td>
-        <td class="text-center">
+        <td>
           <a href="{% url "individuo_detail" individuo.pk %}">{{ individuo.nome }}</a>
         </td>
         <td class="text-center">{{ individuo.data_nasc|date:"d/m/Y" }}</td>
@@ -129,29 +139,7 @@
 
 {% block extra_body_js %}
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const searchInput = document.getElementById('search-input');
-    const form = document.querySelector('.d-flex');
-    
-    // 1. Damos um ID ao input para o JS encontrar ele facilmente
-    if (searchInput) {
-        searchInput.addEventListener('input', function() {
-            // Se o valor do campo de busca estiver vazio (após remover espaços)
-            if (this.value.trim() === '') {
-                // Limpa o formulário e envia (ou simplesmente redireciona)
-                
-                // Opção mais simples: Envia o formulário com o campo vazio
-                // A sua View já sabe tratar o campo vazio, retornando a lista completa.
-                //form.submit();
-                
-                // OU, se você quiser apenas garantir que a URL volte ao estado base:
-                window.location.href = window.location.pathname; 
-            }
-        });
-    }
-});
-</script>
+<script src="{% static 'controle/js/individuo_list.js' %}"></script>
 {% endblock extra_body_js %}
 
 {% endblock content %}

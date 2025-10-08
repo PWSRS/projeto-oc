@@ -3,6 +3,7 @@ body {
     padding-top: 56px;
     /* Transição suave para mudança de tema (opcional) */
     transition: background-color 0.3s, color 0.3s;
+    font-family: Verdana, Geneva, Tahoma, sans-serif
 }
 
 .card {

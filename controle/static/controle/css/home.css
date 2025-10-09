@@ -1,0 +1,34 @@
+/* O CSS da imagem de fundo será colocado aqui ou em um arquivo externo */
+.home-background {
+    /* Define a altura mínima: 100% da altura da viewport (tela) */
+    min-height: 100vh; 
+    /* Centraliza a imagem no elemento */
+    background-position: center center;
+    /* A imagem cobre o elemento sem repetição */
+    background-size: cover;
+    background-repeat: no-repeat;
+    /* Opcional: Define a imagem de fundo aqui ou no CSS externo */
+    background-image: url('../img/casarao.jpg');
+    
+    /* Usamos Flexbox para centralizar o conteúdo verticalmente */
+    display: flex;
+    align-items: center; /* Centraliza verticalmente */
+    justify-content: center; /* Centraliza horizontalmente */
+}
+
+.content-overlay {
+    /* Adiciona o escurecimento (overlay) sobre a imagem */
+    background-color: rgba(0, 0, 0, 0.6); /* Preto com 60% de transparência */
+    padding: 50px;
+    border-radius: 10px;
+    text-align: center;
+    /* Ocupa a largura total para centralizar */
+    max-width: 900px; 
+    width: 100%;
+}
+
+/* Ajusta as cores do texto para o overlay escuro */
+.content-overlay h1, .content-overlay h2, .content-overlay h3 {
+    color: #EEE8AA !important; /* Força o texto a ser branco ou claro */
+    text-shadow: 2px 2px 4px #000000; /* Ajuda a destacar o texto */
+}

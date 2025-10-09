@@ -14,7 +14,7 @@
                     <h3 class="mb-0">Cadastro de ORCRIM</h3> {# Título mais específico e como cabeçalho de cartão #}
                 </div>
                 <div class="card-body"> {# Corpo do cartão para o formulário #}
-                    <form method="post" class="needs-validation" novalidate> {# Adiciona classes para validação Bootstrap #}
+                    <form method="post" class="needs-validation" novalidate enctype="multipart/form-data"> {# Adiciona classes para validação Bootstrap #}
                         {% csrf_token %}
 
                         {% for field in form %}

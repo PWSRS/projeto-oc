@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "controle.apps.ControleConfig",
+    "widget_tweaks",
 ]
 
 MIDDLEWARE = [
@@ -127,9 +128,9 @@ JAZZMIN_SETTINGS = {
     # title of the window (Will default to current_admin_site.site_title if absent or None)
     "site_title": "ORCRIM",
     # Title on the login screen (19 chars max) (defaults to current_admin_site.site_header if absent or None)
-    "site_header": "SCP",
+    "site_header": "SPG",
     # Title on the brand (19 chars max) (defaults to current_admin_site.site_header if absent or None)
-    "site_brand": "SCP",
+    "site_brand": "SPG",
     "site_logo": "controle/img/ARI.png",
     "icons": {
         "auth": "fas fa-users-cog",
@@ -155,7 +156,7 @@ JAZZMIN_SETTINGS = {
         "controle.Alojamento",
     ],
     # Welcome text on the login screen
-    "welcome_sign": "Bem-vindo(a) ao SCP",
+    "welcome_sign": "Bem-vindo(a) ao SPG",
     # Copyright on the footer
     "copyright": "ARI Sul",
     # List of model admins to search from the search bar, search bar omitted if excluded

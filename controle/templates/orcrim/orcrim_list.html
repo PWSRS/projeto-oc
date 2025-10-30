@@ -24,7 +24,13 @@
   <tbody>
     {% for orcrim in object_list %}
     <tr class="align-middle">
-        <td class="text-center">{{ orcrim.nome }}</td>
+        <td class="text-center">
+            {% if orcrim.nome %}
+                {{ orcrim.nome }}<span class="badge text-bg-secondary">{{ orcrim.total_individuos }}</span> 
+            {% else %}
+                - 
+            {% endif %}
+        </td>
         <td class="text-center">{{ orcrim.sigla|default:"-" }}</td>
         <td class="text-center">{{ orcrim.get_area_abrangencia_display }}</td>
         <td class="text-center">

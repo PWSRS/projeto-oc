@@ -76,7 +76,19 @@
         <td class="text-center">{{ individuo.codigo_detento }}</td>
         <td class="text-center">{{ individuo.orcrim }}</td>
         <td class="text-center">{{ individuo.casa_prisional }}</td>
-        <td class="text-center">{{ individuo.get_situacao_penal_display }}</td>
+        <td class="text-center">
+                    <span class="badge 
+                        {% if individuo.situacao_penal == 'recolhido' %} text-bg-danger
+                        {% elif individuo.situacao_penal == 'recolhido_tornozeleira' %} text-bg-primary
+                        {% elif individuo.situacao_penal == 'liberdade' %} text-bg-success
+                        {% elif individuo.situacao_penal == 'foragido' %} text-bg-warning
+                        {% elif individuo.situacao_penal == 'procurado' %} text-bg-warning
+                        {% elif individuo.situacao_penal == 'removido' %} text-bg-secondary
+                        {% else %} text-bg-secondary
+                        {% endif %}">
+                        {{ individuo.get_situacao_penal_display }} 
+                    </span>
+        </td>
         <td class="text-center">
             <a href="{% url 'individuo_edit' pk=individuo.pk %}"><i class="bi bi-pencil-square link-warning"></i></a>
             <a href="{% url 'individuo_delete' pk=individuo.pk %}"><i class="bi bi-person-x link-danger"></i></a>

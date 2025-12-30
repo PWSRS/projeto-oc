@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-from django.db.models import Q
+from django.db.models import Q, Count
 from rest_framework import generics
 from .models import Individuo
 from .serializers import IndividuoSerializer, OrcrimSerializer
@@ -132,8 +132,16 @@ class IndividuoDetailView(DetailView):
 class OrcrimListView(ListView):
     model = Orcrim
     template_name = "orcrim/orcrim_list.html"
-    paginate_by = 10  # Paginação: 10 orcrims por página
-    ordering = ["nome"]  # Ordena por nome
+    paginate_by = 10
+    ordering = ["nome"]
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+
+        # A nova propriedade para cada Orcrim é 'total_individuos'
+        # annotate adiciona esse campo ao queryset
+        queryset = queryset.annotate(total_individuos=Count("individuo"))
+        return queryset
 
 
 class OrcrimCreateView(CreateView):

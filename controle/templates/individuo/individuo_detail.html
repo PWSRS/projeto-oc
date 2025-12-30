@@ -81,7 +81,7 @@
                         {% elif individuo.situacao_penal == 'removido' %} text-bg-gray
                         {% else %} text-bg-secondary
                         {% endif %}">
-                        {{ individuo.get_situacao_penal_display }} {{ individuo.casa_prisional|default:'' }}
+                        {{ individuo.get_situacao_penal_display }} - {{ individuo.casa_prisional|default:'' }}
                     </span>
                 </dd>
 

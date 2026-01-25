@@ -4,15 +4,13 @@
 {% block title %}Indivíduos{% endblock %} 
 
 {% block content %}
-
-<div class="card">
-  <div class="card-body text-bg-primary p-3 text-center">
-    <h3>Indivíduos</h3>
-  </div>
+<div class="card mb-4">
+    <div class="card-body text-bg-primary p-3 text-center">
+        <h3 class="mb-0">Indivíduos</h3>
+    </div>
 </div>
-<br>
-<div class="container-fluid d-flex justify-content-between align-items-center mb-3">
-    
+
+<div class="container-fluid d-flex justify-content-between align-items-center mb-3 p-0">
     <form id="search-form" class="d-flex flex-grow-1 me-3" role="search" method="GET"> 
         <input 
             class="form-control me-2" 
@@ -25,133 +23,155 @@
         />
         <div class="btn-group" role="group">
             <button class="btn btn-outline-success" type="submit">Pesquisar</button>
-            <a href="{% url 'individuo_list' %}" class="btn btn-outline-secondary" title="Limpar Busca">
-                Limpar
-            </a>
+            <a href="{% url 'individuo_list' %}" class="btn btn-outline-secondary" title="Limpar Busca">Limpar</a>
         </div>
     </form>
 
-    <a href="{% url 'individuo_add' %}" class="btn btn-primary" title="Adicionar Novo Indivíduo">
-        + indivíduo
+    <a href="{% url 'individuo_add' %}" class="btn btn-primary text-nowrap" title="Adicionar Novo Indivíduo">
+        <i class="fas fa-plus"></i> indivíduo
     </a>
 </div>
-<br>
-<table class="table table-striped table-hover">
-  <thead class="table-dark text-center">
-    <tr class="align-middle">
-      <th>#</th>
-      <th>Nome</th>
-      <th>Data Nasc.</th>
-      <th>Cód. Preso</th>
-      <th>Orcrim</th>
-      <th>Presídio</th>
-      <th>Situação</th>
-      <th>Ações</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for individuo in object_list %}
-    <tr class="align-middle">
-        <td class="text-center">
-            {% if individuo.foto %} {# Se existir uma foto associada ao indivíduo #}
-                <img 
-                    src="{{ individuo.foto.url }}" 
-                    alt="{{ individuo.nome }}" 
-                    style="width: 50px; height: 50px; object-fit: cover;" 
-                    class="img-thumbnail"
-                >
-            {% else %} {# Se não houver foto, use a imagem default #}
-                <img 
-                    src="{% static 'controle/img/image_default.png' %}" 
-                    alt="Sem foto" 
-                    style="width: 50px; height: 50px; object-fit: cover; background-color: #f8f9fa;" 
-                    class="img-thumbnail"
-                >
-            {% endif %}
-        </td>
-        <td>
-          <a href="{% url "individuo_detail" individuo.pk %}">{{ individuo.nome }}</a>
-        </td>
-        <td class="text-center">{{ individuo.data_nasc|date:"d/m/Y" }}</td>
-        <td class="text-center">{{ individuo.codigo_detento }}</td>
-        <td class="text-center">{{ individuo.orcrim }}</td>
-        <td class="text-center">{{ individuo.casa_prisional }}</td>
-        <td class="text-center">
+
+<div class="table-responsive">
+    <table class="table table-striped table-hover border">
+        <thead class="table-dark text-center">
+            <tr class="align-middle">
+                <th>#</th>
+                <th>Nome</th>
+                <th>Data Nasc.</th>
+                <th>Cód. Preso</th>
+                <th>Orcrim</th>
+                <th>Presídio</th>
+                <th>Situação</th>
+                <th style="width: 120px;">Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for individuo in object_list %}
+            <tr class="align-middle">
+                <td class="text-center">
+                    <img 
+                        src="{% if individuo.foto %}{{ individuo.foto.url }}{% else %}{% static 'controle/img/image_default.png' %}{% endif %}" 
+                        alt="{{ individuo.nome }}" 
+                        style="width: 45px; height: 45px; object-fit: cover;" 
+                        class="img-thumbnail rounded-circle"
+                    >
+                </td>
+                <td>
+                    <a href="{% url 'individuo_detail' individuo.pk %}" class="text-decoration-none fw-bold">
+                        {{ individuo.nome }}
+                    </a>
+                </td>
+                <td class="text-center">{{ individuo.data_nasc|date:"d/m/Y" }}</td>
+                <td class="text-center">{{ individuo.codigo_detento|default:"-" }}</td>
+                <td class="text-center">{{ individuo.orcrim|default:"-" }}</td>
+                <td class="text-center">{{ individuo.casa_prisional|default:"-" }}</td>
+                <td class="text-center">
                     <span class="badge 
-                        {% if individuo.situacao_penal == 'recolhido' %} text-bg-danger
-                        {% elif individuo.situacao_penal == 'recolhido_tornozeleira' %} text-bg-primary
-                        {% elif individuo.situacao_penal == 'liberdade' %} text-bg-success
-                        {% elif individuo.situacao_penal == 'foragido' %} text-bg-warning
-                        {% elif individuo.situacao_penal == 'procurado' %} text-bg-warning
-                        {% elif individuo.situacao_penal == 'removido' %} text-bg-secondary
-                        {% else %} text-bg-secondary
-                        {% endif %}">
+                        {% if individuo.situacao_penal == 'recolhido' %}text-bg-danger
+                        {% elif individuo.situacao_penal == 'recolhido_tornozeleira' %}text-bg-primary
+                        {% elif individuo.situacao_penal == 'liberdade' %}text-bg-success
+                        {% elif individuo.situacao_penal == 'foragido' or individuo.situacao_penal == 'procurado' %}text-bg-warning
+                        {% else %}text-bg-secondary{% endif %}">
                         {{ individuo.get_situacao_penal_display }} 
                     </span>
-        </td>
-        <td class="text-center">
-            <a href="{% url 'individuo_edit' pk=individuo.pk %}"><i class="bi bi-pencil-square link-warning"></i></a>
-            <a href="{% url 'individuo_delete' pk=individuo.pk %}"><i class="bi bi-person-x link-danger"></i></a>
-        </td>
-    </tr>
-    {% empty %}
-    <tr>
-        <td colspan="2">Nenhum indivíduo encontrado.</td>
-    </tr>
-    {% endfor %}
-</tbody>
-</table>
+                </td>
+                <td class="text-center">
+                    <div class="btn-group">
+                        <a href="{% url 'individuo_edit' pk=individuo.pk %}" class="btn btn-sm btn-outline-primary" title="Editar">
+                            <i class="fas fa-pencil-alt"></i>
+                        </a>
+                        <button type="button" 
+                                class="btn btn-sm btn-outline-danger" 
+                                data-bs-toggle="modal" 
+                                data-bs-target="#deleteConfirmModal" 
+                                data-delete-url="{% url 'individuo_delete' pk=individuo.pk %}" 
+                                data-item-nome="{{ individuo.nome }}">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="8" class="text-center py-4 text-muted">Nenhum indivíduo encontrado.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 
 {% if is_paginated %}
-<nav aria-label="Paginação da Lista">
+<nav aria-label="Paginação" class="mt-4">
     <ul class="pagination justify-content-center">
-
         {% if page_obj.has_previous %}
             <li class="page-item">
-                <a class="page-link" href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}page={{ page_obj.previous_page_number }}" aria-label="Anterior">
-                    <span aria-hidden="true">&laquo;</span> Anterior
-                </a>
-            </li>
-        {% else %}
-            <li class="page-item disabled">
-                <span class="page-link"><span aria-hidden="true">&laquo;</span> Anterior</span>
+                <a class="page-link" href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}page={{ page_obj.previous_page_number }}">&laquo; Anterior</a>
             </li>
         {% endif %}
 
         {% for i in page_obj.paginator.page_range %}
             {% if page_obj.number == i %}
-                <li class="page-item active" aria-current="page">
-                    <span class="page-link">{{ i }}</span>
-                </li>
+                <li class="page-item active"><span class="page-link">{{ i }}</span></li>
             {% elif i > page_obj.number|add:'-3' and i < page_obj.number|add:'3' %}
-                <li class="page-item">
-                    <a class="page-link" href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}page={{ i }}">{{ i }}</a>
-                </li>
+                <li class="page-item"><a class="page-link" href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}page={{ i }}">{{ i }}</a></li>
             {% endif %}
         {% endfor %}
 
         {% if page_obj.has_next %}
             <li class="page-item">
-                <a class="page-link" href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}page={{ page_obj.next_page_number }}" aria-label="Próxima">
-                    Próxima <span aria-hidden="true">&raquo;</span>
-                </a>
-            </li>
-        {% else %}
-            <li class="page-item disabled">
-                <span class="page-link">Próxima <span aria-hidden="true">&raquo;</span></span>
+                <a class="page-link" href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}page={{ page_obj.next_page_number }}">Próxima &raquo;</a>
             </li>
         {% endif %}
     </ul>
 </nav>
-
 <div class="text-center mb-4">
-    <small>Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}. Total de {{ page_obj.paginator.count }} detentos.</small>
+    <small class="text-muted">Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}. Total de {{ page_obj.paginator.count }} registros.</small>
 </div>
 {% endif %}
 
+<div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content border-danger">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title"><i class="fas fa-exclamation-triangle me-2"></i>Confirmação de Exclusão</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Você tem certeza que deseja excluir permanentemente o registro de:</p>
+                <p><strong>Indivíduo:</strong> <span id="itemNamePlaceholder" class="badge bg-secondary fs-6"></span></p>
+                <p class="text-danger small mt-3"><i class="fas fa-info-circle"></i> Esta ação não poderá ser desfeita.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <form method="post" id="deleteForm">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Excluir Definitivamente</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
 {% block extra_body_js %}
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
-<script src="{% static 'controle/js/individuo_list.js' %}"></script>
-{% endblock extra_body_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const deleteModal = document.getElementById('deleteConfirmModal');
+        if (deleteModal) {
+            deleteModal.addEventListener('show.bs.modal', function(event) {
+                const button = event.relatedTarget;
+                const deleteUrl = button.getAttribute('data-delete-url');
+                const itemName = button.getAttribute('data-item-nome');
 
-{% endblock content %}
+                const form = deleteModal.querySelector('#deleteForm');
+                const namePlaceholder = deleteModal.querySelector('#itemNamePlaceholder');
+
+                form.action = deleteUrl;
+                namePlaceholder.textContent = itemName;
+            });
+        }
+    });
+</script>
+{% endblock extra_body_js %}

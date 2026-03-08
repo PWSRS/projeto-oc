@@ -119,6 +119,15 @@ STATIC_ROOT = BASE_DIR / "staticfiles"  # usado com collectstatic
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
+# No seu settings.py, mude para:
+LOGIN_REDIRECT_URL = 'home'  # Usa o name="home" da sua URL raiz
+LOGOUT_REDIRECT_URL = 'login'  # Usa o name="login" da sua rota contas/login/
+LOGIN_URL = 'login' # Garante que o @login_required saiba para onde mandar
+
+
+
+
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 

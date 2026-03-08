@@ -28,7 +28,8 @@
                                         <!-- Informações da Galeria -->
                                         <div class="d-flex justify-content-between w-100 align-items-center mb-2">
                                             <div>
-                                                <strong>Galeria:</strong> {{ galeria.nome }} {{ galeria.pavilhao.nome }} - {{ galeria.orcrim }}
+                                                <strong>Galeria:</strong> 
+                                                    {{ galeria.nome }} {{ galeria.pavilhao.nome }} - {{ galeria.orcrim.nome|default:"Não possui" }}
                                             </div>
                                             <!-- Botão Ver Detentos -->
                                             <a href="{% url 'listar_detentos_por_galeria' galeria.id %}" class="btn btn-sm btn-outline-primary">

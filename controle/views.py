@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.db.models import Q, Count
 from rest_framework import generics
 from .models import Individuo
@@ -23,8 +23,19 @@ from .models import (
     Cela,
     Alojamento,
 )
-from .forms import IndividuoForm, OrcrimForm, CasaPrisionalForm
+from .forms import IndividuoForm, OrcrimForm, CasaPrisionalForm, CadastroUsuarioForm
 
+
+
+def registro(request):
+    if request.method == "POST":
+        form = CadastroUsuarioForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('login') # Redireciona para o login após criar a conta
+    else:
+        form = CadastroUsuarioForm()
+    return render(request, "registration/registro.html", {"form": form})
 
 # View para página inicial
 def home(request):

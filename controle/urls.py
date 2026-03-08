@@ -17,9 +17,13 @@ from controle.views import (
     individuos_por_orcrim,
     organograma_view,
     orcrim_list,
+    registro,
 )
 
 urlpatterns = [
+    # Cdaastro de usuário
+    path("contas/registro/", views.registro, name="registro"),
+       
     # URLs para Individuo
     path("visualizar_individuos/", IndividuoListView.as_view(), name="individuo_list"),
     path(

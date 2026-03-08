@@ -58,7 +58,23 @@
                             {% endwith %}
                         </td>
                         <td class="text-center">{{ detento.orcrim|default:"N/A" }}</td>
-                        <td class="text-center">{{ detento.get_regime_display }}</td>
+                        <td class="text-center">
+                            {% with detento.regime as regime %}
+                            {% if regime == 'fechado' %}
+                                <span class="badge text-bg-danger">{{ detento.get_regime_display }}</span>
+                            {% elif regime == 'aberto' %}
+                                <span class="badge text-bg-success">{{ detento.get_regime_display }}</span>
+                            {% elif regime == 'semiaberto' %}
+                                <span class="badge text-bg-warning">{{ detento.get_regime_display }}</span>
+                            {% elif regime == 'provisorio' %}
+                                <span class="badge text-bg-info">{{ detento.get_regime_display }}</span>
+                            {% elif regime == 'monitorado' %}
+                                <span class="badge text-bg-secondary">{{ detento.get_regime_display }}</span>
+                            {% else %}
+                                <span class="badge text-bg-light">{{ detento.get_regime_display }}</span>
+                            {% endif %}
+                            {% endwith %}
+                        </td>
                     </tr>
                 {% endfor %}
             </tbody>

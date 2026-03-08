@@ -1,3 +1,4 @@
+{% if request.user.is_authenticated %}
 <nav class="navbar navbar-expand-lg bg-dark fixed-top" id="main-navbar" data-bs-theme="dark">
   <div class="container-fluid">
     <a class="navbar-brand" href="#">ARI - Sul</a>
@@ -41,7 +42,29 @@
             <li><a class="dropdown-item" href="{% url 'selecionar_presidio' %}">Detentos por galeria</a></li>
           </ul>
         </li>
+        <li class="nav-item">
+          <a class="nav-link btn-link text-warning" href="{% url 'password_change' %}">
+            <i class="fa-solid fa-key"></i> Alterar Senha
+          </a>
+        </li>
+        <li class="nav-item">
+          <form method="post" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit" class="nav-link btn btn-link text-danger" style="padding-left: 0;">
+              <i class="fa-solid fa-right-from-bracket"></i> Sair
+            </button>
+          </form>
+        </li>
       </ul>
     </div>
   </div>
 </nav>
+{% else %}
+<!-- Navbar para usuário não autenticado (opcional)
+<nav class="navbar bg-body-tertiary" data-bs-theme="dark">
+    <div class="container-fluid justify-content-end">
+        <a class="btn btn-primary" href="{% url 'login' %}">Entrar</a>
+    </div>
+</nav>
+-->
+{% endif %}

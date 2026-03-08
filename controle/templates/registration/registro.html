@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}Solicitar Cadastro - ARI SUL{% endblock %}
+
+{% block extra_head_css %}
+<style>
+    nav, .navbar { display: none !important; }
+    .card-registro { border-top: 5px solid #198754; }
+    .helptext { font-size: 0.75rem; color: #6c757d; display: block; margin-top: 4px; }
+    ul.errorlist { list-style: none; padding: 0; color: #dc3545; font-size: 0.8rem; }
+</style>
+{% endblock %}
+
+
+
+{% block content %}
+<div class="row justify-content-center align-items-center flex-grow-1 py-5">
+    <div class="col-md-8 col-lg-6">
+        <div class="card card-registro shadow">
+            <div class="card-header bg-white py-3">
+                <h5 class="mb-0 fw-bold text-center"><i class="fa-solid fa-user-plus me-2"></i>Solicitação de Novo Acesso</h5>
+            </div>
+            <div class="card-body p-4">
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    
+                    <div class="row">
+                        {% for field in form %}
+                            <div class="col-md-{% if field.name == 'username' or field.name == 'email' %}12{% else %}6{% endif %} mb-3">
+                                <label class="form-label small fw-bold">{{ field.label|upper }}</label>
+                                {{ field }}
+                                {% if field.help_text %}
+                                    <span class="helptext">{{ field.help_text }}</span>
+                                {% endif %}
+                                {{ field.errors }}
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="d-grid mt-3">
+                        <button type="submit" class="btn btn-success fw-bold py-2">ENVIAR SOLICITAÇÃO</button>
+                    </div>
+                </form>
+            </div>
+            <div class="card-footer text-center bg-light">
+                <a href="{% url 'login' %}" class="small text-decoration-none text-muted">Já possui cadastro? Faça login.</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}ARI Sul - Gestão de Acessos{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="card shadow border-0">
+        <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center py-3">
+            <h5 class="mb-0"><i class="fa-solid fa-shield-halved me-2"></i>Solicitações de Acesso Pendentes</h5>
+            <span class="badge bg-danger rounded-pill">{{ usuarios.count }} pendente(s)</span>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light text-secondary">
+                        <tr>
+                            <th>NOME COMPLETO</th>
+                            <th>E-MAIL INSTITUCIONAL</th>
+                            <th>DATA DA SOLICITAÇÃO</th>
+                            <th class="text-center">AÇÕES</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for usuario in usuarios %}
+                        <tr>
+                            <td class="fw-bold text-dark">{{ usuario.get_full_name }}</td>
+                            <td><code class="text-primary">{{ usuario.email }}</code></td>
+                            <td class="small">{{ usuario.date_joined|date:"d/m/Y H:i" }}</td>
+                            <td class="text-center">
+                                <div class="btn-group" role="group">
+                                    <a href="{% url 'aprovar_usuario' usuario.id %}" class="btn btn-success btn-sm px-3" title="Aprovar">
+                                        <i class="fa-solid fa-check"></i> Aprovar
+                                    </a>
+                                    <a href="{% url 'rejeitar_usuario' usuario.id %}" 
+                                       class="btn btn-outline-danger btn-sm px-3" 
+                                       onclick="return confirm('Tem certeza que deseja REJEITAR e EXCLUIR esta solicitação?')">
+                                        <i class="fa-solid fa-xmark"></i> Rejeitar
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" class="text-center py-5">
+                                <i class="fa-solid fa-user-slash fa-2x text-light mb-2 d-block"></i>
+                                <p class="text-muted mb-0">Nenhuma solicitação aguardando revisão.</p>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

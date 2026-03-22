@@ -10,6 +10,7 @@
 {% block content %}
 <div class="row justify-content-center align-items-center flex-grow-1">
     <div class="col-md-5 col-lg-4">
+        
         <div class="card card-login shadow-lg">
             <div class="card-body p-4 p-md-5">
                 <div class="text-center mb-4">
@@ -20,7 +21,9 @@
 
                 {% if form.errors %}
                     <div class="alert alert-danger small py-2">
-                        <i class="fa-solid fa-circle-exclamation"></i> E-mail ou senha incorretos.
+                        <i class="fa-solid fa-circle-exclamation"></i> 
+                        E-mail ou senha incorretos. 
+                        <br><span class="extra-small opacity-75">Verifique se sua conta já foi homologada.</span>
                     </div>
                 {% endif %}
 
@@ -30,35 +33,38 @@
                     <div class="mb-3">
                         <label class="form-label small fw-bold text-secondary">E-MAIL INSTITUCIONAL</label>
                         {{ form.username }}
-                        {% if form.username.errors %}
-                            <div class="text-danger small">{{ form.username.errors }}</div>
-                        {% endif %}
                     </div>
 
                     <div class="mb-3">
                         <label class="form-label small fw-bold text-secondary">SENHA</label>
                         {{ form.password }}
-                        {% if form.password.errors %}
-                            <div class="text-danger small">{{ form.password.errors }}</div>
-                        {% endif %}
                     </div>
 
                     <button type="submit" class="btn btn-pm w-100 fw-bold py-2 mt-2">ENTRAR</button>
                     
                     <div class="mt-4 d-flex justify-content-between auth-links">
-                        <a href="{% url 'password_reset' %}" class="text-muted">
+                        <a href="{% url 'password_reset' %}" class="text-muted small text-decoration-none">
                             <i class="fa-solid fa-unlock-keyhole me-1"></i> Esqueci a senha
                         </a>
-                        <a href="{% url 'registro' %}" class="text-primary fw-bold">
+                        <a href="{% url 'registro' %}" class="text-primary fw-bold small text-decoration-none">
                             <i class="fa-solid fa-user-plus me-1"></i> Criar conta
                         </a>
                     </div>
                 </form>
             </div>
         </div>
-        <div class="alert alert-warning mt-3 p-2 text-center" style="font-size: 0.75rem;">
-            <i class="fa-solid fa-triangle-exclamation"></i> 
-            Acesso monitorado. O uso indevido está sujeito a sanções disciplinares e penais.
+
+        {# --- ALERTAS DE AVISO (LOCAL CORRETO) --- #}
+        <div class="mt-3">
+            <div class="alert alert-info p-2 text-center shadow-sm" style="font-size: 0.75rem; border-left: 4px solid #0dcaf0;">
+                <i class="fa-solid fa-clock me-1"></i> 
+                Novos cadastros levam até 24h para serem homologados pela ARI.
+            </div>
+            
+            <div class="alert alert-warning p-2 text-center shadow-sm" style="font-size: 0.75rem; border-left: 4px solid #ffc107;">
+                <i class="fa-solid fa-triangle-exclamation me-1"></i> 
+                Acesso monitorado. O uso indevido está sujeito a sanções.
+            </div>
         </div>
     </div>
 </div>

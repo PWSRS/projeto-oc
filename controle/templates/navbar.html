@@ -1,70 +1,87 @@
 {% if request.user.is_authenticated %}
-<nav class="navbar navbar-expand-lg bg-dark fixed-top" id="main-navbar" data-bs-theme="dark">
+<nav class="navbar navbar-expand-lg bg-dark fixed-top shadow" id="main-navbar" data-bs-theme="dark">
   <div class="container-fluid">
-    <a class="navbar-brand" href="#">ARI - Sul</a>
+    <a class="navbar-brand fw-bold" href="{% url 'home' %}">ARI - Sul</a>
+    
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
             aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
     <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav w-100">
+      <ul class="navbar-nav w-100 align-items-center">
 
         <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="{% url 'home' %}">Home</a>
         </li>
+
+        {# DROPDOWN INDIVÍDUOS #}
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownIndividuos" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Indivíduos
           </a>
-          <ul class="dropdown-menu" aria-labelledby="navbarDropdownIndividuos">
-            <li><a class="dropdown-item" href="{% url 'individuo_add' %}">Cadastrar</a></li>
-            <li><a class="dropdown-item" href="{% url 'individuo_list' %}">Listar</a></li>
+          <ul class="dropdown-menu shadow" aria-labelledby="navbarDropdownIndividuos">
+            <li><a class="dropdown-item" href="{% url 'individuo_add' %}"><i class="fa-solid fa-plus me-2"></i>Cadastrar</a></li>
+            <li><a class="dropdown-item" href="{% url 'individuo_list' %}"><i class="fa-solid fa-list me-2"></i>Listar</a></li>
           </ul>
         </li>
 
+        {# DROPDOWN ORCRIM #}
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownOrcrim" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Organizações Criminosas
+            ORCRIM
           </a>
-          <ul class="dropdown-menu" aria-labelledby="navbarDropdownOrcrim">
-            <li><a class="dropdown-item" href="{% url 'orcrim_add' %}">Cadastrar</a></li>
-            <li><a class="dropdown-item" href="{% url 'orcrim_list' %}">Listar</a></li>
-            <li><a class="dropdown-item" href="{% url 'organograma' %}">Organograma</a></li>
+          <ul class="dropdown-menu shadow" aria-labelledby="navbarDropdownOrcrim">
+            <li><a class="dropdown-item" href="{% url 'orcrim_add' %}"><i class="fa-solid fa-plus me-2"></i>Cadastrar</a></li>
+            <li><a class="dropdown-item" href="{% url 'orcrim_list' %}"><i class="fa-solid fa-list me-2"></i>Listar</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="{% url 'organograma' %}"><i class="fa-solid fa-sitemap me-2"></i>Organograma</a></li>
           </ul>
         </li>
 
+        {# DROPDOWN CASAS PRISIONAIS #}
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownCasaPrisional" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Casas Prisionais
           </a>
-          <ul class="dropdown-menu" aria-labelledby="navbarDropdownCasaPrisional">
-            <li><a class="dropdown-item" href="{% url 'selecionar_presidio' %}">Detentos por galeria</a></li>
+          <ul class="dropdown-menu shadow" aria-labelledby="navbarDropdownCasaPrisional">
+            <li><a class="dropdown-item" href="{% url 'selecionar_presidio' %}"><i class="fa-solid fa-building-columns me-2"></i>Detentos por galeria</a></li>
           </ul>
         </li>
-        <li class="nav-item">
-          <a class="nav-link btn-link text-warning" href="{% url 'password_change' %}">
-            <i class="fa-solid fa-key"></i> Alterar Senha
+
+        {# --- ÁREA RESTRITA: GESTÃO DE ACESSOS --- #}
+        {% if user.is_staff %}
+        <li class="nav-item ms-lg-3">
+          <a class="nav-link text-info d-flex align-items-center" href="{% url 'painel_aprovacao' %}">
+            <i class="fa-solid fa-users-gear me-1"></i> Gestão
+            {% if pendentes_count > 0 %}
+              <span class="badge rounded-pill bg-danger ms-1 border border-light animate__animated animate__pulse animate__infinite" 
+                    style="font-size: 0.7rem;" title="{{ pendentes_count }} solicitações pendentes">
+                {{ pendentes_count }}
+              </span>
+            {% endif %}
           </a>
         </li>
+        {% endif %}
+
+        {# --- LINKS DE CONTA (ALINHADOS À DIREITA NO DESKTOP) --- #}
+        <li class="nav-item ms-lg-auto">
+          <a class="nav-link text-warning" href="{% url 'password_change' %}">
+            <i class="fa-solid fa-key"></i> <span class="d-lg-none">Alterar Senha</span>
+          </a>
+        </li>
+
         <li class="nav-item">
-          <form method="post" action="{% url 'logout' %}">
+          <form method="post" action="{% url 'logout' %}" class="d-inline">
             {% csrf_token %}
-            <button type="submit" class="nav-link btn btn-link text-danger" style="padding-left: 0;">
-              <i class="fa-solid fa-right-from-bracket"></i> Sair
+            <button type="submit" class="nav-link btn btn-link text-danger border-0 py-0" style="text-decoration: none;">
+              <i class="fa-solid fa-right-from-bracket"></i> <span class="d-lg-none">Sair</span>
             </button>
           </form>
         </li>
+
       </ul>
     </div>
   </div>
 </nav>
-{% else %}
-<!-- Navbar para usuário não autenticado (opcional)
-<nav class="navbar bg-body-tertiary" data-bs-theme="dark">
-    <div class="container-fluid justify-content-end">
-        <a class="btn btn-primary" href="{% url 'login' %}">Entrar</a>
-    </div>
-</nav>
--->
 {% endif %}

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        @page { size: A4; margin: 1.5cm; }
+        body { font-family: 'Helvetica', 'Arial', sans-serif; color: #222; line-height: 1.4; font-size: 11px; }
+        
+        /* Cabeçalho Oficial */
+        .header { text-align: center; border-bottom: 2px solid #333; margin-bottom: 20px; padding-bottom: 10px; }
+        .header h2 { margin: 0; text-transform: uppercase; font-size: 16px; }
+        .header p { margin: 5px 0 0 0; font-weight: bold; color: #555; }
+
+        /* Layout Principal */
+        .row { width: 100%; clear: both; }
+        .col-left { float: left; width: 70%; }
+        .col-right { float: right; width: 28%; text-align: right; }
+        
+        /* Foto */
+        .foto-box { 
+            width: 140px; height: 170px; 
+            border: 2px solid #333; 
+            display: inline-block;
+            background: #f8f9fa;
+            text-align: center;
+        }
+        .foto-box img { width: 100%; height: 100%; object-fit: cover; }
+        .sem-foto { padding-top: 70px; color: #ccc; font-weight: bold; font-size: 10px; }
+
+        /* Blocos de Informação */
+        .secao-titulo { 
+            background: #333; color: #fff; 
+            padding: 4px 8px; font-weight: bold; 
+            text-transform: uppercase; margin-top: 15px;
+            letter-spacing: 1px;
+        }
+        .campo { margin-bottom: 8px; border-bottom: 1px solid #eee; padding: 2px 0; }
+        .label { font-weight: bold; color: #666; font-size: 9px; text-transform: uppercase; display: block; }
+        .valor { font-size: 12px; color: #000; font-weight: 500; }
+
+        /* Alerta de Facção */
+        .alerta-orcrim { 
+            border: 1px solid #000; padding: 10px; margin-top: 15px;
+            background-color: {% if individuo.orcrim %}#fff3f3{% else %}#f9f9f9{% endif %}; 
+        }
+
+        /* Rodapé de Segurança */
+        .footer { 
+            position: fixed; bottom: 0; width: 100%; 
+            font-size: 8px; color: #777; border-top: 1px solid #ccc;
+            padding-top: 5px; text-align: center;
+        }
+        .clearfix::after { content: ""; clear: both; display: table; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h2>Secretaria de Segurança Pública - RS</h2>
+        <p>ARI SUL - RELATÓRIO DE INTELIGÊNCIA PENITENCIÁRIA</p>
+    </div>
+
+    <div class="row clearfix">
+        <div class="col-left">
+            <div class="campo">
+                <span class="label">Nome Completo</span>
+                <div class="valor" style="font-size: 16px; font-weight: bold;">{{ individuo.nome }}</div>
+            </div>
+            
+            <div class="campo" style="width: 45%; float: left;">
+                <span class="label">Alcunha / Vulgo</span>
+                <div class="valor">{{ individuo.alcunha|default:"NADA CONSTA"|upper }}</div>
+            </div>
+
+            <div class="campo" style="width: 45%; float: right;">
+                <span class="label">RG / CPF</span>
+                <div class="valor">{{ individuo.rg_cpf }}</div>
+            </div>
+
+            <div class="row clearfix">
+                <div class="campo" style="width: 45%; float: left;">
+                    <span class="label">Data de Nascimento</span>
+                    <div class="valor">{{ individuo.data_nasc|date:"d/m/Y" }}</div>
+                </div>
+                <div class="campo" style="width: 45%; float: right;">
+                    <span class="label">Cód. Detento</span>
+                    <div class="valor">{{ individuo.codigo_detento|default:"---" }}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="foto-box">
+            {% if individuo.foto %}
+                {# Usamos .path para o WeasyPrint ler direto do disco #}
+                <img src="file:///{{ individuo.foto.path }}" style="width: 140px; height: 170px; object-fit: cover;">
+            {% else %}
+                <div class="sem-foto" style="padding-top: 70px; color: #ccc;">SEM FOTO</div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="secao-titulo">Vínculo em Organização Criminosa</div>
+    <div class="alerta-orcrim">
+        <table style="width: 100%; border-collapse: collapse;">
+            <tr>
+                <td style="width: 50%; vertical-align: top;">
+                    <span class="label">Facção</span>
+                    <div class="valor"><strong>{{ individuo.orcrim.nome|default:"NÃO POSSUI / ISOLADO" }}</strong></div>
+                </td>
+                <td style="width: 50%; vertical-align: top; border-left: 1px solid #ddd; padding-left: 15px;">
+                    <span class="label">Nível Hierárquico</span>
+                    <div class="valor">{{ individuo.get_nivel_orcrim_display }}</div>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="secao-titulo">Situação Penal e Localização</div>
+    <div class="row clearfix" style="margin-top: 10px;">
+        <div style="width: 33%; float: left;" class="campo">
+            <span class="label">Situação Atual</span>
+            <div class="valor">{{ individuo.get_situacao_penal_display }}</div>
+        </div>
+        <div style="width: 33%; float: left;" class="campo">
+            <span class="label">Regime</span>
+            <div class="valor">{{ individuo.get_regime_display }}</div>
+        </div>
+        <div style="width: 33%; float: left;" class="campo">
+            <span class="label">Unidade</span>
+            <div class="valor">{{ individuo.casa_prisional.sigla|default:"---" }}</div>
+        </div>
+    </div>
+
+    <div class="row clearfix">
+        <div style="width: 25%; float: left;" class="campo">
+            <span class="label">Pavilhão</span>
+            <div class="valor">{{ individuo.pavilhao.nome|default:"---" }}</div>
+        </div>
+        <div style="width: 25%; float: left;" class="campo">
+            <span class="label">Galeria</span>
+            <div class="valor">{{ individuo.galeria.nome|default:"---" }}</div>
+        </div>
+        <div style="width: 25%; float: left;" class="campo">
+            <span class="label">Cela</span>
+            <div class="valor">{{ individuo.cela.numero|default:"---" }}</div>
+        </div>
+        <div style="width: 25%; float: left;" class="campo">
+            <span class="label">Alojamento</span>
+            <div class="valor">{{ individuo.alojamento.nome|default:"---" }}</div>
+        </div>
+    </div>
+
+    {% if individuo.observacao %}
+    <div class="secao-titulo">Observações Relevantes</div>
+    <div style="padding: 10px; border: 1px solid #eee; min-height: 60px;">
+        {{ individuo.observacao }}
+    </div>
+    {% endif %}
+
+    <div class="footer">
+        DOCUMENTO PARA USO EXCLUSIVO EM SERVIÇO - GERADO POR {{ user.get_full_name|upper }} EM {% now "d/m/Y H:i:s" %}
+        <br><strong>CONFIDENCIAL - ARI SUL</strong>
+    </div>
+
+</body>
+</html>

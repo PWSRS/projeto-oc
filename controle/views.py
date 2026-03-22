@@ -1,11 +1,18 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.db.models import Q, Count
+from django.contrib.auth.decorators import login_required
 from rest_framework import generics
 from .models import Individuo
 from .serializers import IndividuoSerializer, OrcrimSerializer
 from django.http import JsonResponse
 from django.conf import settings
+import os
+from weasyprint import HTML
+from django.http import HttpResponse
+from django.template.loader import render_to_string
 from django.contrib import messages
+from django.contrib.auth.models import User
+from django.contrib.auth.decorators import user_passes_test
 from django.views.generic import (
     ListView,
     CreateView,
@@ -31,13 +38,50 @@ def registro(request):
     if request.method == "POST":
         form = CadastroUsuarioForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('login') # Redireciona para o login após criar a conta
+            user = form.save(commit=False)
+            user.username = form.cleaned_data.get('email')
+            
+            # 🟢 AQUI ESTÁ A TRAVA DE SEGURANÇA 🟢
+            user.is_active = False # Usuário criado, mas bloqueado
+            
+            user.save()
+            
+            # Mensagem clara para o usuário não tentar logar à toa
+            messages.warning(request, "Solicitação enviada com sucesso! Seu acesso está aguardando aprovação da administração.")
+            return redirect('login')
     else:
         form = CadastroUsuarioForm()
+    
     return render(request, "registration/registro.html", {"form": form})
 
+# Trava de segurança para apenas administradores acessarem
+def e_supervisor(user):
+    return user.is_staff
+
+@user_passes_test(e_supervisor)
+def painel_aprovacao(request):
+    usuarios_pendentes = User.objects.filter(is_active=False).order_by('-date_joined')
+    return render(request, 'registration/painel_aprovacao.html', {'usuarios': usuarios_pendentes})
+
+@user_passes_test(e_supervisor)
+def aprovar_usuario(request, user_id):
+    usuario = get_object_or_404(User, id=user_id)
+    usuario.is_active = True
+    usuario.save()
+    messages.success(request, f"Acesso de {usuario.get_full_name()} aprovado com sucesso!")
+    return redirect('painel_aprovacao')
+
+@user_passes_test(e_supervisor)
+def rejeitar_usuario(request, user_id):
+    usuario = get_object_or_404(User, id=user_id)
+    nome = usuario.get_full_name()
+    usuario.delete() # Remove do banco de dados
+    messages.warning(request, f"A solicitação de {nome} foi excluída.")
+    return redirect('painel_aprovacao')
+
+
 # View para página inicial
+@login_required
 def home(request):
     return render(request, "home.html")
 
@@ -298,3 +342,22 @@ def listar_detentos_por_galeria(request, galeria_id):
         "detentos": detentos,
     }
     return render(request, "individuo/listar_detentos.html", context)
+
+
+
+def gerar_pdf_individuo(request, pk):
+    individuo = get_object_or_404(Individuo, pk=pk)
+    
+    # Renderiza o HTML
+    html_string = render_to_string('pdf_individuo.html', {
+        'individuo': individuo,
+        'request': request, # Passar o request ajuda a resolver URLs
+    })
+    
+    # O segredo para fotos no Windows/Pycharm é o base_url
+    html = HTML(string=html_string, base_url=request.build_absolute_uri('/'))
+    pdf = html.write_pdf()
+
+    response = HttpResponse(pdf, content_type='application/pdf')
+    response['Content-Disposition'] = f'inline; filename="Ficha_{individuo.nome}.pdf"'
+    return response

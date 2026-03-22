@@ -13,38 +13,44 @@ User = get_user_model()
 
 
 class CadastroUsuarioForm(UserCreationForm):
-    # Definição dos campos
-    first_name = forms.CharField(label="Primeiro nome", max_length=150, required=False)
-    last_name = forms.CharField(label="Último nome", max_length=150, required=False)
-    email = forms.EmailField(label="Endereço de email", max_length=254, required=True)
-
-    password2 = forms.CharField(
-        label="Confirmação de senha",
-        widget=forms.PasswordInput(),
-        help_text="Digite a mesma senha informada anteriormente, para verificação.",
+    # Definimos apenas os campos extras ou que queremos customizar a ordem/label
+    first_name = forms.CharField(
+        label="PRIMEIRO NOME", 
+        max_length=150, 
+        required=True,
+        widget=forms.TextInput(attrs={"placeholder": "Seu primeiro nome"})
+    )
+    last_name = forms.CharField(
+        label="ÚLTIMO NOME", 
+        max_length=150, 
+        required=True,
+        widget=forms.TextInput(attrs={"placeholder": "Seu último nome"})
+    )
+    email = forms.EmailField(
+        label="E-MAIL INSTITUCIONAL", 
+        max_length=254, 
+        required=True,
+        widget=forms.EmailInput(attrs={"placeholder": "usuario@bm.rs.gov.br"})
     )
 
     class Meta(UserCreationForm.Meta):
         model = User
-        fields = (
-            "username",
-            "email",
-            "first_name",
-            "last_name",
-        ) + UserCreationForm.Meta.fields
+        # REMOVEMOS 'username' da lista. 
+        # O UserCreationForm trará as senhas automaticamente no final.
+        fields = ("first_name", "last_name", "email")
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        
+        # O campo username ainda existe internamente no form do Django, 
+        # mas como não vamos exibir, tiramos a obrigatoriedade dele no formulário.
+        if 'username' in self.fields:
+            self.fields['username'].required = False
 
-        # 1. Configurações de auxílio e Placeholders
-        self.fields["email"].help_text = (
-            "Obrigatório: utilize seu e-mail institucional @bm.rs.gov.br"
-        )
-        self.fields["first_name"].widget.attrs["placeholder"] = "Seu primeiro nome"
-        self.fields["last_name"].widget.attrs["placeholder"] = "Seu último nome"
-        self.fields["email"].widget.attrs["placeholder"] = "usuario@bm.rs.gov.br"
+        # Configurações de auxílio
+        self.fields["email"].help_text = "Obrigatório: utilize seu e-mail institucional @bm.rs.gov.br"
 
-        # 2. Aplica a classe CSS form-control do Bootstrap a TODOS os campos
+        # Aplica a classe CSS form-control do Bootstrap a TODOS os campos (incluindo as senhas)
         for field_name, field in self.fields.items():
             field.widget.attrs["class"] = "form-control"
 
@@ -58,6 +64,11 @@ class CadastroUsuarioForm(UserCreationForm):
             raise forms.ValidationError(
                 f"Acesso negado. O e-mail deve pertencer ao domínio {dominio_oficial}."
             )
+        
+        # Validação extra: verificar se esse e-mail já existe como username no sistema
+        if User.objects.filter(username=email).exists():
+            raise forms.ValidationError("Este e-mail já está cadastrado no sistema.")
+            
         return email
 
     def clean_first_name(self):
@@ -67,7 +78,6 @@ class CadastroUsuarioForm(UserCreationForm):
     def clean_last_name(self):
         sobrenome = self.cleaned_data.get("last_name")
         return sobrenome.upper() if sobrenome else sobrenome
-
 
 class EmailLoginForm(AuthenticationForm):
     username = forms.EmailField(

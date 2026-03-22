@@ -53,6 +53,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "controle.context_processors.contagem_pendentes",
             ],
         },
     },
@@ -119,10 +120,13 @@ STATIC_ROOT = BASE_DIR / "staticfiles"  # usado com collectstatic
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
-# No seu settings.py, mude para:
-LOGIN_REDIRECT_URL = 'home'  # Usa o name="home" da sua URL raiz
-LOGOUT_REDIRECT_URL = 'login'  # Usa o name="login" da sua rota contas/login/
-LOGIN_URL = 'login' # Garante que o @login_required saiba para onde mandar
+LOGIN_URL = 'login'  # O nome que você deu na sua path("contas/login/", ...)
+LOGIN_REDIRECT_URL = 'home'
+LOGOUT_REDIRECT_URL = 'login'
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend', # Padrão
+]
 
 
 

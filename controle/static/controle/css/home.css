@@ -1,3 +1,7 @@
+body {
+    padding-top: 70px;
+}
+
 /* O CSS da imagem de fundo será colocado aqui ou em um arquivo externo */
 .home-background {
     /* Define a altura mínima: 100% da altura da viewport (tela) */
@@ -22,12 +26,14 @@
     border-radius: 10px;
     text-align: center;
     /* Ocupa a largura total para centralizar */
-    max-width: 900px; 
+    max-width: 900px;
     width: 100%;
 }
 
 /* Ajusta as cores do texto para o overlay escuro */
-.content-overlay h1, .content-overlay h2, .content-overlay h3 {
-    color: #EEE8AA !important; /* Força o texto a ser branco ou claro */
+.content-overlay h1,
+.content-overlay h2,
+.content-overlay h3 {
+    color: #eee8aa !important; /* Força o texto a ser branco ou claro */
     text-shadow: 2px 2px 4px #000000; /* Ajuda a destacar o texto */
 }

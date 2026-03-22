@@ -21,7 +21,12 @@ from controle.views import (
 )
 
 urlpatterns = [
-    # Cdaastro de usuário
+    # Aprovação pelo admin
+    path('painel-aprovacao/', views.painel_aprovacao, name='painel_aprovacao'),
+    path('aprovar/<int:user_id>/', views.aprovar_usuario, name='aprovar_usuario'),
+    path('rejeitar/<int:user_id>/', views.rejeitar_usuario, name='rejeitar_usuario'),
+    
+    # Cadastro de usuário
     path("contas/registro/", views.registro, name="registro"),
        
     # URLs para Individuo
@@ -42,6 +47,9 @@ urlpatterns = [
         IndividuoDeleteView.as_view(),
         name="individuo_delete",
     ),
+    # Rota para gerar o PDF da ficha do alvo
+    path('individuo/<int:pk>/pdf/', views.gerar_pdf_individuo, name='gerar_pdf_individuo'),
+    
     # URLs para Orcrim
     path("visualizar_orcrims/", OrcrimListView.as_view(), name="orcrim_list"),
     path("adicionar_orcrim/", OrcrimCreateView.as_view(), name="orcrim_add"),
@@ -80,8 +88,10 @@ urlpatterns = [
     path("ajax/galerias/", views.carregar_galerias, name="carregar_galerias"),
     path("ajax/celas/", views.carregar_celas, name="carregar_celas"),
     path("ajax/alojamentos/", views.carregar_alojamentos, name="carregar_alojamentos"),
+    
     # AJAX para tipo de estrutura da casa prisional
     path("ajax/tipo_estrutura/", views.tipo_estrutura_view, name="tipo_estrutura"),
+    
     # AJAX para carregar dados diretamente por casa prisional
     path("ajax/galerias_por_casa/", views.carregar_galerias, name="galerias_por_casa"),
     path("ajax/celas_por_casa/", views.carregar_celas, name="celas_por_casa"),

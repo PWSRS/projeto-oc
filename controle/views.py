@@ -33,6 +33,11 @@ from .models import (
 from .forms import IndividuoForm, OrcrimForm, CasaPrisionalForm, CadastroUsuarioForm
 
 
+# View para página inicial
+@login_required
+def home(request):
+    return render(request, "home.html")
+
 
 def registro(request):
     if request.method == "POST":
@@ -40,54 +45,110 @@ def registro(request):
         if form.is_valid():
             # Chamamos o save(commit=False) para aplicar a trava de segurança
             user = form.save(commit=False)
-            
+
             # O username já é definido no form.save(), então focamos na trava:
-            user.is_active = False # 🔒 Bloqueado até aprovação manual
-            
+            user.is_active = False  # 🔒 Bloqueado até aprovação manual
+
             user.save()
-            
+
             # Mensagem de orientação para o agente
             messages.warning(
-                request, 
+                request,
                 "Solicitação enviada! Seu acesso passará por análise técnica. "
-                "Aguarde a homologação da ARI para realizar o login."
+                "Aguarde a homologação da ARI para realizar o login.",
             )
-            return redirect('login')
+            return redirect("login")
     else:
         form = CadastroUsuarioForm()
-    
+
     return render(request, "registration/registro.html", {"form": form})
+
 
 # Trava de segurança para apenas administradores acessarem
 def e_supervisor(user):
     return user.is_staff
 
+
+# --- PAINÉIS DE LISTAGEM ---
+
+
 @user_passes_test(e_supervisor)
 def painel_aprovacao(request):
-    usuarios_pendentes = User.objects.filter(is_active=False).order_by('-date_joined')
-    return render(request, 'registration/painel_aprovacao.html', {'usuarios': usuarios_pendentes})
+    """Lista apenas quem se cadastrou e ainda não foi aprovado (is_active=False)"""
+    usuarios_pendentes = User.objects.filter(is_active=False).order_by("-date_joined")
+    return render(
+        request, "registration/painel_aprovacao.html", {"usuarios": usuarios_pendentes}
+    )
+
+
+@user_passes_test(e_supervisor)
+def listar_usuarios_ativos(request):
+    """Lista apenas quem já está liberado no sistema (is_active=True)"""
+    usuarios_ativos = User.objects.filter(is_active=True).order_by("-date_joined")
+    return render(
+        request, "registration/painel_ativos.html", {"usuarios": usuarios_ativos}
+    )
+
+
+# --- AÇÕES PARA NOVOS CADASTROS (PENDENTES) ---
+
 
 @user_passes_test(e_supervisor)
 def aprovar_usuario(request, user_id):
+    """Ativa o usuário que estava pendente"""
     usuario = get_object_or_404(User, id=user_id)
     usuario.is_active = True
     usuario.save()
-    messages.success(request, f"Acesso de {usuario.get_full_name()} aprovado com sucesso!")
-    return redirect('painel_aprovacao')
+    messages.success(
+        request, f"Acesso de {usuario.get_full_name() or usuario.username} aprovado!"
+    )
+    return redirect("painel_aprovacao")
+
 
 @user_passes_test(e_supervisor)
 def rejeitar_usuario(request, user_id):
+    """Exclui o cadastro se não for alguém da organização (Limpeza de banco)"""
     usuario = get_object_or_404(User, id=user_id)
-    nome = usuario.get_full_name()
-    usuario.delete() # Remove do banco de dados
-    messages.warning(request, f"A solicitação de {nome} foi excluída.")
-    return redirect('painel_aprovacao')
+    nome = usuario.username
+    usuario.delete()  # Como é um cadastro novo e indevido, removemos logo.
+    messages.error(request, f"Solicitação de {nome} rejeitada e removida do banco.")
+    return redirect("painel_aprovacao")
 
 
-# View para página inicial
-@login_required
-def home(request):
-    return render(request, "home.html")
+# --- AÇÕES PARA USUÁRIOS ATIVOS ---
+
+
+@user_passes_test(e_supervisor)
+def revogar_acesso(request, user_id):
+    """Bloqueia o acesso, mas mantém o usuário no banco (is_active=False)"""
+    if request.user.id == user_id:
+        messages.error(
+            request, "Operação negada: Você não pode bloquear seu próprio acesso."
+        )
+        return redirect("usuarios_ativos")
+
+    usuario = get_object_or_404(User, id=user_id)
+    usuario.is_active = False  # Bloqueia, mas não apaga
+    usuario.save()
+    messages.warning(
+        request,
+        f"Acesso de {usuario.username} suspenso. Ele agora consta em 'Pendentes'.",
+    )
+    return redirect("usuarios_ativos")
+
+
+@user_passes_test(e_supervisor)
+def excluir_usuario_ativo(request, user_id):
+    """Remove o usuário ativo permanentemente do banco"""
+    if request.user.id == user_id:
+        messages.error(request, "Você não pode excluir sua própria conta.")
+        return redirect("usuarios_ativos")
+
+    usuario = get_object_or_404(User, id=user_id)
+    nome = usuario.username
+    usuario.delete()
+    messages.success(request, f"O registro de {nome} foi excluído permanentemente.")
+    return redirect("usuarios_ativos")
 
 
 # Função para requisitar a página 404.html personalizada
@@ -348,20 +409,22 @@ def listar_detentos_por_galeria(request, galeria_id):
     return render(request, "individuo/listar_detentos.html", context)
 
 
-
 def gerar_pdf_individuo(request, pk):
     individuo = get_object_or_404(Individuo, pk=pk)
-    
+
     # Renderiza o HTML
-    html_string = render_to_string('pdf_individuo.html', {
-        'individuo': individuo,
-        'request': request, # Passar o request ajuda a resolver URLs
-    })
-    
+    html_string = render_to_string(
+        "pdf_individuo.html",
+        {
+            "individuo": individuo,
+            "request": request,  # Passar o request ajuda a resolver URLs
+        },
+    )
+
     # O segredo para fotos no Windows/Pycharm é o base_url
-    html = HTML(string=html_string, base_url=request.build_absolute_uri('/'))
+    html = HTML(string=html_string, base_url=request.build_absolute_uri("/"))
     pdf = html.write_pdf()
 
-    response = HttpResponse(pdf, content_type='application/pdf')
-    response['Content-Disposition'] = f'inline; filename="Ficha_{individuo.nome}.pdf"'
+    response = HttpResponse(pdf, content_type="application/pdf")
+    response["Content-Disposition"] = f'inline; filename="Ficha_{individuo.nome}.pdf"'
     return response

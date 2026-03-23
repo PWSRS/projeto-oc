@@ -1,34 +1,112 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}E-mail de Redefinição Enviado{% endblock %}
+{% block title %}ARI SUL - Redefinição de Acesso{% endblock %}
+
+{% block extra_head_css %}
+    <style>
+        /* Estilos Dark/Tech Consistentes */
+        body { 
+            background: radial-gradient(circle at center, #1e272e 0%, #0f1418 100%); 
+            color: #ecf0f1;
+            min-height: 100vh;
+        }
+        .wrapper-centered { 
+            min-height: 90vh; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+        }
+        .glass-card {
+            background: rgba(44, 62, 80, 0.4);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 40px;
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
+        }
+        .brand-icon {
+            width: 80px;
+            height: 80px;
+            background: rgba(52, 152, 219, 0.2);
+            color: #3498db;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            margin: 0 auto 25px;
+            border: 2px solid #3498db;
+            box-shadow: 0 0 25px rgba(52, 152, 219, 0.3);
+        }
+        .text-info-tech {
+            color: #4fb9ff !important;
+            letter-spacing: 1px;
+        }
+        .instruction-box {
+            background: rgba(0, 0, 0, 0.2);
+            border-left: 3px solid #3498db;
+            padding: 15px;
+            margin: 20px 0;
+            text-align: left;
+            font-size: 0.9rem;
+            color: #bdc3c7;
+        }
+        .btn-tech-outline {
+            border: 1px solid #3498db;
+            color: #3498db;
+            background: transparent;
+            letter-spacing: 1px;
+            transition: 0.4s;
+            font-weight: bold;
+        }
+        .btn-tech-outline:hover {
+            background: #3498db;
+            color: white;
+            box-shadow: 0 0 15px rgba(52, 152, 219, 0.4);
+        }
+        .security-footer {
+            margin-top: 25px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #7f8c8d;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding-top: 15px;
+        }
+    </style>
+{% endblock %}
 
 {% block content %}
-<div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
-    <div class="col-md-8 col-lg-6">
-        {# Card de Aviso #}
-        <div class="card text-center shadow-lg border-0 p-5">
-            <div class="card-body">
-                
-                {# Ícone de E-mail Enviado #}
-                <i class="fas fa-paper-plane text-info mb-4" style="font-size: 4rem;"></i>
-                
-                <h2 class="card-title text-info fw-bold mb-3">E-mail de Redefinição Enviado!</h2>
-                
-                <p class="lead text-muted">
-                    Verifique sua **caixa de entrada** e, por precaução, a **pasta de spam**.
-                </p>
-                
-                <p class="text-secondary mt-4">
-                    Nós lhe enviamos um e-mail com instruções detalhadas para configurar sua nova senha. Se você não receber a mensagem em alguns minutos, verifique se o endereço de e-mail digitado está correto e tente o processo novamente.
-                </p>
-                
-                <hr class="my-4">
-                
-                <a href="{% url 'login' %}" class="btn btn-outline-secondary btn-lg w-75 shadow-sm">
-                    Voltar para o Login
-                </a>
-            </div>
+<div class="wrapper-centered px-3">
+    <div class="glass-card animate__animated animate__fadeIn">
+        <div class="brand-icon">
+            <i class="fa-solid fa-paper-plane fa-2x"></i>
+        </div>
+        
+        <h4 class="fw-bold text-info-tech mb-2">SOLICITAÇÃO ENVIADA</h4>
+        <p class="text-light opacity-75 small mb-4">Protocolo de Redefinição de Credenciais</p>
+
+        <div class="instruction-box">
+            <p class="mb-2"><strong>Verificação Necessária:</strong></p>
+            <p class="mb-0">Enviamos um link de autenticação para o seu e-mail funcional. Caso não visualize em 2 minutos, verifique a pasta de <strong>Spam/Lixo Eletrônico</strong>.</p>
+        </div>
+
+        <p class="extra-small text-muted px-2" style="font-size: 0.8rem;">
+            Se o endereço estiver correto, as instruções de recuperação permitirão o acesso imediato ao sistema ARI SUL.
+        </p>
+
+        <div class="d-grid mt-4">
+            <a href="{% url 'login' %}" class="btn btn-tech-outline py-2">
+                <i class="fa-solid fa-chevron-left me-2"></i> RETORNAR AO LOGIN
+            </a>
+        </div>
+
+        <div class="security-footer">
+            <i class="fa-solid fa-shield-halved text-info me-1"></i> 
+            Sistema de Inteligência - SPG
         </div>
     </div>
 </div>

@@ -1,5 +1,5 @@
 {% if request.user.is_authenticated %}
-<nav class="navbar navbar-expand-lg bg-dark fixed-top shadow" id="main-navbar" data-bs-theme="dark">
+<nav class="navbar navbar-expand-lg fixed-top shadow navbar-ari" id="main-navbar" data-bs-theme="dark">
   <div class="container-fluid">
     <a class="navbar-brand fw-bold" href="{% url 'home' %}">ARI - Sul</a>
     
@@ -49,24 +49,48 @@
           </ul>
         </li>
 
-        {# --- ÁREA RESTRITA: GESTÃO DE ACESSOS --- #}
+        {# --- ÁREA RESTRITA: GESTÃO DE ACESSOS (DROPDOWN) --- #}
         {% if user.is_staff %}
-        <li class="nav-item ms-lg-3">
-          <a class="nav-link text-info d-flex align-items-center" href="{% url 'painel_aprovacao' %}">
+        <li class="nav-item dropdown ms-lg-3">
+          <a class="nav-link dropdown-toggle text-info d-flex align-items-center" href="#" id="navbarDropdownGestao" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             <i class="fa-solid fa-users-gear me-1"></i> Gestão
+            {# Badge de pendentes aparece no título do dropdown se houver algo #}
             {% if pendentes_count > 0 %}
               <span class="badge rounded-pill bg-danger ms-1 border border-light animate__animated animate__pulse animate__infinite" 
-                    style="font-size: 0.7rem;" title="{{ pendentes_count }} solicitações pendentes">
+                    style="font-size: 0.6rem;">
                 {{ pendentes_count }}
               </span>
             {% endif %}
           </a>
+          
+          <ul class="dropdown-menu shadow border-info" aria-labelledby="navbarDropdownGestao">
+            <li>
+              <a class="dropdown-item d-flex justify-content-between align-items-center" href="{% url 'painel_aprovacao' %}">
+                <span><i class="fa-solid fa-user-check me-2"></i>Aprovações</span>
+                {% if pendentes_count > 0 %}
+                  <span class="badge bg-danger rounded-pill">{{ pendentes_count }}</span>
+                {% endif %}
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="{% url 'usuarios_ativos' %}">
+                <i class="fa-solid fa-user-group me-2"></i>Usuários Ativos
+              </a>
+            </li>
+          </ul>
         </li>
         {% endif %}
 
         {# --- LINKS DE CONTA (ALINHADOS À DIREITA NO DESKTOP) --- #}
-        <li class="nav-item ms-lg-auto">
-          <a class="nav-link text-warning" href="{% url 'password_change' %}">
+        <li class="nav-item ms-lg-auto d-flex align-items-center">
+          <span class="navbar-text text-light me-3 d-none d-lg-inline">
+            <i class="fa-solid fa-user-circle me-1"></i>
+            <strong>{{ user.first_name|default:user.username }}</strong>
+          </span>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link text-warning" href="{% url 'password_change' %}" title="Alterar Senha">
             <i class="fa-solid fa-key"></i> <span class="d-lg-none">Alterar Senha</span>
           </a>
         </li>

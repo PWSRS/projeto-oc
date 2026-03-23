@@ -1,40 +1,121 @@
 {% extends "base.html" %}
+{% load static %}
 
-{% block title %}ARI Sul - Gestão de Acessos{% endblock %}
+{% block title %}ARI SUL - Aprovações Pendentes{% endblock %}
+
+{% block extra_head_css %}
+<style>
+    body {
+        background: radial-gradient(circle at center, #1e272e 0%, #0f1418 100%);
+        color: #ecf0f1;
+        min-height: 100vh;
+        padding-top: 70px;
+    }
+    .glass-card {
+        background: rgba(44, 62, 80, 0.4);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+    }
+    .table-dark-tech {
+        --bs-table-bg: transparent;
+        --bs-table-color: #ecf0f1;
+        --bs-table-hover-bg: rgba(255, 255, 255, 0.05);
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+    .text-info-tech { color: #4fb9ff !important; }
+    
+    .btn-action {
+        transition: 0.3s;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+    }
+    /* Estilo Verde para Aprovar */
+    .btn-aprovar-tech {
+        background: rgba(46, 204, 113, 0.15);
+        color: #2ecc71;
+        border: 1px solid rgba(46, 204, 113, 0.4);
+    }
+    .btn-aprovar-tech:hover {
+        background: #2ecc71;
+        color: #fff;
+        box-shadow: 0 0 15px rgba(46, 204, 113, 0.4);
+    }
+    /* Estilo Vermelho para Rejeitar */
+    .btn-rejeitar-tech {
+        background: rgba(231, 76, 60, 0.1);
+        color: #e74c3c;
+        border: 1px solid rgba(231, 76, 60, 0.4);
+    }
+    .btn-rejeitar-tech:hover {
+        background: #e74c3c;
+        color: #fff;
+        box-shadow: 0 0 15px rgba(231, 76, 60, 0.4);
+    }
+</style>
+{% endblock %}
 
 {% block content %}
-<div class="container py-4">
-    <div class="card shadow border-0">
-        <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center py-3">
-            <h5 class="mb-0"><i class="fa-solid fa-shield-halved me-2"></i>Solicitações de Acesso Pendentes</h5>
-            <span class="badge bg-danger rounded-pill">{{ usuarios.count }} pendente(s)</span>
+<div class="container py-5">
+    <div class="glass-card shadow-lg p-0 overflow-hidden animate__animated animate__fadeIn">
+        
+        {# Cabeçalho #}
+        <div class="card-header bg-dark bg-opacity-50 text-white d-flex justify-content-between align-items-center py-3 border-bottom border-secondary">
+            <h5 class="mb-0">
+                <i class="fa-solid fa-user-clock me-2 text-warning"></i>Solicitações de Acesso Pendentes
+            </h5>
+            <span class="badge bg-danger rounded-pill border border-light animate__animated animate__pulse animate__infinite">
+                {{ usuarios.count }} Pendência(s)
+            </span>
         </div>
-        <div class="card-body">
+
+        <div class="card-body p-0">
             <div class="table-responsive">
-                <table class="table table-hover align-middle">
-                    <thead class="table-light text-secondary">
+                <table class="table table-dark-tech table-hover align-middle mb-0">
+                    <thead class="bg-black bg-opacity-25 text-info-tech small text-uppercase">
                         <tr>
-                            <th>NOME COMPLETO</th>
+                            <th class="ps-4">SOLICITANTE</th>
                             <th>E-MAIL INSTITUCIONAL</th>
                             <th>DATA DA SOLICITAÇÃO</th>
-                            <th class="text-center">AÇÕES</th>
+                            <th class="text-center">ANÁLISE TÉCNICA</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for usuario in usuarios %}
                         <tr>
-                            <td class="fw-bold text-dark">{{ usuario.get_full_name }}</td>
-                            <td><code class="text-primary">{{ usuario.email }}</code></td>
-                            <td class="small">{{ usuario.date_joined|date:"d/m/Y H:i" }}</td>
+                            <td class="ps-4">
+                                <div class="d-flex align-items-center">
+                                    <div class="rounded-circle d-flex align-items-center justify-content-center me-3" 
+                                         style="width: 35px; height: 35px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);">
+                                        <i class="fa-solid fa-user-tag small text-secondary"></i>
+                                    </div>
+                                    <div>
+                                        <span class="fw-bold d-block text-white">{{ usuario.get_full_name|default:usuario.username }}</span>
+                                        <small class="text-muted">ID: #{{ usuario.id }}</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <code class="text-info-tech opacity-75">{{ usuario.email }}</code>
+                            </td>
+                            <td class="small opacity-75">
+                                <i class="fa-regular fa-clock me-1"></i> {{ usuario.date_joined|date:"d/m/Y H:i" }}
+                            </td>
                             <td class="text-center">
-                                <div class="btn-group" role="group">
-                                    <a href="{% url 'aprovar_usuario' usuario.id %}" class="btn btn-success btn-sm px-3" title="Aprovar">
-                                        <i class="fa-solid fa-check"></i> Aprovar
+                                <div class="btn-group shadow-sm">
+                                    {# BOTÃO APROVAR #}
+                                    <a href="{% url 'aprovar_usuario' usuario.id %}" 
+                                       class="btn btn-sm btn-action btn-aprovar-tech px-3"
+                                       title="Homologar Acesso">
+                                        <i class="fa-solid fa-check-double me-1"></i> APROVAR
                                     </a>
+
+                                    {# BOTÃO REJEITAR (EXCLUIR) #}
                                     <a href="{% url 'rejeitar_usuario' usuario.id %}" 
-                                       class="btn btn-outline-danger btn-sm px-3" 
-                                       onclick="return confirm('Tem certeza que deseja REJEITAR e EXCLUIR esta solicitação?')">
-                                        <i class="fa-solid fa-xmark"></i> Rejeitar
+                                       class="btn btn-sm btn-action btn-rejeitar-tech px-3"
+                                       title="Rejeitar Solicitação"
+                                       onclick="return confirm('ATENÇÃO: Deseja REJEITAR e EXCLUIR permanentemente a solicitação de {{ usuario.username }}?');">
+                                        <i class="fa-solid fa-user-xmark me-1"></i> REJEITAR
                                     </a>
                                 </div>
                             </td>
@@ -42,8 +123,11 @@
                         {% empty %}
                         <tr>
                             <td colspan="4" class="text-center py-5">
-                                <i class="fa-solid fa-user-slash fa-2x text-light mb-2 d-block"></i>
-                                <p class="text-muted mb-0">Nenhuma solicitação aguardando revisão.</p>
+                                <div class="opacity-25">
+                                    <i class="fa-solid fa-clipboard-check fa-4x mb-3 d-block"></i>
+                                    <h5 class="mb-0">Tudo em dia!</h5>
+                                    <p>Nenhuma solicitação aguardando análise.</p>
+                                </div>
                             </td>
                         </tr>
                         {% endfor %}

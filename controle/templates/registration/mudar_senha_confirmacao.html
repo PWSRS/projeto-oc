@@ -1,35 +1,111 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Senha Alterada{% endblock %}
+{% block title %}ARI SUL - Operação Concluída{% endblock %}
+
+{% block extra_head_css %}
+    <style>
+        /* Estilos Dark/Tech Consistentes ARI SUL */
+        body { 
+            background: radial-gradient(circle at center, #1e272e 0%, #0f1418 100%); 
+            color: #ecf0f1;
+            min-height: 100vh;
+        }
+        .wrapper-centered { 
+            min-height: 90vh; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+        }
+        .glass-card {
+            background: rgba(44, 62, 80, 0.4);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 40px;
+            width: 100%;
+            max-width: 480px;
+            text-align: center;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
+        }
+        .brand-icon {
+            width: 80px;
+            height: 80px;
+            background: rgba(39, 174, 96, 0.1);
+            color: #27ae60;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            margin: 0 auto 25px;
+            border: 2px solid #27ae60;
+            box-shadow: 0 0 20px rgba(39, 174, 96, 0.2);
+        }
+        .text-success-tech {
+            color: #27ae60 !important;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        .info-box {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            font-size: 0.9rem;
+            color: #bdc3c7;
+            border: 1px solid rgba(39, 174, 96, 0.2);
+        }
+        .btn-home-tech {
+            background: linear-gradient(45deg, #2ecc71, #27ae60);
+            border: none;
+            color: white;
+            letter-spacing: 1px;
+            font-weight: bold;
+            transition: 0.4s;
+        }
+        .btn-home-tech:hover {
+            filter: brightness(1.2);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(39, 174, 96, 0.3);
+            color: white;
+        }
+        .security-footer {
+            margin-top: 25px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #7f8c8d;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding-top: 15px;
+        }
+    </style>
+{% endblock %}
 
 {% block content %}
-<div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
-    <div class="col-md-8 col-lg-6">
-        {# Card de Sucesso #}
-        <div class="card text-center shadow-lg border-0 p-4">
-            <div class="card-body">
-                
-                {# Ícone de Sucesso #}
-                <i class="fas fa-check-circle text-success mb-3" style="font-size: 4rem;"></i>
-                
-                <h2 class="card-title text-success fw-bold mb-3">Senha Alterada com Sucesso!</h2>
-                
-                <p class="lead text-muted">
-                    Sua nova senha foi definida. Agora você pode usar suas novas credenciais para acessar a plataforma.
-                </p>
-                
-                <hr class="my-4">
-                
-                {# O botão direciona para a página principal, conforme o seu código #}
-                <a href="{% url 'index' %}" class="btn btn-primary btn-lg shadow-sm w-75">
-                    <i class="fas fa-home me-2"></i> Ir para a Página Inicial
-                </a>
-                
-                <p class="small mt-3 text-secondary">
-                    O login foi concluído com a nova senha.
-                </p>
-            </div>
+<div class="wrapper-centered px-3">
+    <div class="glass-card animate__animated animate__fadeIn">
+        <div class="brand-icon">
+            <i class="fa-solid fa-check-double fa-2x"></i>
+        </div>
+        
+        <h4 class="fw-bold text-success-tech mb-2">ATERAÇÃO CONFIRMADA</h4>
+        <p class="text-light opacity-75 small">Credenciais atualizadas no banco de dados.</p>
+
+        <div class="info-box">
+            <p class="mb-0">
+                Sua nova senha foi processada e validada. A integridade da sua conta foi restabelecida e o acesso total ao sistema está liberado.
+            </p>
+        </div>
+
+        <div class="d-grid mt-4">
+            <a href="{% url 'home' %}" class="btn btn-home-tech py-2">
+                <i class="fa-solid fa-house-chimney me-2"></i> IR PARA O PAINEL PRINCIPAL
+            </a>
+        </div>
+
+        <div class="security-footer">
+            <i class="fa-solid fa-user-check text-success me-1"></i> 
+            Identidade Confirmada - ARI SUL
         </div>
     </div>
 </div>

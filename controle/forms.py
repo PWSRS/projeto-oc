@@ -14,32 +14,30 @@ User = get_user_model()
 
 class CadastroUsuarioForm(UserCreationForm):
     first_name = forms.CharField(
-        label="PRIMEIRO NOME", 
-        max_length=150, 
+        label="PRIMEIRO NOME",
+        max_length=150,
         required=True,
-        widget=forms.TextInput(attrs={"placeholder": "Seu primeiro nome"})
+        widget=forms.TextInput(attrs={"placeholder": "Seu primeiro nome"}),
     )
     last_name = forms.CharField(
-        label="ÚLTIMO NOME", 
-        max_length=150, 
+        label="ÚLTIMO NOME",
+        max_length=150,
         required=True,
-        widget=forms.TextInput(attrs={"placeholder": "Seu último nome"})
+        widget=forms.TextInput(attrs={"placeholder": "Seu último nome"}),
     )
     email = forms.EmailField(
-        label="E-MAIL INSTITUCIONAL", 
-        max_length=254, 
+        label="E-MAIL INSTITUCIONAL",
+        max_length=254,
         required=True,
-        widget=forms.EmailInput(attrs={"placeholder": "usuario@bm.rs.gov.br"})
+        widget=forms.EmailInput(attrs={"placeholder": "usuario@bm.rs.gov.br"}),
     )
 
     # 🟢 ADIÇÃO: Campos de senha manuais para controle total no HTML
     password1 = forms.CharField(
-        label="SENHA",
-        widget=forms.PasswordInput(attrs={"placeholder": "••••••••"})
+        label="SENHA", widget=forms.PasswordInput(attrs={"placeholder": "••••••••"})
     )
     password2 = forms.CharField(
-        label="CONFIRMAR",
-        widget=forms.PasswordInput(attrs={"placeholder": "••••••••"})
+        label="CONFIRMAR", widget=forms.PasswordInput(attrs={"placeholder": "••••••••"})
     )
 
     class Meta(UserCreationForm.Meta):
@@ -49,10 +47,12 @@ class CadastroUsuarioForm(UserCreationForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        if 'username' in self.fields:
-            self.fields['username'].required = False
-        
-        self.fields["email"].help_text = "Obrigatório: utilize seu e-mail institucional @bm.rs.gov.br"
+        if "username" in self.fields:
+            self.fields["username"].required = False
+
+        self.fields["email"].help_text = (
+            "Obrigatório: utilize seu e-mail institucional @bm.rs.gov.br"
+        )
 
         # Aplica a classe CSS em todos, incluindo as novas senhas
         for field_name, field in self.fields.items():
@@ -74,7 +74,7 @@ class CadastroUsuarioForm(UserCreationForm):
         user = super().save(commit=False)
         user.username = self.cleaned_data["email"]
         # Define a senha corretamente usando o método do Django
-        user.set_password(self.cleaned_data["password1"]) 
+        user.set_password(self.cleaned_data["password1"])
         if commit:
             user.save()
         return user
@@ -83,7 +83,9 @@ class CadastroUsuarioForm(UserCreationForm):
         email = self.cleaned_data.get("email").lower()
         dominio_oficial = "@bm.rs.gov.br"
         if not email.endswith(dominio_oficial):
-            raise forms.ValidationError(f"Acesso negado. Domínio aceito: {dominio_oficial}.")
+            raise forms.ValidationError(
+                f"Acesso negado. Domínio aceito: {dominio_oficial}."
+            )
         if User.objects.filter(username=email).exists():
             raise forms.ValidationError("Este e-mail já está cadastrado.")
         return email
@@ -95,17 +97,18 @@ class CadastroUsuarioForm(UserCreationForm):
     def clean_last_name(self):
         sobrenome = self.cleaned_data.get("last_name")
         return sobrenome.upper() if sobrenome else sobrenome
-    
+
+
 class EmailLoginForm(AuthenticationForm):
     username = forms.EmailField(
-        label="IDENTIFICADOR", # Garante que o Django use o termo que queremos
+        label="IDENTIFICADOR",  # Garante que o Django use o termo que queremos
         widget=forms.EmailInput(
             attrs={
-                "class": "form-control py-2", # 'py-2' dá um preenchimento interno melhor
+                "class": "form-control py-2",  # 'py-2' dá um preenchimento interno melhor
                 "placeholder": "usuario@bm.rs.gov.br",
-                "autocomplete": "username"
+                "autocomplete": "username",
             }
-        )
+        ),
     )
     password = forms.CharField(
         label="CHAVE DE ACESSO",
@@ -113,13 +116,10 @@ class EmailLoginForm(AuthenticationForm):
             attrs={
                 "class": "form-control py-2",
                 "placeholder": "••••••••",
-                "autocomplete": "current-password"
+                "autocomplete": "current-password",
             }
-        )
+        ),
     )
-
-
-
 
 
 class IndividuoForm(forms.ModelForm):

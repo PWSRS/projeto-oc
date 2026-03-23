@@ -1,85 +1,133 @@
 {% extends "base.html" %}
 {% load static %}
+{% load widget_tweaks %}
 
-{% block title %}Criar Nova Senha{% endblock %}
+{% block title %}ARI SUL - Nova Credencial{% endblock %}
+
+{% block extra_head_css %}
+    <style>
+        /* Estilos Consistentes ARI SUL */
+        body { 
+            background: radial-gradient(circle at center, #1e272e 0%, #0f1418 100%); 
+            color: #ecf0f1;
+            min-height: 100vh;
+        }
+        .wrapper-centered { 
+            min-height: 90vh; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+        }
+        .glass-card {
+            background: rgba(44, 62, 80, 0.4);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 40px;
+            width: 100%;
+            max-width: 480px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
+        }
+        .brand-icon {
+            width: 70px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+        }
+        .icon-success { background: #27ae60; box-shadow: 0 0 20px rgba(39, 174, 96, 0.3); }
+        .icon-error { background: #c0392b; box-shadow: 0 0 20px rgba(192, 57, 43, 0.3); }
+
+        .form-control-dark {
+            background: rgba(0, 0, 0, 0.3) !important;
+            border: 1px solid #34495e !important;
+            color: #fff !important;
+            padding: 10px 12px;
+        }
+        .form-control-dark:focus {
+            border-color: #27ae60 !important;
+            box-shadow: 0 0 8px rgba(39, 174, 96, 0.2) !important;
+        }
+        .btn-tech {
+            background: linear-gradient(45deg, #219150, #27ae60);
+            border: none; color: white; font-weight: bold; letter-spacing: 1px;
+        }
+        .btn-tech:hover { filter: brightness(1.2); transform: translateY(-1px); color: white; }
+        
+        .label-tech {
+            color: #a5b1be !important;
+            font-size: 0.7rem;
+            letter-spacing: 1px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .help-text-tech { font-size: 0.65rem; color: #7f8c8d; display: block; margin-top: 5px; }
+    </style>
+{% endblock %}
 
 {% block content %}
-<div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
-    <div class="col-md-7 col-lg-5">
-        <div class="card shadow-lg p-4 border-0">
-            <div class="card-body">
-                
-                {% if validlink %}
-                    {# Bloco para quando o link é válido #}
-                    <h2 class="text-center mb-4 text-primary">Defina sua Nova Senha</h2>
-                    
-                    <form method="post">
-                        {% csrf_token %}
-                        
-                        {# Renderiza campos e seus erros #}
-                        {% for field in form %}
-                        <div class="mb-3">
-                            <label for="{{ field.id_for_label }}" class="form-label fw-bold">{{ field.label }}</label>
-                            {{ field }}
-                            
-                            {% if field.help_text %}
-                            <small class="form-text text-muted">{{ field.help_text }}</small>
-                            {% endif %}
-                            
-                            {% for error in field.errors %}
-                            <div class="text-danger small mt-1">{{ error }}</div>
-                            {% endfor %}
-                        </div>
-                        {% endfor %}
-
-                        <div class="d-grid mt-4">
-                            <button type="submit" class="btn btn-primary btn-lg shadow">Alterar minha senha</button>
-                        </div>
-                    </form>
-
-                {% else %}
-                    {# Bloco para quando o link é inválido ou expirou #}
-                    <div class="text-center">
-                        <i class="fas fa-exclamation-triangle text-danger mb-3" style="font-size: 4rem;"></i>
-                        <h2 class="text-danger fw-bold mb-3">Link de Redefinição Inválido</h2>
-                        <p class="lead text-muted">
-                            O link de redefinição de senha era inválido ou já expirou. Isso pode ocorrer se você já usou este link anteriormente.
-                        </p>
-                        <hr class="my-4">
-                        <a href="{% url 'password_reset' %}" class="btn btn-warning btn-lg shadow-sm w-75">
-                            <i class="fas fa-redo me-2"></i> Solicitar Nova Redefinição
-                        </a>
-                    </div>
-                {% endif %}
+<div class="wrapper-centered px-3">
+    <div class="glass-card animate__animated animate__zoomIn">
+        
+        {% if validlink %}
+            {# --- ESTADO: LINK VÁLIDO --- #}
+            <div class="text-center">
+                <div class="brand-icon icon-success">
+                    <i class="fa-solid fa-lock-open fa-2x text-white"></i>
+                </div>
+                <h5 class="fw-bold mb-1">REDEFINIÇÃO</h5>
+                <p class="small text-success mb-4">Crie sua nova chave de acesso</p>
             </div>
-        </div>
+
+            <form method="post">
+                {% csrf_token %}
+                
+                {% for field in form %}
+                <div class="mb-3">
+                    <label for="{{ field.id_for_label }}" class="form-label label-tech">{{ field.label }}</label>
+                    {{ field|add_class:"form-control form-control-dark" }}
+                    
+                    {% if field.help_text %}
+                        <small class="help-text-tech">{{ field.help_text|safe }}</small>
+                    {% endif %}
+                    
+                    {% for error in field.errors %}
+                        <div class="text-danger extra-small mt-1"><i class="fa-solid fa-circle-exclamation"></i> {{ error }}</div>
+                    {% endfor %}
+                </div>
+                {% endfor %}
+
+                <div class="d-grid mt-4">
+                    <button type="submit" class="btn btn-tech py-2 shadow">
+                        ATUALIZAR CREDENCIAIS
+                    </button>
+                </div>
+            </form>
+
+        {% else %}
+            {# --- ESTADO: LINK INVÁLIDO --- #}
+            <div class="text-center py-3">
+                <div class="brand-icon icon-error">
+                    <i class="fa-solid fa-triangle-exclamation fa-2x text-white"></i>
+                </div>
+                <h4 class="fw-bold text-danger mb-2">LINK EXPIRADO</h4>
+                <p class="text-muted small mb-4">
+                    Este token de segurança tornou-se inválido por tempo ou por uso prévio.
+                </p>
+                
+                <div class="d-grid gap-2">
+                    <a href="{% url 'password_reset' %}" class="btn btn-outline-warning fw-bold">
+                        SOLICITAR NOVO LINK
+                    </a>
+                    <a href="{% url 'login' %}" class="btn btn-link text-muted text-decoration-none small mt-2">
+                        Voltar ao Login
+                    </a>
+                </div>
+            </div>
+        {% endif %}
+
     </div>
 </div>
 {% endblock %}
-
-{% block extra_js %}
-    {{ block.super }}
-    {# Script para adicionar a classe form-control a todos os widgets de formulário automaticamente #}
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var formFields = document.querySelectorAll('form input');
-            formFields.forEach(function(field) {
-                if (!field.classList.contains('form-control')) {
-                    field.classList.add('form-control');
-                }
-            });
-            var selectFields = document.querySelectorAll('form select');
-            selectFields.forEach(function(field) {
-                if (!field.classList.contains('form-select')) {
-                    field.classList.add('form-select');
-                }
-            });
-            var textareaFields = document.querySelectorAll('form textarea');
-            textareaFields.forEach(function(field) {
-                if (!field.classList.contains('form-control')) {
-                    field.classList.add('form-control');
-                }
-            });
-        });
-    </script>
-{% endblock extra_js %}

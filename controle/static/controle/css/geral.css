@@ -19,3 +19,52 @@ body {
 .card-body {
     border-radius: 20px !important;
 }
+
+
+
+/* Efeito Glassmorphism na Navbar */
+.navbar-ari {
+    background: rgba(15, 20, 24, 0.7) !important; /* Fundo escuro semi-transparente */
+    backdrop-filter: blur(12px);                 /* Desfoque do fundo */
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Linha sutil inferior */
+    transition: all 0.3s ease;
+}
+
+/* Estilização dos Links */
+.navbar-ari .nav-link {
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    padding: 0.5rem 1rem;
+    transition: color 0.3s ease;
+}
+
+/* Efeito ao passar o mouse (Hover) */
+.navbar-ari .nav-link:hover {
+    color: #eee8aa !important; /* Cor palha da sua home */
+}
+
+/* Estilização dos Dropdowns para acompanhar o tema */
+.navbar-ari .dropdown-menu {
+    background: rgba(30, 39, 46, 0.95);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    margin-top: 10px;
+}
+
+.navbar-ari .dropdown-item {
+    color: #ecf0f1;
+    transition: all 0.2s;
+}
+
+.navbar-ari .dropdown-item:hover {
+    background: rgba(238, 232, 170, 0.1); /* Fundo palha bem clarinho */
+    color: #eee8aa;
+    padding-left: 25px; /* Efeito de deslize */
+}
+
+/* Badge de pendentes com animação mais suave */
+.navbar-ari .badge.bg-danger {
+    box-shadow: 0 0 10px rgba(220, 53, 69, 0.4);
+}

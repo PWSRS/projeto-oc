@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}ARI SUL - Gestão de Ativos{% endblock %}
+
+{% block extra_head_css %}
+<style>
+    body {
+        background: radial-gradient(circle at center, #1e272e 0%, #0f1418 100%);
+        color: #ecf0f1;
+        min-height: 100vh;
+        padding-top: 70px;
+    }
+    .glass-card {
+        background: rgba(44, 62, 80, 0.4);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+    }
+    .table-dark-tech {
+        --bs-table-bg: transparent;
+        --bs-table-color: #ecf0f1;
+        --bs-table-hover-bg: rgba(255, 255, 255, 0.05);
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+    .text-info-tech { color: #4fb9ff !important; }
+    
+    .btn-action {
+        transition: 0.3s;
+        font-weight: 600;
+        font-size: 0.7rem;
+    }
+    /* Estilo Amarelo: REJEITAR (Desativar mas manter no banco) */
+    .btn-rejeitar-tech {
+        color: #f1c40f;
+        border: 1px solid rgba(241, 196, 15, 0.3);
+    }
+    .btn-rejeitar-tech:hover {
+        background: rgba(241, 196, 15, 0.15);
+        border-color: #f1c40f;
+        color: #f1c40f;
+    }
+    /* Estilo Vermelho: EXCLUIR (Apagar do banco) */
+    .btn-excluir-tech {
+        color: #e74c3c;
+        border: 1px solid rgba(231, 76, 60, 0.3);
+    }
+    .btn-excluir-tech:hover {
+        background: rgba(231, 76, 60, 0.15);
+        border-color: #e74c3c;
+        color: #e74c3c;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="glass-card shadow-lg p-0 overflow-hidden animate__animated animate__fadeIn">
+        
+        <div class="card-header bg-dark bg-opacity-50 text-white d-flex justify-content-between align-items-center py-3 border-bottom border-secondary">
+            <h5 class="mb-0">
+                <i class="fa-solid fa-user-shield me-2 text-info-tech"></i>Gestão de Operadores Ativos
+            </h5>
+            <span class="badge bg-danger rounded-pill border border-light animate__animated animate__pulse animate__infinite">
+                {{ usuarios.count }} Ativo(s)
+            </span>
+        </div>
+
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-dark-tech table-hover align-middle mb-0">
+                    <thead class="bg-black bg-opacity-25 text-info-tech small text-uppercase">
+                        <tr>
+                            <th class="ps-4">OPERADOR</th>
+                            <th>E-MAIL INSTITUCIONAL</th>
+                            <th>DATA DE INGRESSO</th>
+                            <th class="text-center">AÇÕES DE COMANDO</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for usuario in usuarios %}
+                        <tr>
+                            <td class="ps-4">
+                                <div class="d-flex align-items-center">
+                                    <div class="rounded-circle d-flex align-items-center justify-content-center me-3" 
+                                         style="width: 32px; height: 32px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);">
+                                        <i class="fa-solid fa-user-check small text-success"></i>
+                                    </div>
+                                    <span class="fw-bold">{{ usuario.get_full_name|default:usuario.username }}</span>
+                                </div>
+                            </td>
+                            <td>
+                                <code class="text-info-tech opacity-75">{{ usuario.email }}</code>
+                            </td>
+                            <td class="small opacity-75">
+                                {{ usuario.date_joined|date:"d/m/Y H:i" }}
+                            </td>
+                            <td class="text-center">
+                                <div class="btn-group">
+                                    {# REVOGAR: Fica salvo, mas perde o login #}
+                                    <a href="{% url 'revogar_acesso' usuario.id %}" 
+                                    class="btn btn-sm btn-outline-warning"
+                                    onclick="return confirm('Deseja SUSPENDER o acesso de {{ usuario.username }}?');">
+                                        <i class="fa-solid fa-user-lock"></i> Revogar
+                                    </a>
+
+                                    {# EXCLUIR: Sai do banco pra sempre #}
+                                    <a href="{% url 'excluir_usuario_ativo' usuario.id %}" 
+                                    class="btn btn-sm btn-outline-danger"
+                                    onclick="return confirm('ALERTA: Excluir registro de {{ usuario.username }} permanentemente?');">
+                                        <i class="fa-solid fa-trash-can"></i> Excluir
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" class="text-center py-5 text-muted">
+                                <i class="fa-solid fa-users-slash fa-3x mb-3 d-block opacity-25"></i>
+                                <p class="mb-0">Nenhum operador ativo no terminal.</p>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

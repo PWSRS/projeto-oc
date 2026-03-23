@@ -18,17 +18,33 @@ from controle.views import (
     organograma_view,
     orcrim_list,
     registro,
+    listar_usuarios_ativos,
+    excluir_usuario_ativo,
+    painel_aprovacao,
+    aprovar_usuario,
+    rejeitar_usuario,
+    revogar_acesso,
 )
 
 urlpatterns = [
     # Aprovação pelo admin
-    path('painel-aprovacao/', views.painel_aprovacao, name='painel_aprovacao'),
-    path('aprovar/<int:user_id>/', views.aprovar_usuario, name='aprovar_usuario'),
-    path('rejeitar/<int:user_id>/', views.rejeitar_usuario, name='rejeitar_usuario'),
-    
+    path("painel-aprovacao/", views.painel_aprovacao, name="painel_aprovacao"),
+    path("usuarios-ativos/", views.listar_usuarios_ativos, name="usuarios_ativos"),
+    # Ações
+    path("aprovar/<int:user_id>/", views.aprovar_usuario, name="aprovar_usuario"),
+    path(
+        "rejeitar/<int:user_id>/", views.rejeitar_usuario, name="rejeitar_usuario"
+    ),  # Para novos
+    path(
+        "revogar/<int:user_id>/", views.revogar_acesso, name="revogar_acesso"
+    ),  # Para ativos
+    path(
+        "excluir-ativo/<int:user_id>/",
+        views.excluir_usuario_ativo,
+        name="excluir_usuario_ativo",
+    ),
     # Cadastro de usuário
     path("contas/registro/", views.registro, name="registro"),
-       
     # URLs para Individuo
     path("visualizar_individuos/", IndividuoListView.as_view(), name="individuo_list"),
     path(
@@ -48,8 +64,9 @@ urlpatterns = [
         name="individuo_delete",
     ),
     # Rota para gerar o PDF da ficha do alvo
-    path('individuo/<int:pk>/pdf/', views.gerar_pdf_individuo, name='gerar_pdf_individuo'),
-    
+    path(
+        "individuo/<int:pk>/pdf/", views.gerar_pdf_individuo, name="gerar_pdf_individuo"
+    ),
     # URLs para Orcrim
     path("visualizar_orcrims/", OrcrimListView.as_view(), name="orcrim_list"),
     path("adicionar_orcrim/", OrcrimCreateView.as_view(), name="orcrim_add"),
@@ -88,10 +105,8 @@ urlpatterns = [
     path("ajax/galerias/", views.carregar_galerias, name="carregar_galerias"),
     path("ajax/celas/", views.carregar_celas, name="carregar_celas"),
     path("ajax/alojamentos/", views.carregar_alojamentos, name="carregar_alojamentos"),
-    
     # AJAX para tipo de estrutura da casa prisional
     path("ajax/tipo_estrutura/", views.tipo_estrutura_view, name="tipo_estrutura"),
-    
     # AJAX para carregar dados diretamente por casa prisional
     path("ajax/galerias_por_casa/", views.carregar_galerias, name="galerias_por_casa"),
     path("ajax/celas_por_casa/", views.carregar_celas, name="celas_por_casa"),
@@ -112,6 +127,10 @@ urlpatterns = [
         name="individuos_por_orcrim",
     ),
     # URL para listar indivíduos por galeria
-    path('selecionar-presidio/', views.selecionar_presidio, name='selecionar_presidio'),
-    path('galeria/<int:galeria_id>/detentos/', views.listar_detentos_por_galeria, name='listar_detentos_por_galeria'),
+    path("selecionar-presidio/", views.selecionar_presidio, name="selecionar_presidio"),
+    path(
+        "galeria/<int:galeria_id>/detentos/",
+        views.listar_detentos_por_galeria,
+        name="listar_detentos_por_galeria",
+    ),
 ]

@@ -1,38 +1,114 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Saiu da Conta{% endblock %}
+{% block title %}ARI SUL - Sessão Encerrada{% endblock %}
+
+{% block extra_head_css %}
+    <style>
+        /* Estilos Dark/Tech Consistentes ARI SUL */
+        body { 
+            background: radial-gradient(circle at center, #1e272e 0%, #0f1418 100%); 
+            color: #ecf0f1;
+            min-height: 100vh;
+        }
+        .wrapper-centered { 
+            min-height: 90vh; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+        }
+        .glass-card {
+            background: rgba(44, 62, 80, 0.4);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 40px;
+            width: 100%;
+            max-width: 450px;
+            text-align: center;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
+        }
+        .brand-icon {
+            width: 80px;
+            height: 80px;
+            background: rgba(241, 196, 15, 0.1);
+            color: #f1c40f;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            margin: 0 auto 25px;
+            border: 2px solid #f1c40f;
+            box-shadow: 0 0 20px rgba(241, 196, 15, 0.2);
+        }
+        .text-terminal {
+            color: #f1c40f !important;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        .status-box {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            font-size: 0.9rem;
+            color: #bdc3c7;
+            border: 1px dashed rgba(241, 196, 15, 0.3);
+        }
+        .btn-reconnect {
+            background: linear-gradient(45deg, #f39c12, #f1c40f);
+            border: none;
+            color: #000;
+            letter-spacing: 1px;
+            font-weight: bold;
+            transition: 0.4s;
+        }
+        .btn-reconnect:hover {
+            filter: brightness(1.1);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(241, 196, 15, 0.3);
+            color: #000;
+        }
+        .security-footer {
+            margin-top: 25px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #7f8c8d;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding-top: 15px;
+        }
+    </style>
+{% endblock %}
 
 {% block content %}
-<div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
-    <div class="col-md-8 col-lg-6">
-        {# Card de Logout #}
-        <div class="card text-center shadow-lg border-0 p-4">
-            <div class="card-body">
-                
-                {# Ícone de Saída/Chave #}
-                <i class="fas fa-sign-out-alt text-warning mb-3" style="font-size: 4rem;"></i>
-                
-                <h2 class="card-title text-dark fw-bold mb-3">Sessão Encerrada</h2>
-                
-                <p class="lead text-muted">
-                    Você saiu da sua conta com sucesso. Obrigado por utilizar nosso serviço.
-                </p>
-                
-                <hr class="my-4">
-                
-                {# Botão Principal: Entrar Novamente #}
-                <a href="{% url 'login' %}" class="btn btn-primary btn-lg shadow-sm w-75 mb-3">
-                    <i class="fas fa-sign-in-alt me-2"></i> Entrar Novamente
-                </a>
-                
-                {# Botão Secundário: Ir para a Página Inicial #}
-                <div class="d-grid w-75 mx-auto">
-                    <a href="/" class="btn btn-outline-secondary">
-                        Ir para a Página Inicial
-                    </a>
-                </div>
-            </div>
+<div class="wrapper-centered px-3">
+    <div class="glass-card animate__animated animate__fadeInUp">
+        <div class="brand-icon">
+            <i class="fa-solid fa-right-from-bracket fa-2x"></i>
+        </div>
+        
+        <h4 class="fw-bold text-terminal mb-2">SESSÃO FINALIZADA</h4>
+        <p class="text-light opacity-75 small">Conexão encerrada com segurança.</p>
+
+        <div class="status-box">
+            <p class="mb-0">
+                O acesso ao terminal <strong>ARI SUL</strong> foi deslogado. Para sua proteção, feche esta aba do navegador se estiver em um dispositivo compartilhado.
+            </p>
+        </div>
+
+        <div class="d-grid gap-2 mt-4">
+            <a href="{% url 'login' %}" class="btn btn-reconnect py-2">
+                <i class="fa-solid fa-plug me-2"></i> NOVA AUTENTICAÇÃO
+            </a>
+            <a href="/" class="btn btn-link btn-sm text-muted text-decoration-none mt-2">
+                Ir para Página Inicial
+            </a>
+        </div>
+
+        <div class="security-footer">
+            <i class="fa-solid fa-user-shield text-warning me-1"></i> 
+            Log de Saída Registrado
         </div>
     </div>
 </div>

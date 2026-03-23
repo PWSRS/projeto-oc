@@ -38,16 +38,20 @@ def registro(request):
     if request.method == "POST":
         form = CadastroUsuarioForm(request.POST)
         if form.is_valid():
+            # Chamamos o save(commit=False) para aplicar a trava de segurança
             user = form.save(commit=False)
-            user.username = form.cleaned_data.get('email')
             
-            # 🟢 AQUI ESTÁ A TRAVA DE SEGURANÇA 🟢
-            user.is_active = False # Usuário criado, mas bloqueado
+            # O username já é definido no form.save(), então focamos na trava:
+            user.is_active = False # 🔒 Bloqueado até aprovação manual
             
             user.save()
             
-            # Mensagem clara para o usuário não tentar logar à toa
-            messages.warning(request, "Solicitação enviada com sucesso! Seu acesso está aguardando aprovação da administração.")
+            # Mensagem de orientação para o agente
+            messages.warning(
+                request, 
+                "Solicitação enviada! Seu acesso passará por análise técnica. "
+                "Aguarde a homologação da ARI para realizar o login."
+            )
             return redirect('login')
     else:
         form = CadastroUsuarioForm()

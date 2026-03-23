@@ -13,7 +13,6 @@ User = get_user_model()
 
 
 class CadastroUsuarioForm(UserCreationForm):
-    # Definimos apenas os campos extras ou que queremos customizar a ordem/label
     first_name = forms.CharField(
         label="PRIMEIRO NOME", 
         max_length=150, 
@@ -33,42 +32,60 @@ class CadastroUsuarioForm(UserCreationForm):
         widget=forms.EmailInput(attrs={"placeholder": "usuario@bm.rs.gov.br"})
     )
 
+    # 🟢 ADIÇÃO: Campos de senha manuais para controle total no HTML
+    password1 = forms.CharField(
+        label="SENHA",
+        widget=forms.PasswordInput(attrs={"placeholder": "••••••••"})
+    )
+    password2 = forms.CharField(
+        label="CONFIRMAR",
+        widget=forms.PasswordInput(attrs={"placeholder": "••••••••"})
+    )
+
     class Meta(UserCreationForm.Meta):
         model = User
-        # REMOVEMOS 'username' da lista. 
-        # O UserCreationForm trará as senhas automaticamente no final.
-        fields = ("first_name", "last_name", "email")
+        # 🟢 ADIÇÃO: Inclua password1 e password2 aqui
+        fields = ("first_name", "last_name", "email", "password1", "password2")
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        
-        # O campo username ainda existe internamente no form do Django, 
-        # mas como não vamos exibir, tiramos a obrigatoriedade dele no formulário.
         if 'username' in self.fields:
             self.fields['username'].required = False
-
-        # Configurações de auxílio
+        
         self.fields["email"].help_text = "Obrigatório: utilize seu e-mail institucional @bm.rs.gov.br"
 
-        # Aplica a classe CSS form-control do Bootstrap a TODOS os campos (incluindo as senhas)
+        # Aplica a classe CSS em todos, incluindo as novas senhas
         for field_name, field in self.fields.items():
-            field.widget.attrs["class"] = "form-control"
+            field.widget.attrs["class"] = "form-control shadow-sm"
 
-    # --- VALIDAÇÕES (CLEAN METHODS) ---
+    # --- VALIDAÇÕES ---
+
+    def clean(self):
+        cleaned_data = super().clean()
+        p1 = cleaned_data.get("password1")
+        p2 = cleaned_data.get("password2")
+
+        # Verifica se as senhas conferem
+        if p1 and p2 and p1 != p2:
+            raise forms.ValidationError("As senhas digitadas não são iguais.")
+        return cleaned_data
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.username = self.cleaned_data["email"]
+        # Define a senha corretamente usando o método do Django
+        user.set_password(self.cleaned_data["password1"]) 
+        if commit:
+            user.save()
+        return user
 
     def clean_email(self):
         email = self.cleaned_data.get("email").lower()
         dominio_oficial = "@bm.rs.gov.br"
-
         if not email.endswith(dominio_oficial):
-            raise forms.ValidationError(
-                f"Acesso negado. O e-mail deve pertencer ao domínio {dominio_oficial}."
-            )
-        
-        # Validação extra: verificar se esse e-mail já existe como username no sistema
+            raise forms.ValidationError(f"Acesso negado. Domínio aceito: {dominio_oficial}.")
         if User.objects.filter(username=email).exists():
-            raise forms.ValidationError("Este e-mail já está cadastrado no sistema.")
-            
+            raise forms.ValidationError("Este e-mail já está cadastrado.")
         return email
 
     def clean_first_name(self):
@@ -78,17 +95,25 @@ class CadastroUsuarioForm(UserCreationForm):
     def clean_last_name(self):
         sobrenome = self.cleaned_data.get("last_name")
         return sobrenome.upper() if sobrenome else sobrenome
-
+    
 class EmailLoginForm(AuthenticationForm):
     username = forms.EmailField(
+        label="IDENTIFICADOR", # Garante que o Django use o termo que queremos
         widget=forms.EmailInput(
-            attrs={"class": "form-control", "placeholder": "usuario@bm.rs.gov.br"}
+            attrs={
+                "class": "form-control py-2", # 'py-2' dá um preenchimento interno melhor
+                "placeholder": "usuario@bm.rs.gov.br",
+                "autocomplete": "username"
+            }
         )
     )
     password = forms.CharField(
+        label="CHAVE DE ACESSO",
         widget=forms.PasswordInput(
             attrs={
-                "class": "form-control",
+                "class": "form-control py-2",
+                "placeholder": "••••••••",
+                "autocomplete": "current-password"
             }
         )
     )

@@ -1,51 +1,129 @@
 {% extends "base.html" %}
+{% load static %}
 
-{% block title %}Solicitar Cadastro - ARI SUL{% endblock %}
-
-{% block extra_head_css %}
-<style>
-    nav, .navbar { display: none !important; }
-    .card-registro { border-top: 5px solid #198754; }
-    .helptext { font-size: 0.75rem; color: #6c757d; display: block; margin-top: 4px; }
-    ul.errorlist { list-style: none; padding: 0; color: #dc3545; font-size: 0.8rem; }
-</style>
-{% endblock %}
-
-
+{% block title %}ARI SUL - Solicitar Acesso{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center align-items-center flex-grow-1 py-5">
-    <div class="col-md-8 col-lg-6">
-        <div class="card card-registro shadow">
-            <div class="card-header bg-white py-3">
-                <h5 class="mb-0 fw-bold text-center"><i class="fa-solid fa-user-plus me-2"></i>Solicitação de Novo Acesso</h5>
-            </div>
-            <div class="card-body p-4">
-                <form method="post" novalidate>
-                    {% csrf_token %}
-                    
-                    <div class="row">
-                        {% for field in form %}
-                            <div class="col-md-{% if field.name == 'username' or field.name == 'email' %}12{% else %}6{% endif %} mb-3">
-                                <label class="form-label small fw-bold">{{ field.label|upper }}</label>
-                                {{ field }}
-                                {% if field.help_text %}
-                                    <span class="helptext">{{ field.help_text }}</span>
-                                {% endif %}
-                                {{ field.errors }}
-                            </div>
-                        {% endfor %}
-                    </div>
+<style>
+    body { background: radial-gradient(circle at center, #1e272e 0%, #0f1418 100%); color: #ecf0f1; min-height: 100vh; }
+    .register-wrapper { display: flex; align-items: center; justify-content: center; padding: 40px 15px; }
+    
+    .glass-card-sm {
+        background: rgba(44, 62, 80, 0.4);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        padding: 30px;
+        width: 100%;
+        max-width: 500px; /* Um pouco mais largo que o login para caber as colunas */
+    }
 
-                    <div class="d-grid mt-3">
-                        <button type="submit" class="btn btn-success fw-bold py-2">ENVIAR SOLICITAÇÃO</button>
-                    </div>
-                </form>
+    .brand-icon-sm {
+        width: 50px; height: 50px; background: #3498db; color: white;
+        display: flex; align-items: center; justify-content: center;
+        border-radius: 50%; margin: 0 auto 15px;
+        box-shadow: 0 0 15px rgba(52, 152, 219, 0.3);
+    }
+
+    .form-label-sm { color: #a5b1be !important; font-size: 0.7rem; letter-spacing: 0.5px; font-weight: 700; margin-bottom: 4px; }
+    
+    /* Inputs mais compactos */
+    .form-control-sm-custom { 
+        background-color: rgba(255, 255, 255, 0.9) !important; 
+        border: none !important; 
+        color: #1a202c !important;
+        font-size: 0.85rem;
+        padding: 8px 12px;
+    }
+
+    .btn-tech { 
+        background: linear-gradient(45deg, #2980b9, #3498db); 
+        border: none; color: white; font-weight: bold; 
+        transition: 0.3s; letter-spacing: 1px;
+    }
+
+    .help-text-sm { font-size: 0.65rem; color: #63b3ed; margin-top: 3px; }
+    .error-text-sm { font-size: 0.7rem; color: #ff7675; list-style: none; padding: 0; margin: 0; }
+</style>
+
+<div class="register-wrapper">
+    <div class="glass-card-sm shadow-lg">
+        <div class="text-center mb-4">
+            <div class="brand-icon-sm">
+                <i class="fa-solid fa-user-plus fa-lg"></i>
             </div>
-            <div class="card-footer text-center bg-light">
-                <a href="{% url 'login' %}" class="small text-decoration-none text-muted">Já possui cadastro? Faça login.</a>
-            </div>
+            <h5 class="fw-bold mb-0">NOVO CADASTRO</h5>
+            <p class="small text-info opacity-75">Agência Regional de Inteligência</p>
         </div>
+
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="row g-2 mb-2">
+                <div class="col-md-6">
+                    <label class="form-label-sm">PRIMEIRO NOME</label>
+                    {{ form.first_name }}
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label-sm">ÚLTIMO NOME</label>
+                    {{ form.last_name }}
+                </div>
+            </div>
+
+            <div class="mb-2">
+                <label class="form-label-sm">E-MAIL INSTITUCIONAL</label>
+                {{ form.email }}
+                <div class="help-text-sm">{{ form.email.help_text }}</div>
+            </div>
+
+            <hr class="my-3 opacity-25">
+
+            <div class="row g-2 mb-3">
+                <div class="col-md-6">
+                    <label class="form-label-sm">SENHA</label>
+                    {{ form.password1 }} 
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label-sm">CONFIRMAR</label>
+                    {{ form.password2 }}
+                </div>
+            </div>
+
+            {% if form.password.help_text %}
+            <div class="alert alert-dark p-2 mb-3" style="font-size: 0.65rem; background: rgba(0,0,0,0.2); border: none;">
+                <i class="fa-solid fa-circle-info text-info me-1"></i>
+                <span class="text-muted">A senha deve conter pelo menos 8 caracteres, números e letras.</span>
+            </div>
+            {% endif %}
+
+            {% if form.errors %}
+                <div class="alert alert-dark border-danger p-2 mb-3">
+                    <ul class="error-text-sm m-0 p-0" style="list-style: none;">
+                        {% for field in form %}
+                            {% for error in field.errors %}
+                                <li><i class="fa-solid fa-xmark me-1"></i> {{ error }}</li>
+                            {% endfor %}
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+
+            <button type="submit" class="btn btn-tech w-100 py-2 shadow">SOLICITAR ACESSO</button>
+            
+            <div class="text-center mt-3">
+                <a href="{% url 'login' %}" style="color: #adb5bd; font-size: 0.75rem; text-decoration: none;">
+                    <i class="fa-solid fa-arrow-left me-1"></i> Voltar ao Login
+                </a>
+            </div>
+        </form>
     </div>
 </div>
+
+<script>
+    // Script rápido para aplicar a classe customizada nos campos de senha gerados pelo Django
+    document.querySelectorAll('input[type="password"]').forEach(el => {
+        el.classList.add('form-control', 'form-control-sm-custom');
+        el.placeholder = '••••••••';
+    });
+</script>
 {% endblock %}

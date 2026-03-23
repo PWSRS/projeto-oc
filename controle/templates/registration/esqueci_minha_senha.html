@@ -1,31 +1,87 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Recuperação de Acesso{% endblock %}
+{% block title %}ARI SUL - Recuperação de Acesso{% endblock %}
+
+{% block extra_head_css %}
+    <style>
+    body { 
+        background: radial-gradient(circle at center, #1e272e 0%, #0f1418 100%); 
+        color: #ecf0f1; 
+        min-height: 100vh; 
+    }
+    .recovery-wrapper { 
+        display: flex; 
+        align-items: center; 
+        justify-content: center; 
+        padding-top: 80px; 
+    }
+    .glass-card-recovery {
+        background: rgba(44, 62, 80, 0.4);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        padding: 35px;
+        width: 100%;
+        max-width: 400px;
+    }
+    
+    /* 🟢 AJUSTE DE CONTRASTE AQUI 🟢 */
+    .glass-card-recovery h5 { color: #ffffff; }
+    .glass-card-recovery p { color: #cbd5e0 !important; } /* Texto de instrução mais claro */
+    
+    .form-label-sm { 
+        color: #cbd5e0 !important; /* Label claro igual ao Login */
+        font-size: 0.75rem; 
+        letter-spacing: 1px; 
+        font-weight: 700; 
+        margin-bottom: 6px; 
+    }
+    
+    .form-control-custom { 
+        background-color: rgba(255, 255, 255, 0.9) !important; 
+        border: none !important; 
+        color: #1a202c !important;
+        font-weight: 500;
+    }
+    .btn-tech { 
+        background: linear-gradient(45deg, #2980b9, #3498db); 
+        border: none; color: white; font-weight: bold; 
+        transition: 0.3s; letter-spacing: 1px;
+        text-transform: uppercase;
+    }
+    .text-info-sm { color: #63b3ed !important; font-size: 0.8rem; font-weight: 600; }
+</style>
+{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center align-items-center flex-grow-1">
-    <div class="col-md-5 col-lg-4">
-        <div class="card shadow border-0">
-            <div class="card-body p-4 text-center">
-                <i class="fa-solid fa-envelope-open-text fa-3x text-primary mb-3"></i>
-                <h4 class="fw-bold">Recuperar Senha</h4>
-                <p class="text-muted small">Informe seu e-mail institucional para receber as instruções de redefinição.</p>
-                
-                <form method="post">
-                    {% csrf_token %}
-                    <div class="mb-3 text-start">
-                        <label class="form-label small fw-bold">E-MAIL</label>
-                        <input type="email" name="email" class="form-control" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary w-100 fw-bold">ENVIAR LINK</button>
-                </form>
-                
-                <div class="mt-3">
-                    <a href="{% url 'login' %}" class="small text-decoration-none">Voltar ao login</a>
-                </div>
-            </div>
+<div class="recovery-wrapper">
+    <div class="glass-card-recovery shadow-lg text-center">
+        <div class="brand-icon-recovery">
+            <i class="fa-solid fa-envelope-circle-check fa-xl"></i>
         </div>
+        
+        <h5 class="fw-bold mb-1">RECUPERAR ACESSO</h5>
+        <p class="small text-muted mb-4 px-2">
+            Informe seu e-mail institucional para receber as instruções de segurança.
+        </p>
+        
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-4 text-start">
+                <label class="form-label-sm text-uppercase">E-mail Institucional</label>
+                <input type="email" name="email" class="form-control form-control-custom py-2" 
+                       placeholder="usuario@bm.rs.gov.br" required>
+            </div>
+            
+            <button type="submit" class="btn btn-tech w-100 py-2 mb-3">Enviar Instruções</button>
+            
+            <div class="mt-2">
+                <a href="{% url 'login' %}" class="text-info-sm text-decoration-none">
+                    <i class="fa-solid fa-chevron-left me-1 small"></i> Voltar ao Login
+                </a>
+            </div>
+        </form>
     </div>
 </div>
 {% endblock %}

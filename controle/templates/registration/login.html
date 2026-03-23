@@ -1,70 +1,182 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}SPG - Login{% endblock %}
+{% block title %}ARI SUL - Autenticação de Operador{% endblock %}
 
 {% block extra_head_css %}
-   <link rel="stylesheet" href="{% static 'controle/css/login.css' %}">
+    <link rel="stylesheet" href="{% static 'controle/css/login.css' %}">
+    <style>
+        /* Estilos para a Versão Dark/Tech */
+        body { 
+            background: radial-gradient(circle at center, #1e272e 0%, #0f1418 100%); 
+            color: #ecf0f1;
+        }
+        .login-wrapper { 
+            min-height: 90vh; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+        }
+        .glass-card {
+            background: rgba(44, 62, 80, 0.4);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+        }
+        .brand-icon {
+            width: 70px;
+            height: 70px;
+            background: #3498db;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            box-shadow: 0 0 20px rgba(52, 152, 219, 0.4);
+        }
+        .form-control-dark {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid #34495e;
+            color: #fff;
+            padding: 12px;
+        }
+        .form-control-dark:focus {
+            background: rgba(0, 0, 0, 0.3);
+            border-color: #3498db;
+            color: #fff;
+            box-shadow: none;
+        }
+        .btn-tech {
+            background: linear-gradient(45deg, #2980b9, #3498db);
+            border: none;
+            color: white;
+            letter-spacing: 2px;
+            transition: 0.4s;
+        }
+        .btn-tech:hover {
+            filter: brightness(1.2);
+            transform: translateY(-2px);
+        }
+        .security-footer {
+            margin-top: 25px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #7f8c8d;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding-top: 15px;
+        }
+        /* Ajuste de contraste para textos e links */
+
+/* Rótulos dos campos (IDENTIFICADOR / CHAVE DE ACESSO) */
+.form-label.text-muted {
+    color: #a5b1be !important; /* Um cinza bem mais claro que o padrão */
+    letter-spacing: 1px;
+    font-weight: 600;
+}
+
+/* Link de "Recuperar" (que estava sumindo) */
+.text-muted.extra-small {
+    color: #adb5bd !important; 
+    transition: 0.3s;
+}
+
+.text-muted.extra-small:hover {
+    color: #ffffff !important;
+}
+
+/* Divisor vertical | */
+.text-muted.opacity-25 {
+    opacity: 0.5 !important;
+    color: #ffffff;
+}
+
+/* Rodapé (Terminal Restrito) */
+.security-footer {
+    color: #94a3b8; /* Cinza azulado claro */
+    border-top: 1px solid rgba(255, 255, 255, 0.15); /* Linha um pouco mais visível */
+}
+
+/* Ajuste nos Inputs (opcional, para não ficarem brancos demais) */
+.form-control {
+    background-color: rgba(255, 255, 255, 0.9) !important;
+    border: none !important;
+}
+
+/* Melhoria no link de Solicitar Registro */
+.text-info.fw-bold {
+    color: #4fb9ff !important; /* Um ciano mais vibrante para destacar */
+}
+/* Garante que os links fiquem legíveis no fundo escuro */
+.login-wrapper a.text-muted {
+    color: #a0aec0 !important; /* Cinza claro */
+    text-decoration: none;
+}
+
+.login-wrapper a.text-info {
+    color: #63b3ed !important; /* Azul céu brilhante */
+}
+
+.login-wrapper label {
+    color: #cbd5e0 !important; /* Cor clara para os labels "IDENTIFICADOR" */
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+}
+    </style>
 {% endblock %}
 
 {% block content %}
-<div class="row justify-content-center align-items-center flex-grow-1">
-    <div class="col-md-5 col-lg-4">
-        
-        <div class="card card-login shadow-lg">
-            <div class="card-body p-4 p-md-5">
-                <div class="text-center mb-4">
-                    <i class="fa-solid fa-building-shield fa-3x text-secondary mb-3"></i>
-                    <h4 class="fw-bold text-dark">SPG - ARI SUL</h4>
-                    <p class="text-muted small">Sistema Penitenciário Gaúcho</p>
-                </div>
-
-                {% if form.errors %}
-                    <div class="alert alert-danger small py-2">
-                        <i class="fa-solid fa-circle-exclamation"></i> 
-                        E-mail ou senha incorretos. 
-                        <br><span class="extra-small opacity-75">Verifique se sua conta já foi homologada.</span>
-                    </div>
-                {% endif %}
-
-                <form method="post">
-                    {% csrf_token %}
-                    
-                    <div class="mb-3">
-                        <label class="form-label small fw-bold text-secondary">E-MAIL INSTITUCIONAL</label>
-                        {{ form.username }}
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label small fw-bold text-secondary">SENHA</label>
-                        {{ form.password }}
-                    </div>
-
-                    <button type="submit" class="btn btn-pm w-100 fw-bold py-2 mt-2">ENTRAR</button>
-                    
-                    <div class="mt-4 d-flex justify-content-between auth-links">
-                        <a href="{% url 'password_reset' %}" class="text-muted small text-decoration-none">
-                            <i class="fa-solid fa-unlock-keyhole me-1"></i> Esqueci a senha
-                        </a>
-                        <a href="{% url 'registro' %}" class="text-primary fw-bold small text-decoration-none">
-                            <i class="fa-solid fa-user-plus me-1"></i> Criar conta
-                        </a>
-                    </div>
-                </form>
+<div class="login-wrapper">
+    <div class="glass-card shadow-2xl">
+        <div class="text-center">
+            <div class="brand-icon">
+                <i class="fa-solid fa-user-secret fa-2x"></i>
             </div>
+            <h5 class="fw-bold mb-1">ARI SUL</h5>
+            <p class="small text-info mb-4">Sistema Penitenciário Gaúcho - SPG</p>
         </div>
 
-        {# --- ALERTAS DE AVISO (LOCAL CORRETO) --- #}
-        <div class="mt-3">
-            <div class="alert alert-info p-2 text-center shadow-sm" style="font-size: 0.75rem; border-left: 4px solid #0dcaf0;">
-                <i class="fa-solid fa-clock me-1"></i> 
-                Novos cadastros levam até 24h para serem homologados pela ARI.
+        {% if form.errors %}
+            <div class="alert alert-dark border-danger text-danger small p-2 text-center mb-4">
+                <i class="fa-solid fa-lock me-1"></i> Acesso Negado
             </div>
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
             
-            <div class="alert alert-warning p-2 text-center shadow-sm" style="font-size: 0.75rem; border-left: 4px solid #ffc107;">
-                <i class="fa-solid fa-triangle-exclamation me-1"></i> 
-                Acesso monitorado. O uso indevido está sujeito a sanções.
+            <div class="mb-3">
+                <div class="d-flex justify-content-between">
+                    <label class="form-label extra-small text-muted">IDENTIFICADOR</label>
+                </div>
+                {{ form.username }}
             </div>
+
+            <div class="mb-4">
+                <div class="d-flex justify-content-between">
+                    <label class="form-label extra-small text-muted">CHAVE DE ACESSO</label>
+                </div>
+                {{ form.password }}
+            </div>
+
+            <button type="submit" class="btn btn-tech w-100 fw-bold py-2 mb-3">
+                EFETUAR LOGIN
+            </button>
+            
+            <div class="d-flex justify-content-center gap-3">
+                <a href="{% url 'password_reset' %}" class="text-muted text-decoration-none extra-small">Recuperar</a>
+                <span class="text-muted opacity-25">|</span>
+                <a href="{% url 'registro' %}" class="text-info text-decoration-none extra-small fw-bold">Solicitar Registro</a>
+            </div>
+        </form>
+
+        <div class="security-footer text-center">
+            <i class="fa-solid fa-circle-dot text-danger me-1"></i> 
+            Controle de Acesso e Segurança
         </div>
     </div>
 </div>

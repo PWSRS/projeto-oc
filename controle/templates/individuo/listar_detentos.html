@@ -5,51 +5,7 @@
 {% block title %}Detentos - {{ galeria.nome }}{% endblock %}
 
 {% block extra_head_css %}
-<style>
-    body {
-        background: radial-gradient(circle at center, #1e272e 0%, #0f1418 100%);
-        color: #ecf0f1;
-        min-height: 100vh;
-        padding-top: 70px;
-    }
-    .glass-card {
-        background: rgba(44, 62, 80, 0.4);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 15px;
-    }
-    .text-info-tech { color: #4fb9ff !important; }
-
-    /* Tabela Tech */
-    .table-dark-tech {
-        --bs-table-bg: transparent;
-        --bs-table-color: #ecf0f1;
-        --bs-table-hover-bg: rgba(255, 255, 255, 0.05);
-        border-color: rgba(255, 255, 255, 0.1);
-    }
-    .table-dark-tech thead {
-        background: rgba(0, 0, 0, 0.3);
-        color: #4fb9ff;
-        text-transform: uppercase;
-        font-size: 0.75rem;
-        letter-spacing: 1px;
-    }
-
-    .img-table {
-        width: 45px;
-        height: 45px;
-        object-fit: cover;
-        border: 2px solid rgba(79, 185, 255, 0.3);
-        border-radius: 50%;
-    }
-
-    .btn-voltar {
-        color: #4fb9ff;
-        text-decoration: none;
-        transition: 0.3s;
-    }
-    .btn-voltar:hover { color: #fff; }
-</style>
+    <link rel="stylesheet" href="{% static 'controle/css/listar_detentos.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -110,15 +66,9 @@
                             <td class="small font-monospace">{{ detento.rg_cpf|formatar_cpf_rg|default:"---" }}</td>
                             <td class="small">{{ detento.data_nasc|date:"d/m/Y" }}</td>
                             <td>
-                                {% with detento.situacao_penal as status %}
-                                    <span class="badge rounded-pill shadow-sm 
-                                        {% if status == 'recolhido' %}bg-danger
-                                        {% elif status == 'liberdade' %}bg-success
-                                        {% elif status == 'foragido' %}bg-warning text-dark
-                                        {% else %}bg-info text-dark{% endif %}">
-                                        {{ detento.get_situacao_penal_display|upper }}
-                                    </span>
-                                {% endwith %}
+                                <span class="badge rounded-pill shadow-sm border {{ detento.get_situacao_badge_class }}">
+                                    {{ detento.get_situacao_penal_display|upper }}
+                                </span>
                             </td>
                             <td>
                                 <span class="badge bg-dark border border-secondary text-danger fw-bold">
@@ -126,7 +76,7 @@
                                 </span>
                             </td>
                             <td>
-                                <span class="badge border border-info text-info small">
+                                <span class="badge rounded-pill shadow-sm border {{ detento.get_regime_badge_class }}">
                                     {{ detento.get_regime_display|upper }}
                                 </span>
                             </td>

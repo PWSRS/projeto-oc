@@ -4,85 +4,7 @@
 {% block title %}ARI SUL - Casas Prisionais{% endblock %}
 
 {% block extra_head_css %}
-<style>
-    /* Fundo tático */
-    body {
-        background: radial-gradient(circle at center, #1e272e 0%, #0f1418 100%) !important;
-        color: #ecf0f1 !important;
-        min-height: 100vh;
-    }
-
-    .text-info-tech { color: #4fb9ff !important; }
-
-    /* Header */
-    .header-tech {
-        background: rgba(0, 0, 0, 0.4);
-        border-bottom: 2px solid #4fb9ff;
-        border-radius: 10px;
-    }
-
-    /* Accordion Presídios */
-    .accordion-item {
-        background: rgba(30, 39, 46, 0.4) !important;
-        border: 1px solid rgba(79, 185, 255, 0.2) !important;
-        margin-bottom: 8px;
-        border-radius: 10px !important;
-        overflow: hidden;
-    }
-
-    .accordion-button {
-        background: rgba(0, 0, 0, 0.3) !important;
-        color: #4fb9ff !important;
-        font-weight: 600;
-        padding: 12px 20px;
-    }
-
-    .accordion-button:not(.collapsed) {
-        background: rgba(79, 185, 255, 0.1) !important;
-        color: #00e5ff !important;
-    }
-
-    .accordion-body { padding: 10px !important; }
-
-    /* CARD COMPACTO (A mágica está aqui) */
-    .galeria-card {
-        background: rgba(255, 255, 255, 0.03) !important;
-        border: 1px solid rgba(255, 255, 255, 0.08) !important;
-        border-left: 3px solid #4fb9ff !important;
-        border-radius: 6px;
-        padding: 6px 15px !important; /* Padding bem reduzido */
-        margin-bottom: 5px !important;
-        transition: all 0.2s;
-    }
-
-    .galeria-card:hover {
-        background: rgba(255, 255, 255, 0.07) !important;
-        transform: translateX(4px);
-    }
-
-    .galeria-title {
-        font-size: 0.95rem !important;
-        margin: 0 !important;
-        font-weight: bold;
-    }
-
-    /* Badges menores */
-    .badge-orcrim {
-        font-size: 0.65rem !important;
-        padding: 2px 8px !important;
-        text-transform: uppercase;
-        font-weight: 500;
-    }
-
-    .alojamento-badge {
-        background: rgba(79, 185, 255, 0.1);
-        color: #4fb9ff;
-        border: 1px solid rgba(79, 185, 255, 0.2);
-        font-size: 0.7rem !important;
-        padding: 1px 6px !important;
-        border-radius: 4px;
-    }
-</style>
+    <link rel="stylesheet" href="{% static 'controle/css/selecionar_presidio.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -115,7 +37,10 @@
                                             
                                             <div class="d-flex align-items-center gap-3">
                                                 <p class="galeria-title text-white">
-                                                    {{ galeria.nome }} <span class="text-muted fw-normal small">({{ galeria.pavilhao.nome }})</span>
+                                                    {% if galeria.pavilhao %}
+                                                        <span class="pavilhao-prefix me-2">{{ galeria.pavilhao.nome }}</span>
+                                                    {% endif %}
+                                                    <span class="galeria-nome">{{ galeria.nome }}</span>
                                                 </p>
                                                 
                                                 <span class="badge badge-orcrim {% if galeria.orcrim %}bg-danger{% else %}bg-secondary{% endif %}">

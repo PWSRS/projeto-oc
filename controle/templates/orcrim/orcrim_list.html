@@ -4,88 +4,7 @@
 {% block title %}ARI SUL - Monitoramento ORCRIM{% endblock %}
 
 {% block extra_head_css %}
-<style>
-    body {
-        background: radial-gradient(circle at center, #1e272e 0%, #0f1418 100%);
-        color: #ecf0f1;
-        min-height: 100vh;
-        padding-top: 70px;
-    }
-    .glass-card {
-            background: rgba(15, 20, 24, 0.8) !important; /* Força o fundo escuro do sistema */
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(79, 185, 255, 0.2);
-            border-radius: 15px;
-            overflow: hidden;
-        }
-    .text-info-tech { color: #4fb9ff !important; }
-
-    /* Barra de Busca Estilizada */
-    .search-container {
-        background: rgba(0, 0, 0, 0.3);
-        border: 1px solid rgba(79, 185, 255, 0.3);
-        border-radius: 10px;
-        padding: 5px 15px;
-        display: flex;
-        align-items: center;
-        transition: 0.3s;
-    }
-    .search-container:focus-within {
-        border-color: #00e5ff;
-        box-shadow: 0 0 10px rgba(0, 229, 255, 0.2);
-    }
-    .search-input {
-        background: transparent !important;
-        border: none !important;
-        color: white !important;
-        box-shadow: none !important;
-    }
-    .search-input::placeholder { color: rgba(255, 255, 255, 0.3); }
-
-    /* Estilo da Tabela ARI SUL */
-    /* Remove qualquer fundo branco residual da tabela ou das células */
-    .table, .table > :not(caption) > * > * {
-        background-color: transparent !important; 
-        color: #ecf0f1 !important;
-        border-bottom-color: rgba(255, 255, 255, 0.05) !important;
-    }
-    .table { color: #ecf0f1 !important; margin-bottom: 0; }
-.table thead th {
-        background: rgba(0, 0, 0, 0.4) !important;
-        color: #4fb9ff !important;
-        border-bottom: 2px solid #4fb9ff !important;
-    }
-    .table tbody tr {
-        background: transparent !important;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        transition: 0.3s;
-    }
-    .table tbody tr:hover { background: rgba(79, 185, 255, 0.05) !important; }
-    .table td { padding: 15px; border: none; vertical-align: middle; }
-
- .badge-count {
-        background: rgba(255, 193, 7, 0.1) !important;
-        color: #ffc107 !important;
-        border: 1px solid rgba(255, 193, 7, 0.3) !important;
-        padding: 5px 10px;
-    }
-
-    /* Botão Adicionar */
-    .btn-add-tech {
-        background-color: #00e5ff;
-        color: #000;
-        font-weight: 800;
-        border-radius: 8px;
-        transition: 0.3s;
-    }
-    .btn-add-tech:hover {
-        background-color: #fff;
-        box-shadow: 0 0 15px rgba(0, 229, 255, 0.5);
-    }
-
-    .pagination .page-link { background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.1); color: #4fb9ff; }
-    .pagination .page-item.active .page-link { background: #4fb9ff; border-color: #4fb9ff; color: #000; }
-</style>
+    <link rel="stylesheet" href="{% static 'controle/css/orcrim_list.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -93,7 +12,7 @@
     <div class="row align-items-center mb-4">
         <div class="col-lg-4 mb-3 mb-lg-0">
             <h3 class="mb-0 fw-bold"><i class="fa-solid fa-layer-group me-2 text-info-tech"></i>ORGANIZAÇÕES <span class="text-info-tech">CRIMINOSAS</span></h3>
-            <small class="text-muted text-uppercase letter-spacing-1">ARI SUL - Inteligência Territorial</small>
+            <!--<small class="text-info-tech text-uppercase letter-spacing-1">ARI SUL - Inteligência Policial</small>-->
         </div>
         
         <div class="col-lg-5 mb-3 mb-lg-0">

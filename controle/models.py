@@ -87,6 +87,7 @@ class Orcrim(models.Model):
     class Meta:
         verbose_name = "Orcrim"
         verbose_name_plural = "Orcrims"
+        ordering = ["nome"]
 
     def __str__(self):
         return self.nome
@@ -126,7 +127,13 @@ class Pavilhao(models.Model):
         verbose_name = "Pavilhão"
         verbose_name_plural = "Pavilhões"
 
+    # Esta propriedade retorna APENAS o nome do pavilhão (ex: "PAV 1")
+    @property
+    def nome_curto(self):
+        return self.nome if self.nome else "-"
+
     def __str__(self):
+        # Mantém assim para o Admin e selects mostrarem o nome completo
         return f"{self.nome} - {self.casa_prisional.nome}"
 
 
@@ -150,7 +157,13 @@ class Galeria(models.Model):
         verbose_name = "Galeria"
         verbose_name_plural = "Galerias"
 
+    # Propriedade para retornar apenas o nome limpo no template
+    @property
+    def nome_curto(self):
+        return self.nome if self.nome else "-"
+
     def __str__(self):
+        # Mantém o padrão completo para buscas e Admin
         return f"{self.nome} - {self.casa_prisional.nome}"
 
 
@@ -253,6 +266,30 @@ class Individuo(models.Model):
     class Meta:
         verbose_name = "Indivíduo"
         verbose_name_plural = "Indivíduos"
+
+    def get_situacao_badge_class(self):
+        mapping = {
+            "recolhido": "bg-danger-subtle text-danger border-danger",
+            "foragido": "bg-warning-subtle text-warning border-warning",
+            "procurado": "bg-warning-subtle text-warning border-warning",
+            "liberdade": "bg-success-subtle text-success border-success",
+            "recolhido_tornozeleira": "bg-primary-subtle text-primary border-primary",
+            "removido": "bg-secondary-subtle text-secondary border-secondary",
+        }
+        # Retorna as classes baseadas no valor, ou um padrão caso não encontre
+        return mapping.get(self.situacao_penal, "bg-secondary-subtle text-secondary")
+
+    def get_regime_badge_class(self):
+        mapping = {
+            "fechado": "bg-danger-subtle text-danger border-danger",
+            "semiaberto": "bg-warning-subtle text-warning border-warning",
+            "provisorio": "bg-info-subtle text-info border-info",
+            "aberto": "bg-success-subtle text-success border-success",
+            "monitorado": "bg-primary-subtle text-primary border-primary",
+            "sem regime": "bg-secondary-subtle text-secondary border-secondary",
+        }
+        # Retorna as classes baseadas no valor, ou um padrão caso não encontre
+        return mapping.get(self.regime, "bg-secondary-subtle text-secondary")
 
     def __str__(self):
         return self.nome

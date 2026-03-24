@@ -263,16 +263,16 @@ class OrcrimListView(ListView):
         queryset = queryset.annotate(total_individuos=Count("individuo"))
 
         # 3. Capturamos o que o usuário digitou no campo 'q' do template
-        query = self.request.GET.get('q')
+        query = self.request.GET.get("q")
 
         # 4. Se houver algo digitado, filtramos por Nome ou Sigla
         if query:
             queryset = queryset.filter(
-                Q(nome__icontains=query) | 
-                Q(sigla__icontains=query)
+                Q(nome__icontains=query) | Q(sigla__icontains=query)
             )
 
         return queryset
+
 
 class OrcrimCreateView(CreateView):
     model = Orcrim
@@ -396,11 +396,24 @@ def listar_por_galeria(request, galeria_id):
     return render(request, "individuo/individuo_por_galeria.html", context)
 
 
+from django.db.models import Prefetch  # Importe o Prefetch
+
+
 def selecionar_presidio(request):
-    # Lista todos os presídios
-    presidios = CasaPrisional.objects.all().prefetch_related(
-        "galeria_set", "galeria_set__alojamento_set"
+    # Criamos uma regra de busca para as galerias já ordenadas
+    # Ordena primeiro pelo nome do pavilhão, depois pelo nome da galeria
+    prefetch_galerias = Prefetch(
+        "galeria_set",
+        queryset=Galeria.objects.select_related("pavilhao", "orcrim").order_by(
+            "pavilhao__nome", "nome"
+        ),
     )
+
+    # Lista todos os presídios usando a regra de ordenação acima
+    presidios = CasaPrisional.objects.prefetch_related(
+        prefetch_galerias, "galeria_set__alojamento_set"
+    ).all()
+
     context = {
         "presidios": presidios,
     }
@@ -408,10 +421,10 @@ def selecionar_presidio(request):
 
 
 def listar_detentos_por_galeria(request, galeria_id):
-    # Obtém a galeria ou retorna 404 se não existir
     galeria = get_object_or_404(Galeria, id=galeria_id)
-    # Filtra detentos diretamente pela galeria (usando o campo ForeignKey em Individuo)
-    detentos = Individuo.objects.filter(galeria=galeria)
+    # Adicionado .order_by('nome') para a lista de detentos não vir bagunçada
+    detentos = Individuo.objects.filter(galeria=galeria).order_by("nome")
+
     context = {
         "galeria": galeria,
         "detentos": detentos,

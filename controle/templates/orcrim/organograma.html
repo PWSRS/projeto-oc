@@ -5,66 +5,6 @@
 
 {% block extra_head_css %}
     <link rel="stylesheet" href="{% static 'controle/css/organograma.css' %}">
-    <style>
-        body {
-            background: radial-gradient(circle at center, #1e272e 0%, #0f1418 100%);
-            color: #ecf0f1;
-        }
-
-        /* Estilização do Header do Card */
-        .header-tech {
-            background: rgba(0, 0, 0, 0.4);
-            border-bottom: 2px solid #4fb9ff;
-            padding: 15px;
-            border-radius: 15px 15px 0 0;
-        }
-
-        /* Ajuste do Select para o padrão que criamos */
-        #selecaoOrcrim {
-            background-color: rgba(0, 0, 0, 0.4) !important;
-            border: 1px solid rgba(79, 185, 255, 0.3) !important;
-            color: #fff !important;
-            padding: 8px 15px;
-            border-radius: 8px;
-            width: 100%;
-            max-width: 400px;
-        }
-        #selecaoOrcrim option { background-color: #1e272e; }
-
-        /* Container do Organograma */
-        #organograma-container {
-            position: relative;
-            background: rgba(30, 39, 46, 0.4);
-            border-radius: 15px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            margin-top: 20px;
-            height: 700px; /* Garante altura para o gráfico */
-        }
-
-        #organograma {
-            width: 100%;
-            height: 600px; /* IMPORTANTE: Sem isso, o gráfico fica invisível */
-            min-height: 500px;
-        }
-
-        /* Legenda Flutuante Estilizada */
-        #legenda-situacao-penal {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: rgba(0, 0, 0, 0.7);
-            padding: 15px;
-            border-radius: 10px;
-            border: 1px solid rgba(79, 185, 255, 0.2);
-            z-index: 10;
-            font-size: 0.85rem;
-        }
-        .legenda-item { display: flex; align-items: center; margin-bottom: 5px; }
-        .cor-legenda { 
-            width: 12px; height: 12px; border-radius: 50%; 
-            margin-right: 10px; border: 1px solid rgba(255,255,255,0.2);
-        }
-    </style>
 {% endblock %}
 
 {% block content %}
@@ -77,7 +17,7 @@
     </div>
 
     <div class="d-flex align-items-center justify-content-center gap-3 mb-4">
-        <label for="selecaoOrcrim" class="fw-bold text-info-tech">ALVO:</label>
+        <label for="selecaoOrcrim" class="fw-bold text-info-tech">OrCrim:</label>
         <select id="selecaoOrcrim" class="form-select"></select>
     </div>
 
@@ -102,12 +42,12 @@
         const container = document.getElementById('organograma');
         
         const situacaoCores = {
-            'recolhido': 'red',
-            'foragido': 'orange',
-            'procurado': 'orange',
-            'liberdade': 'green',
-            'recolhido_tornozeleira': 'blue',
-            'removido': 'gray',
+            'recolhido': '#dc3545',              // Vermelho Bootstrap (Danger)
+            'foragido': '#ffc107',               // Amarelo Bootstrap (Warning)
+            'procurado': '#ffc107',              // Amarelo Bootstrap (Warning)
+            'liberdade': '#198754',              // Verde Bootstrap (Success)
+            'recolhido_tornozeleira': '#0d6efd', // Azul Bootstrap (Primary)
+            'removido': '#6c757d',               // Cinza Bootstrap (Secondary)
         };
 
         // 1. Preenche o select com as Orcrims
@@ -192,7 +132,7 @@
                         },
                         borderWidth: 6,
                         level: individuo.nivel_orcrim === 'lider' ? 1 : (individuo.nivel_orcrim === 'influente' ? 2 : 3),
-                        font: { color: '#ecf0f1', size: 12, multi: true }
+                        font: { color: '#ecf0f1', size: 11, multi: true }
                     });
 
                     if (individuo.nivel_orcrim === 'influente' && noPaiParaInfluentes) {
@@ -208,14 +148,24 @@
                     edges: new vis.DataSet(edges)
                 };
 
-                // Opções para o fundo escuro
+                // Opções para o fundo escuro e ajuste de espaçamento
                 const options = {
+                    nodes: {
+                        size: 40,        // Aumenta o tamanho do círculo da imagem
+                        borderWidth: 6,  // Mantém a borda colorida do status penal
+                        font: { 
+                            size: 11, 
+                            color: '#ecf0f1', 
+                            multi: true,
+                            vadjust: 5  // Ajusta a posição do texto para baixo da imagem ampliada
+                        }
+                    },
                     layout: {
                         hierarchical: {
                             direction: 'UD',
                             sortMethod: 'directed',
-                            levelSeparation: 150,
-                            nodeSpacing: 200
+                            levelSeparation: 200, // Espaço entre níveis (Cima/Baixo)
+                            nodeSpacing: 300      // Espaço entre nós do mesmo nível (Lado a Lado)
                         }
                     },
                     physics: false,

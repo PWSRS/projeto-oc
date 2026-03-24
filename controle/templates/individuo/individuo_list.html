@@ -4,105 +4,7 @@
 {% block title %}ARI SUL - Lista de Indivíduos{% endblock %}
 
 {% block extra_head_css %}
-<style>
-    body {
-        background: radial-gradient(circle at center, #1e272e 0%, #0f1418 100%);
-        color: #ecf0f1;
-        min-height: 100vh;
-        padding-top: 70px;
-    }
-    .glass-card {
-        background: rgba(44, 62, 80, 0.4);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 15px;
-    }
-    .text-info-tech { color: #4fb9ff !important; }
-
-    /* Estilo da Tabela Tech */
-    .table-dark-tech {
-        --bs-table-bg: transparent;
-        --bs-table-color: #ecf0f1;
-        --bs-table-hover-bg: rgba(255, 255, 255, 0.05);
-        border-color: rgba(255, 255, 255, 0.1);
-    }
-    .table-dark-tech thead {
-        background: rgba(0, 0, 0, 0.3);
-        color: #4fb9ff;
-        text-transform: uppercase;
-        font-size: 0.75rem;
-        letter-spacing: 1px;
-    }
-
-    /* Foto Redonda na Tabela */
-    .img-table {
-        width: 40px;
-        height: 40px;
-        object-fit: cover;
-        border: 2px solid rgba(79, 185, 255, 0.3);
-        transition: 0.3s;
-    }
-    .img-table:hover {
-        transform: scale(1.2);
-        border-color: #4fb9ff;
-    }
-
-        /* Campo de Busca Tech */
-        /* Campo de Busca Tech - Versão Corrigida */
-    .search-tech {
-        background-color: rgba(255, 255, 255, 0.05) !important; /* Um pouco mais claro */
-        border: 1px solid rgba(79, 185, 255, 0.2) !important;
-        color: #ffffff !important; /* Cor do texto digitado */
-        font-weight: 500;
-    }
-
-/* Cor do texto de ajuda (Placeholder) */
-    .search-tech::placeholder {
-        color: rgba(255, 255, 255, 0.4) !important;
-        font-style: italic;
-        font-size: 0.9rem;
-    }
-
-    /* Quando clica no campo para digitar */
-    .search-tech:focus {
-        background-color: rgba(255, 255, 255, 0.1) !important;
-        border-color: #4fb9ff !important;
-        box-shadow: 0 0 10px rgba(79, 185, 255, 0.4) !important;
-        outline: none;
-    }
-
-    /* Paginação Customizada */
-    .page-link {
-        background: rgba(255, 255, 255, 0.05);
-        border-color: rgba(255, 255, 255, 0.1);
-        color: #4fb9ff;
-    }
-    .page-item.active .page-link {
-        background: #4fb9ff;
-        border-color: #4fb9ff;
-        color: #000;
-    }
-
-    /* Modal Dark */
-    .modal-content {
-        background: #1e272e;
-        color: #fff;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-    .btn-info-tech {
-    background-color: transparent;
-    border: 1px solid #4fb9ff !important;
-    color: #4fb9ff !important;
-    transition: 0.3s;
-}
-
-.btn-info-tech:hover {
-    background-color: #4fb9ff;
-    color: #000 !important;
-    box-shadow: 0 0 15px rgba(79, 185, 255, 0.5);
-}
- 
-</style>
+    <link rel="stylesheet" href="{% static 'controle/css/individuo_list.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -185,13 +87,8 @@
                             {{ individuo.casa_prisional|default:"---" }}
                         </td>
                         <td>
-                            <span class="badge rounded-pill 
-                                {% if individuo.situacao_penal == 'recolhido' %}bg-danger
-                                {% elif 'recolhido' in individuo.situacao_penal %}bg-primary
-                                {% elif individuo.situacao_penal == 'liberdade' %}bg-success
-                                {% elif 'foragido' in individuo.situacao_penal or 'procurado' in individuo.situacao_penal %}bg-warning text-dark
-                                {% else %}bg-secondary{% endif %} shadow-sm">
-                                {{ individuo.get_situacao_penal_display|upper }} 
+                            <span class="badge rounded-pill border shadow-sm {{ individuo.get_situacao_badge_class }}">
+                                {{ individuo.get_situacao_penal_display|upper }}
                             </span>
                         </td>
                         <td class="pe-4 text-nowrap">

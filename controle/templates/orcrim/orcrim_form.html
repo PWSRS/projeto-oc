@@ -4,67 +4,7 @@
 {% block title %}ARI SUL - Cadastrar ORCRIM{% endblock %}
 
 {% block extra_head_css %}
-<style>
-    body {
-        background: radial-gradient(circle at center, #1e272e 0%, #0f1418 100%);
-        color: #ecf0f1;
-        min-height: 100vh;
-        padding-top: 70px;
-    }
-    .glass-card {
-        background: rgba(44, 62, 80, 0.4);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 15px;
-    }
-    .text-info-tech { color: #4fb9ff !important; }
-
-    /* TRATAMENTO PARA INPUTS E SELECTS */
-    input, select, textarea {
-        background-color: rgba(0, 0, 0, 0.4) !important;
-        border: 1px solid rgba(79, 185, 255, 0.3) !important;
-        color: #fff !important;
-        border-radius: 8px !important;
-        padding: 10px !important;
-    }
-
-    /* Força o fundo escuro nas opções do Select (Dropdown) */
-    select option {
-        background-color: #1e272e !important;
-        color: #fff !important;
-    }
-
-    input:focus, select:focus {
-        border-color: #00e5ff !important;
-        box-shadow: 0 0 10px rgba(0, 229, 255, 0.3) !important;
-        background-color: rgba(0, 0, 0, 0.6) !important;
-        outline: none;
-    }
-
-    label {
-        color: #4fb9ff;
-        font-size: 0.8rem;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        font-weight: bold;
-        margin-bottom: 5px;
-    }
-    
-    .form-text { color: rgba(236, 240, 241, 0.5) !important; }
-
-    .btn-save-tech {
-        background-color: #00e5ff !important;
-        color: #000 !important;
-        font-weight: 800 !important;
-        border: none !important;
-        box-shadow: 0 0 15px rgba(0, 229, 255, 0.3);
-        transition: 0.3s;
-    }
-    .btn-save-tech:hover {
-        background-color: #fff !important;
-        transform: translateY(-2px);
-    }
-</style>
+    <link rel="stylesheet" href="{% static 'controle/css/orcrim_form.css' %}">
 {% endblock %}
 
 {% block content %}

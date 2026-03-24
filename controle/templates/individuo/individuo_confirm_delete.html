@@ -1,14 +1,118 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Excluir Indivíduo{% endblock %} 
+{% block title %}Excluir - {{ individuo.nome }}{% endblock %} 
+
+{% block extra_head_css %}
+<style>
+    body {
+        background: radial-gradient(circle at center, #1e272e 0%, #0f1418 100%);
+        color: #ecf0f1;
+        min-height: 100vh;
+        padding-top: 80px;
+    }
+
+    .glass-card-danger {
+        background: rgba(220, 53, 69, 0.05); /* Fundo levemente avermelhado */
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(220, 53, 69, 0.2);
+        border-radius: 20px;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .danger-icon-container {
+        width: 80px;
+        height: 80px;
+        background: rgba(220, 53, 69, 0.1);
+        border: 2px solid #dc3545;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+        color: #dc3545;
+        box-shadow: 0 0 20px rgba(220, 53, 69, 0.3);
+    }
+
+    .text-danger-tech {
+        color: #ff6b6b !important;
+        text-shadow: 0 0 10px rgba(255, 107, 107, 0.3);
+    }
+
+    .btn-danger-tech {
+        background: #dc3545;
+        border: none;
+        color: white;
+        padding: 10px 25px;
+        font-weight: bold;
+        transition: 0.3s;
+        border-radius: 8px;
+    }
+
+    .btn-danger-tech:hover {
+        background: #b21f2d;
+        box-shadow: 0 0 15px rgba(220, 53, 69, 0.5);
+        transform: translateY(-2px);
+    }
+
+    .btn-cancel-tech {
+        background: transparent;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: #adb5bd;
+        padding: 10px 25px;
+        transition: 0.3s;
+        border-radius: 8px;
+        text-decoration: none;
+    }
+
+    .btn-cancel-tech:hover {
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+    }
+
+    .warning-box {
+        background: rgba(0, 0, 0, 0.3);
+        border-left: 4px solid #ffc107;
+        padding: 15px;
+        margin-top: 20px;
+        border-radius: 4px;
+        font-size: 0.9rem;
+    }
+</style>
+{% endblock %}
 
 {% block content %}
-    <h1>Exclusão de Indivíduo</h1>
-    <p>Tem certeza que deseja excluir o Indivíduo "{{ individuo.nome }}"?</p>
-    <form method="post">
-        {% csrf_token %}
-        <button type="submit" class="btn btn-danger">Confirmar Exclusão</button>
-        <a href="{% url 'individuo_list' %}" class="btn btn-secondary">Cancelar</a>
-    </form>
+<div class="container animate__animated animate__zoomIn">
+    <div class="glass-card-danger p-5 text-center shadow-lg">
+        
+        <div class="danger-icon-container">
+            <i class="fa-solid fa-triangle-exclamation fa-3x"></i>
+        </div>
+
+        <h2 class="text-danger-tech fw-bold">ALERTA DE EXCLUSÃO</h2>
+        <p class="mt-3 text-muted">
+            Você está prestes a remover permanentemente do banco de dados da ARI Sul o indivíduo:
+        </p>
+        
+        <h4 class="text-white fw-bold mb-4">
+            "{{ individuo.nome|upper }}"
+        </h4>
+
+        <div class="warning-box text-start mb-4">
+            <span class="text-warning fw-bold"><i class="fa-solid fa-circle-info me-1"></i> ATENÇÃO:</span>
+            Esta ação não pode ser desfeita. Todos os dados, fotos e registros vinculados a este CPF/RG serão deletados.
+        </div>
+
+        <form method="post" class="d-flex justify-content-center gap-3">
+            {% csrf_token %}
+            <a href="{% url 'individuo_list' %}" class="btn-cancel-tech">
+                <i class="fa-solid fa-xmark me-2"></i>CANCELAR
+            </a>
+            <button type="submit" class="btn-danger-tech shadow">
+                <i class="fa-solid fa-trash-can me-2"></i>CONFIRMAR EXCLUSÃO
+            </button>
+        </form>
+    </div>
+</div>
 {% endblock content %}

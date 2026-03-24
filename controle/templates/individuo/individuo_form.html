@@ -1,164 +1,214 @@
 {% extends "base.html" %}
 {% load static %}
 {% load widget_tweaks %}
+
 {% block title %}
-    {% if form.instance.pk %}Editar Indivíduo{% else %}Cadastrar Indivíduo{% endif %}
+    ARI SUL - {% if form.instance.pk %}Editar Indivíduo{% else %}Cadastrar Indivíduo{% endif %}
 {% endblock %}
 
-{% block extra_head %}
+{% block extra_head_css %}
+<style>
+    body {
+        background: radial-gradient(circle at center, #1e272e 0%, #0f1418 100%);
+        color: #ecf0f1;
+        min-height: 100vh;
+        padding-top: 70px;
+    }
+    .glass-card {
+        background: rgba(44, 62, 80, 0.4);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+    }
+    .text-info-tech { color: #4fb9ff !important; }
+    
+    /* Estilização dos inputs para modo dark */
+    .form-control, .form-select {
+        background-color: rgba(0, 0, 0, 0.2) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        color: #ecf0f1 !important;
+    }
+    .form-control:focus, .form-select:focus {
+        background-color: rgba(0, 0, 0, 0.3) !important;
+        border-color: #4fb9ff !important;
+        box-shadow: 0 0 0 0.25rem rgba(79, 185, 255, 0.25);
+    }
+    
+    label {
+        color: #4fb9ff;
+        font-weight: 600;
+        font-size: 0.75rem;
+        margin-bottom: 5px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
 
+    /* Container da Foto Compacto */
+    .foto-preview-container {
+        width: 60px;
+        height: 60px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(79, 185, 255, 0.3);
+        border-radius: 8px;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .foto-preview-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    .foto-placeholder-icon {
+        font-size: 1.5rem;
+        color: rgba(79, 185, 255, 0.4);
+    }
+
+    hr { opacity: 0.1; border-color: #fff; }
+
+    .btn-success { background-color: #27ae60; border: none; }
+    .btn-success:hover { background-color: #2ecc71; }
+    /* Estilização das opções dentro do Select (o dropdown em si) */
+select option {
+    background-color: #1e272e; /* Tom escuro igual ao fundo */
+    color: #ecf0f1;
+    padding: 10px;
+}
+
+/* Quando o mouse passa por cima da opção ou ela é selecionada */
+select option:hover, 
+select option:focus, 
+select option:active {
+    background-color: #2c3e50 !important;
+    color: #4fb9ff !important;
+}
+
+/* Ajuste específico para o Chrome/Edge que às vezes ignora o estilo acima */
+.form-select {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%234fb9ff' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e") !important;
+    background-repeat: no-repeat !important;
+    background-position: right 0.75rem center !important;
+    background-size: 16px 12px !important;
+}
+</style>
 {% endblock %}
 
 {% block content %}
-<div class="container my-5">
+<div class="container py-4">
     <div class="row justify-content-center">
-        <div class="col-md-9 col-lg-10">
-            <div class="card shadow-sm">
-                <div class="card-header bg-primary text-white text-center">
-                    <h3 class="mb-0">
-                        {% if form.instance.pk %}Editar Indivíduo{% else %}Cadastrar Indivíduo{% endif %}
-                    </h3>
+        <div class="col-md-11 col-lg-10">
+            <div class="glass-card shadow-lg animate__animated animate__fadeIn">
+                
+                <div class="card-header bg-dark bg-opacity-50 text-white py-3 border-bottom border-secondary">
+                    <h5 class="mb-0 text-center">
+                        <i class="fa-solid fa-id-card me-2 text-info-tech"></i>
+                        {% if form.instance.pk %}ATUALIZAR REGISTRO: {{ form.instance.nome|upper }}{% else %}NOVA INCLUSÃO DE INDIVÍDUO{% endif %}
+                    </h5>
                 </div>
-                <div class="card-body">
+
+                <div class="card-body p-4">
                     <form method="post" class="needs-validation" novalidate enctype="multipart/form-data">
                         {% csrf_token %}
-                        <div class="row">
-                            <div class="col-md-3 mb-3">
-                                <div class="foto-container">
-                                    <div class="foto-placeholder">
-                                        <i class="bi bi-person-circle"></i>
+                        
+                        <div class="row align-items-end">
+                            <div class="col-md-4 mb-3">
+                                <label>Identificação Visual</label>
+                                <div class="d-flex align-items-center gap-2 p-2 rounded bg-black bg-opacity-10 border border-secondary border-opacity-25">
+                                    <div class="foto-preview-container" id="preview-box">
+                                        {% if form.instance.foto %}
+                                            <img src="{{ form.instance.foto.url }}" alt="Foto">
+                                        {% else %}
+                                            <i class="fa-solid fa-user-ninja foto-placeholder-icon"></i>
+                                        {% endif %}
                                     </div>
-                                    <div>
-                                        {{ form.foto }}
-                                            <small class="form-text text-muted d-block mt-1">Selecionar foto</small>
-                                        {{ form.foto.errors }}
+                                    <div class="flex-grow-1">
+                                        {% render_field form.foto class="form-control form-control-sm border-0" onchange="previewImage(this)" %}
+                                        <small class="text-muted" style="font-size: 0.65rem;">Selecione imagem (JPG/PNG)</small>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-5 mb-3">
                                 {{ form.nome.label_tag }}
-                                {{ form.nome }}
-                                {% for error in form.nome.errors %}
-                                    <div class="invalid-feedback d-block">{{ error }}</div>
-                                {% endfor %}
+                                {% render_field form.nome class="form-control" placeholder="Nome completo" %}
                             </div>
-
                             <div class="col-md-3 mb-3">
                                 {{ form.rg_cpf.label_tag }}
-                                {{ form.rg_cpf }}
-                                {% for error in form.rg_cpf.errors %}
-                                    <div class="invalid-feedback d-block">{{ error }}</div>
-                                {% endfor %}
-                            </div>
-                            
-                            <div class="col-md-3 mb-3">
-                                {{ form.data_nasc.label_tag }}
-                                {{ form.data_nasc }}
-                                {% for error in form.alcunha.errors %}
-                                    <div class="invalid-feedback d-block">{{ error }}</div>
-                                {% endfor %}
-                            </div>
-
-                            <div class="col-md-6 mb-3">
-                                {{ form.alcunha.label_tag }}
-                                {{ form.alcunha }}
-                                {% for error in form.alcunha.errors %}
-                                    <div class="invalid-feedback d-block">{{ error }}</div>
-                                {% endfor %}
-                            </div>
-
-                            <div class="col-md-3 mb-3">
-                                {{ form.codigo_detento.label_tag }}
-                                {{ form.codigo_detento }}
-                                {% for error in form.codigo_detento.errors %}
-                                    <div class="invalid-feedback d-block">{{ error }}</div>
-                                {% endfor %}
-                            </div>
-
-                            <div class="col-md-3 mb-3">
-                                {{ form.orcrim.label_tag }}
-                                {{ form.orcrim }}
-                                {% for error in form.orcrim.errors %}
-                                    <div class="invalid-feedback d-block">{{ error }}</div>
-                                {% endfor %}
-                            </div>
-                            <div class="col-md-3 mb-3">
-                                <h7>Nível</h7>
-                                {{ form.nivel_ocrim.label_tag }}
-                                {{ form.nivel_orcrim }}
-                                {% for error in form.nivel_orcrim.errors %}
-                                    <div class="invalid-feedback d-block">{{ error }}</div>
-                                {% endfor %}
-                            </div>
-
-                            <div class="col-md-3 mb-3">
-                                {{ form.situacao_penal.label_tag }}
-                                {{ form.situacao_penal }}
-                                {% for error in form.situacao_penal.errors %}
-                                    <div class="invalid-feedback d-block">{{ error }}</div>
-                                {% endfor %}
-                            </div>
-
-                            <div class="col-md-3 mb-3">
-                                {{ form.regime.label_tag }}
-                                {{ form.regime }}
-                                {% for error in form.regime.errors %}
-                                    <div class="invalid-feedback d-block">{{ error }}</div>
-                                {% endfor %}
-                            </div>
-
-                            <div class="col-md-4 mb-3">
-                                {{ form.casa_prisional.label_tag }}
-                                {{ form.casa_prisional }}
-                                {% for error in form.prisional.errors %}
-                                    <div class="invalid-feedback d-block">{{ error }}</div>
-                                {% endfor %}
-                            </div>
-
-                            <div class="col-md-2 mb-3">
-                                {{ form.pavilhao.label_tag }}
-                                {{ form.pavilhao }}
-                                {% for error in form.pavilhao.errors %}
-                                    <div class="invalid-feedback d-block">{{ error }}</div>
-                                {% endfor %}
-                            </div>
-
-                            <div class="col-md-2 mb-3">
-                                {{ form.galeria.label_tag }}
-                                {{ form.galeria }}
-                                {% for error in form.galeria.errors %}
-                                    <div class="invalid-feedback d-block">{{ error }}</div>
-                                {% endfor %}
-                            </div>
-
-                            <div class="col-md-2 mb-3">
-                                {{ form.cela.label_tag }}
-                                {{ form.cela }}
-                                {% for error in form.cela.errors %}
-                                    <div class="invalid-feedback d-block">{{ error }}</div>
-                                {% endfor %}
-                            </div>
-
-                            <div class="col-md-2 mb-3">
-                                {{ form.alojamento.label_tag }}
-                                {{ form.alojamento }}
-                                {% for error in form.alojamento.errors %}
-                                    <div class="invalid-feedback d-block">{{ error }}</div>
-                                {% endfor %}
-                            </div>
-
-                            <div class="col-md-12 mb-3">
-                                {{ form.observacao.label_tag }}
-                                {{ form.observacao }}
-                                {% for error in form.observacao.errors %}
-                                    <div class="invalid-feedback d-block">{{ error }}</div>
-                                {% endfor %}
+                                {% render_field form.rg_cpf class="form-control" placeholder="CPF ou RG" %}
                             </div>
                         </div>
+
+                        <div class="row">
+                            <div class="col-md-3 mb-3">
+                                {{ form.data_nasc.label_tag }}
+                                {% render_field form.data_nasc class="form-control" type="date" %}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                {{ form.alcunha.label_tag }}
+                                {% render_field form.alcunha class="form-control" placeholder="Apelido / Vulgo" %}
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                {{ form.codigo_detento.label_tag }}
+                                {% render_field form.codigo_detento class="form-control" placeholder="Cód. Detento" %}
+                            </div>
+                        </div>
+
                         <hr>
-                        <div class="d-grid gap-2 d-md-flex justify-content-md-center">
-                            <button type="submit" class="btn btn-success btn-lg">Salvar</button>
-                            <a href="{% url 'individuo_list' %}" class="btn btn-secondary btn-lg">Cancelar</a>
+
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                {{ form.orcrim.label_tag }}
+                                {% render_field form.orcrim class="form-select" %}
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label>Nível na Orcrim</label>
+                                {% render_field form.nivel_orcrim class="form-select" %}
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                {{ form.situacao_penal.label_tag }}
+                                {% render_field form.situacao_penal class="form-select" %}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                {{ form.casa_prisional.label_tag }}
+                                {% render_field form.casa_prisional class="form-select" %}
+                            </div>
+                            <div class="col-md-2 mb-3">
+                                {{ form.regime.label_tag }}
+                                {% render_field form.regime class="form-select" %}
+                            </div>
+                            <div class="col-md-2 mb-3">
+                                {{ form.pavilhao.label_tag }}
+                                {% render_field form.pavilhao class="form-control text-center" %}
+                            </div>
+                            <div class="col-md-2 mb-3">
+                                {{ form.galeria.label_tag }}
+                                {% render_field form.galeria class="form-control text-center" %}
+                            </div>
+                            <div class="col-md-2 mb-3">
+                                {{ form.cela.label_tag }}
+                                {% render_field form.cela class="form-control text-center" %}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                {{ form.observacao.label_tag }}
+                                {% render_field form.observacao class="form-control" rows="3" placeholder="Observações e informações complementares..." %}
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-center mt-4">
+                            <button type="submit" class="btn btn-success px-5 shadow-sm fw-bold">
+                                <i class="fa-solid fa-floppy-disk me-2"></i> SALVAR REGISTRO
+                            </button>
+                            <a href="{% url 'individuo_list' %}" class="btn btn-outline-secondary px-5">
+                                <i class="fa-solid fa-xmark me-2"></i> CANCELAR
+                            </a>
                         </div>
                     </form>
                 </div>
@@ -166,10 +216,24 @@
         </div>
     </div>
 </div>
-{% endblock content %}
+{% endblock %}
 
 {% block extra_body_js %}
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
 <script src="{% static 'controle/js/individuo_form.js' %}"></script>
-{% endblock extra_body_js %}
+
+<script>
+    // Função para mostrar a foto assim que selecionada
+    function previewImage(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('preview-box').innerHTML = 
+                    '<img src="' + e.target.result + '" class="animate__animated animate__fadeIn">';
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
+{% endblock %}

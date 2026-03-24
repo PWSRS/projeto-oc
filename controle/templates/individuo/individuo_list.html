@@ -1,155 +1,282 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Indivíduos{% endblock %} 
+{% block title %}ARI SUL - Lista de Indivíduos{% endblock %}
+
+{% block extra_head_css %}
+<style>
+    body {
+        background: radial-gradient(circle at center, #1e272e 0%, #0f1418 100%);
+        color: #ecf0f1;
+        min-height: 100vh;
+        padding-top: 70px;
+    }
+    .glass-card {
+        background: rgba(44, 62, 80, 0.4);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+    }
+    .text-info-tech { color: #4fb9ff !important; }
+
+    /* Estilo da Tabela Tech */
+    .table-dark-tech {
+        --bs-table-bg: transparent;
+        --bs-table-color: #ecf0f1;
+        --bs-table-hover-bg: rgba(255, 255, 255, 0.05);
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+    .table-dark-tech thead {
+        background: rgba(0, 0, 0, 0.3);
+        color: #4fb9ff;
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        letter-spacing: 1px;
+    }
+
+    /* Foto Redonda na Tabela */
+    .img-table {
+        width: 40px;
+        height: 40px;
+        object-fit: cover;
+        border: 2px solid rgba(79, 185, 255, 0.3);
+        transition: 0.3s;
+    }
+    .img-table:hover {
+        transform: scale(1.2);
+        border-color: #4fb9ff;
+    }
+
+        /* Campo de Busca Tech */
+        /* Campo de Busca Tech - Versão Corrigida */
+    .search-tech {
+        background-color: rgba(255, 255, 255, 0.05) !important; /* Um pouco mais claro */
+        border: 1px solid rgba(79, 185, 255, 0.2) !important;
+        color: #ffffff !important; /* Cor do texto digitado */
+        font-weight: 500;
+    }
+
+/* Cor do texto de ajuda (Placeholder) */
+    .search-tech::placeholder {
+        color: rgba(255, 255, 255, 0.4) !important;
+        font-style: italic;
+        font-size: 0.9rem;
+    }
+
+    /* Quando clica no campo para digitar */
+    .search-tech:focus {
+        background-color: rgba(255, 255, 255, 0.1) !important;
+        border-color: #4fb9ff !important;
+        box-shadow: 0 0 10px rgba(79, 185, 255, 0.4) !important;
+        outline: none;
+    }
+
+    /* Paginação Customizada */
+    .page-link {
+        background: rgba(255, 255, 255, 0.05);
+        border-color: rgba(255, 255, 255, 0.1);
+        color: #4fb9ff;
+    }
+    .page-item.active .page-link {
+        background: #4fb9ff;
+        border-color: #4fb9ff;
+        color: #000;
+    }
+
+    /* Modal Dark */
+    .modal-content {
+        background: #1e272e;
+        color: #fff;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .btn-info-tech {
+    background-color: transparent;
+    border: 1px solid #4fb9ff !important;
+    color: #4fb9ff !important;
+    transition: 0.3s;
+}
+
+.btn-info-tech:hover {
+    background-color: #4fb9ff;
+    color: #000 !important;
+    box-shadow: 0 0 15px rgba(79, 185, 255, 0.5);
+}
+ 
+</style>
+{% endblock %}
 
 {% block content %}
-<div class="card mb-4">
-    <div class="card-body text-bg-primary p-3 text-center">
-        <h3 class="mb-0">Indivíduos</h3>
-    </div>
-</div>
-
-<div class="container-fluid d-flex justify-content-between align-items-center mb-3 p-0">
-    <form id="search-form" class="d-flex flex-grow-1 me-3" role="search" method="GET"> 
-        <input 
-            class="form-control me-2" 
-            type="search" 
-            placeholder="Pesquisa por nome ou alcunha" 
-            aria-label="Search"
-            name="q"
-            id="search-input" 
-            value="{{ request.GET.q|default:'' }}"
-        />
-        <div class="btn-group" role="group">
-            <button class="btn btn-outline-success" type="submit">Pesquisar</button>
-            <a href="{% url 'individuo_list' %}" class="btn btn-outline-secondary" title="Limpar Busca">Limpar</a>
-        </div>
-    </form>
-
-    <a href="{% url 'individuo_add' %}" class="btn btn-primary text-nowrap" title="Adicionar Novo Indivíduo">
-        <i class="fas fa-plus"></i> indivíduo
-    </a>
-</div>
-
-<div class="table-responsive">
-    <table class="table table-striped table-hover border">
-        <thead class="table-dark text-center">
-            <tr class="align-middle">
-                <th>#</th>
-                <th>Nome</th>
-                <th>Data Nasc.</th>
-                <th>Cód. Preso</th>
-                <th>Orcrim</th>
-                <th>Presídio</th>
-                <th>Situação</th>
-                <th style="width: 120px;">Ações</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for individuo in object_list %}
-            <tr class="align-middle">
-                <td class="text-center">
-                    <img 
-                        src="{% if individuo.foto %}{{ individuo.foto.url }}{% else %}{% static 'controle/img/image_default.png' %}{% endif %}" 
-                        alt="{{ individuo.nome }}" 
-                        style="width: 45px; height: 45px; object-fit: cover;" 
-                        class="img-thumbnail rounded-circle"
-                    >
-                </td>
-                <td>
-                    <a href="{% url 'individuo_detail' individuo.pk %}" class="text-decoration-none fw-bold">
-                        {{ individuo.nome }}
-                    </a>
-                </td>
-                <td class="text-center">{{ individuo.data_nasc|date:"d/m/Y" }}</td>
-                <td class="text-center">{{ individuo.codigo_detento|default:"-" }}</td>
-                <td class="text-center">{{ individuo.orcrim|default:"-" }}</td>
-                <td class="text-center">{{ individuo.casa_prisional|default:"-" }}</td>
-                <td class="text-center">
-                    <span class="badge 
-                        {% if individuo.situacao_penal == 'recolhido' %}text-bg-danger
-                        {% elif individuo.situacao_penal == 'recolhido_tornozeleira' %}text-bg-primary
-                        {% elif individuo.situacao_penal == 'liberdade' %}text-bg-success
-                        {% elif individuo.situacao_penal == 'foragido' or individuo.situacao_penal == 'procurado' %}text-bg-warning
-                        {% else %}text-bg-secondary{% endif %}">
-                        {{ individuo.get_situacao_penal_display }} 
-                    </span>
-                </td>
-                <td class="text-center">
-                    <div class="btn-group">
-                        <a href="{% url 'gerar_pdf_individuo' individuo.id %}" target="_blank" class="btn btn-outline-dark btn-sm">
-                            <i class="fa-solid fa-file-pdf"></i>
-                        </a>
-                        <a href="{% url 'individuo_edit' pk=individuo.pk %}" class="btn btn-sm btn-outline-primary" title="Editar">
-                            <i class="fas fa-pencil-alt"></i>
-                        </a>
-                        <button type="button" 
-                                class="btn btn-sm btn-outline-danger" 
-                                data-bs-toggle="modal" 
-                                data-bs-target="#deleteConfirmModal" 
-                                data-delete-url="{% url 'individuo_delete' pk=individuo.pk %}" 
-                                data-item-nome="{{ individuo.nome }}">
-                            <i class="fas fa-trash-alt"></i>
-                        </button>
+<div class="container-fluid py-4">
+    
+    <div class="glass-card p-4 mb-4 animate__animated animate__fadeInDown">
+        <div class="row align-items-center">
+            <div class="col-md-4">
+                <h4 class="mb-0 text-info-tech">
+                    <i class="fa-solid fa-users-viewfinder me-2"></i>INDIVÍDUOS MONITORADOS
+                </h4>
+            </div>
+            <div class="col-md-6">
+                <form id="search-form" class="d-flex" method="GET"> 
+                    <div class="input-group">
+                        <span class="input-group-text bg-transparent border-secondary border-opacity-25 text-info-tech">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </span>
+                        <input 
+                            class="form-control search-tech" 
+                            type="search" 
+                            placeholder="Pesquisar por nome ou alcunha..." 
+                            name="q"
+                            value="{{ request.GET.q|default:'' }}"
+                        />
+                        <button class="btn btn-info-tech border border-secondary border-opacity-25" type="submit">FILTRAR</button>
+                        {% if request.GET.q %}
+                            <a href="{% url 'individuo_list' %}" class="btn btn-outline-secondary">LIMPAR</a>
+                        {% endif %}
                     </div>
-                </td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="8" class="text-center py-4 text-muted">Nenhum indivíduo encontrado.</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
+                </form>
+            </div>
+            <div class="col-md-2 text-end">
+                <a href="{% url 'individuo_add' %}" class="btn btn-success w-100 fw-bold shadow-sm">
+                    <i class="fas fa-plus me-1"></i> Cadastrar
+                </a>
+            </div>
+        </div>
+    </div>
 
-{% if is_paginated %}
-<nav aria-label="Paginação" class="mt-4">
-    <ul class="pagination justify-content-center">
-        {% if page_obj.has_previous %}
-            <li class="page-item">
-                <a class="page-link" href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}page={{ page_obj.previous_page_number }}">&laquo; Anterior</a>
-            </li>
-        {% endif %}
+    <div class="glass-card shadow-lg overflow-hidden animate__animated animate__fadeInUp">
+        <div class="table-responsive">
+            <table class="table table-dark-tech table-hover align-middle mb-0">
+                <thead>
+                    <tr class="text-center">
+                        <th class="ps-4">#</th>
+                        <th>NOME / ALCUNHA</th>
+                        <th>NASCIMENTO</th>
+                        <th>COD. DETENTO</th>
+                        <th>ORCRIM</th>
+                        <th>LOCALIZAÇÃO</th>
+                        <th>SITUAÇÃO</th>
+                        <th class="pe-4">AÇÕES</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for individuo in object_list %}
+                    <tr class="text-center">
+                        <td class="ps-4">
+                            <img 
+                                src="{% if individuo.foto %}{{ individuo.foto.url }}{% else %}{% static 'controle/img/image_default.png' %}{% endif %}" 
+                                alt="Foto" 
+                                class="rounded-circle img-table shadow"
+                            >
+                        </td>
+                        <td class="text-start">
+                            <a href="{% url 'individuo_detail' individuo.pk %}" class="text-decoration-none fw-bold text-white">
+                                {{ individuo.nome|upper }}
+                                {% if individuo.alcunha %}
+                                    <br><small class="text-info-tech">Vulgo: {{ individuo.alcunha }}</small>
+                                {% endif %}
+                            </a>
+                        </td>
+                        <td class="small">{{ individuo.data_nasc|date:"d/m/Y" }}</td>
+                        <td class="font-monospace">{{ individuo.codigo_detento|default:"---" }}</td>
+                        <td>
+                            <span class="badge bg-dark border border-secondary">{{ individuo.orcrim|default:"S/F" }}</span>
+                        </td>
+                        <td class="small text-uppercase">
+                            {{ individuo.casa_prisional|default:"---" }}
+                        </td>
+                        <td>
+                            <span class="badge rounded-pill 
+                                {% if individuo.situacao_penal == 'recolhido' %}bg-danger
+                                {% elif 'recolhido' in individuo.situacao_penal %}bg-primary
+                                {% elif individuo.situacao_penal == 'liberdade' %}bg-success
+                                {% elif 'foragido' in individuo.situacao_penal or 'procurado' in individuo.situacao_penal %}bg-warning text-dark
+                                {% else %}bg-secondary{% endif %} shadow-sm">
+                                {{ individuo.get_situacao_penal_display|upper }} 
+                            </span>
+                        </td>
+                        <td class="pe-4 text-nowrap">
+                            <div class="btn-group shadow-sm">
+                                <a href="{% url 'gerar_pdf_individuo' individuo.id %}" target="_blank" class="btn btn-sm btn-outline-light" title="PDF">
+                                    <i class="fa-solid fa-file-pdf text-danger"></i>
+                                </a>
+                                <a href="{% url 'individuo_edit' pk=individuo.pk %}" class="btn btn-sm btn-outline-light" title="Editar">
+                                    <i class="fas fa-edit text-info-tech"></i>
+                                </a>
+                                <button type="button" 
+                                        class="btn btn-sm btn-outline-light" 
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#deleteConfirmModal" 
+                                        data-delete-url="{% url 'individuo_delete' pk=individuo.pk %}" 
+                                        data-item-nome="{{ individuo.nome }}">
+                                    <i class="fas fa-trash-alt text-danger"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="8" class="text-center py-5">
+                            <i class="fa-solid fa-database fa-3x mb-3 d-block opacity-25"></i>
+                            <p class="mb-0 text-muted italic">Nenhum registro encontrado no terminal.</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 
-        {% for i in page_obj.paginator.page_range %}
-            {% if page_obj.number == i %}
-                <li class="page-item active"><span class="page-link">{{ i }}</span></li>
-            {% elif i > page_obj.number|add:'-3' and i < page_obj.number|add:'3' %}
-                <li class="page-item"><a class="page-link" href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}page={{ i }}">{{ i }}</a></li>
+    {% if is_paginated %}
+    <nav aria-label="Paginação" class="mt-4">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}page={{ page_obj.previous_page_number }}">
+                        <i class="fa-solid fa-chevron-left"></i> Anterior
+                    </a>
+                </li>
             {% endif %}
-        {% endfor %}
 
-        {% if page_obj.has_next %}
-            <li class="page-item">
-                <a class="page-link" href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}page={{ page_obj.next_page_number }}">Próxima &raquo;</a>
-            </li>
-        {% endif %}
-    </ul>
-</nav>
-<div class="text-center mb-4">
-    <small class="text-muted">Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}. Total de {{ page_obj.paginator.count }} registros.</small>
+            {% for i in page_obj.paginator.page_range %}
+                {% if page_obj.number == i %}
+                    <li class="page-item active"><span class="page-link">{{ i }}</span></li>
+                {% elif i > page_obj.number|add:'-3' and i < page_obj.number|add:'3' %}
+                    <li class="page-item"><a class="page-link" href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}page={{ i }}">{{ i }}</a></li>
+                {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}page={{ page_obj.next_page_number }}">
+                        Próxima <i class="fa-solid fa-chevron-right"></i>
+                    </a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+    <div class="text-center">
+        <small class="text-muted opacity-50">REGISTROS: {{ page_obj.paginator.count }} | PÁGINA: {{ page_obj.number }}/{{ page_obj.paginator.num_pages }}</small>
+    </div>
+    {% endif %}
 </div>
-{% endif %}
 
 <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content border-danger">
-            <div class="modal-header bg-danger text-white">
-                <h5 class="modal-title"><i class="fas fa-exclamation-triangle me-2"></i>Confirmação de Exclusão</h5>
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-secondary border-opacity-25 bg-danger bg-opacity-10">
+                <h5 class="modal-title text-danger"><i class="fas fa-exclamation-triangle me-2"></i>ALERTA DE EXCLUSÃO</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                <p>Você tem certeza que deseja excluir permanentemente o registro de:</p>
-                <p><strong>Indivíduo:</strong> <span id="itemNamePlaceholder" class="badge bg-secondary fs-6"></span></p>
-                <p class="text-danger small mt-3"><i class="fas fa-info-circle"></i> Esta ação não poderá ser desfeita.</p>
+            <div class="modal-body text-center py-4">
+                <p class="mb-1">Confirmar remoção permanente do registro:</p>
+                <h5 id="itemNamePlaceholder" class="text-info-tech mt-2"></h5>
+                <p class="text-muted small mt-3">Esta operação é irreversível no banco de dados da ARI SUL.</p>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <div class="modal-footer border-secondary border-opacity-25">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">CANCELAR</button>
                 <form method="post" id="deleteForm">
                     {% csrf_token %}
-                    <button type="submit" class="btn btn-danger">Excluir Definitivamente</button>
+                    <button type="submit" class="btn btn-danger px-4">EXCLUIR REGISTRO</button>
                 </form>
             </div>
         </div>
@@ -172,7 +299,7 @@
                 const namePlaceholder = deleteModal.querySelector('#itemNamePlaceholder');
 
                 form.action = deleteUrl;
-                namePlaceholder.textContent = itemName;
+                namePlaceholder.textContent = itemName.toUpperCase();
             });
         }
     });

@@ -1,62 +1,99 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Organograma{% endblock %}
+{% block title %}ARI SUL - Organograma{% endblock %}
 
 {% block extra_head_css %}
     <link rel="stylesheet" href="{% static 'controle/css/organograma.css' %}">
+    <style>
+        body {
+            background: radial-gradient(circle at center, #1e272e 0%, #0f1418 100%);
+            color: #ecf0f1;
+        }
+
+        /* Estilização do Header do Card */
+        .header-tech {
+            background: rgba(0, 0, 0, 0.4);
+            border-bottom: 2px solid #4fb9ff;
+            padding: 15px;
+            border-radius: 15px 15px 0 0;
+        }
+
+        /* Ajuste do Select para o padrão que criamos */
+        #selecaoOrcrim {
+            background-color: rgba(0, 0, 0, 0.4) !important;
+            border: 1px solid rgba(79, 185, 255, 0.3) !important;
+            color: #fff !important;
+            padding: 8px 15px;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 400px;
+        }
+        #selecaoOrcrim option { background-color: #1e272e; }
+
+        /* Container do Organograma */
+        #organograma-container {
+            position: relative;
+            background: rgba(30, 39, 46, 0.4);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 20px;
+            height: 700px; /* Garante altura para o gráfico */
+        }
+
+        #organograma {
+            width: 100%;
+            height: 600px; /* IMPORTANTE: Sem isso, o gráfico fica invisível */
+            min-height: 500px;
+        }
+
+        /* Legenda Flutuante Estilizada */
+        #legenda-situacao-penal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid rgba(79, 185, 255, 0.2);
+            z-index: 10;
+            font-size: 0.85rem;
+        }
+        .legenda-item { display: flex; align-items: center; margin-bottom: 5px; }
+        .cor-legenda { 
+            width: 12px; height: 12px; border-radius: 50%; 
+            margin-right: 10px; border: 1px solid rgba(255,255,255,0.2);
+        }
+    </style>
 {% endblock %}
 
 {% block content %}
-
-<div class="card">
-  <div class="card-body text-bg-primary p-3 text-center">
-    <h3>Organograma das Organizaçoes Criminosas</h3>
-  </div>
-</div>
-
-<br>
-
-<div style="margin-bottom: 10px;">
-    <label for="selecaoOrcrim">Selecione a Orcrim:</label>
-    <select id="selecaoOrcrim"></select>
-</div>
-
-<div id="logo-container">
-    <p class="text-muted"></p>
-</div>
-
-
-<div id="organograma-container"> 
-    
-    <div id="legenda-situacao-penal">
-      <h4>Situação Penal</h4>
-      <div class="legenda-item">
-        <span class="cor-legenda" style="background-color: red;"></span>
-        Recolhido
-      </div>
-      <div class="legenda-item">
-        <span class="cor-legenda" style="background-color: orange;"></span>
-        Foragido / Procurado
-      </div>
-      <div class="legenda-item">
-        <span class="cor-legenda" style="background-color: green;"></span>
-        Liberdade
-      </div>
-      <div class="legenda-item">
-        <span class="cor-legenda" style="background-color: blue;"></span>
-        Recolhido Tornozeleira
-      </div>
-      <div class="legenda-item">
-        <span class="cor-legenda" style="background-color: gray;"></span>
-        Removido
-      </div>
+<div class="container-fluid py-4">
+    <div class="header-tech text-center mb-4">
+        <h3 class="fw-bold mb-0 text-uppercase">
+            <i class="fa-solid fa-sitemap me-2 text-info-tech"></i>
+            Organograma <span class="text-info-tech">ORCRIM</span>
+        </h3>
     </div>
 
-    <div id="organograma"></div>
+    <div class="d-flex align-items-center justify-content-center gap-3 mb-4">
+        <label for="selecaoOrcrim" class="fw-bold text-info-tech">ALVO:</label>
+        <select id="selecaoOrcrim" class="form-select"></select>
+    </div>
 
+    <div id="organograma-container" class="shadow-lg">
+        <div id="legenda-situacao-penal">
+            <h6 class="text-info-tech mb-3 border-bottom border-secondary pb-2">STATUS PENAL</h6>
+            <div class="legenda-item"><span class="cor-legenda" style="background-color: #ff4d4d;"></span> Recolhido</div>
+            <div class="legenda-item"><span class="cor-legenda" style="background-color: #ffa502;"></span> Foragido / Procurado</div>
+            <div class="legenda-item"><span class="cor-legenda" style="background-color: #2ed573;"></span> Liberdade</div>
+            <div class="legenda-item"><span class="cor-legenda" style="background-color: #1e90ff;"></span> Tornozeleira</div>
+            <div class="legenda-item"><span class="cor-legenda" style="background-color: #747d8c;"></span> Removido</div>
+        </div>
+        <div id="organograma"></div>
+    </div>
 </div>
-{% endblock content %}
+{% endblock %}
 {% block extra_body_js %}
 <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
 <script>
@@ -106,51 +143,56 @@
 
         // 2. Carrega e desenha o organograma
         async function carregarOrganograma(orcrimId) {
-            const logoContainer = document.getElementById('logo-container');
-            logoContainer.innerHTML = '';
+            // 1. Buscamos o elemento DIRETAMENTE aqui para evitar o erro de "null"
+            const organogramaDiv = document.getElementById('organograma');
+            
+            // Verificação de segurança: se não achar a div, ele para aqui e te avisa no console
+            if (!organogramaDiv) {
+                console.error("Elemento 'organograma' não encontrado no DOM!");
+                return;
+            }
+
             try {
+                // Limpa o conteúdo anterior antes de carregar o novo
+                organogramaDiv.innerHTML = '<p class="text-center text-info-tech mt-5">Carregando dados táticos...</p>';
+
                 const response = await fetch(`/api/orcrim/${orcrimId}/individuos/`);
                 const individuos = await response.json();
+
+                if (individuos.length === 0) {
+                    organogramaDiv.innerHTML = '<p class="text-center text-warning mt-5">Nenhum alvo vinculado a esta ORCRIM.</p>';
+                    return;
+                }
 
                 const nodes = [];
                 const edges = [];
 
+                // Identificação de lideranças para criar as conexões (edges)
                 const lideresIds = individuos.filter(i => i.nivel_orcrim === 'lider').map(i => i.id);
                 const influentesIds = individuos.filter(i => i.nivel_orcrim === 'influente').map(i => i.id);
 
                 let noPaiParaInfluentes = lideresIds.length > 0 ? lideresIds[0] : null;
                 let noPaiParaSemExpressao = influentesIds.length > 0 ? influentesIds[0] : (lideresIds.length > 0 ? lideresIds[0] : null);
 
-                if (!noPaiParaInfluentes && !noPaiParaSemExpressao) {
-                    console.log("Não há líderes ou influentes para criar o organograma hierárquico.");
-                    container.innerHTML = '<p>Não há registros na base de dados para criar o organograma.</p>';
-                    return;
-                }
-
                 individuos.forEach(individuo => {
-                    let primeiraAlcunha = "";
-                    if (individuo.alcunha){
-                        const alcunhasArray = individuo.alcunha.split(/[,/;]/);
-                        primeiraAlcunha = alcunhasArray[0].trim();
-
-                        if(primeiraAlcunha === ""){
-                            primeiraAlcunha = null;
-                        }
+                    let labelText = individuo.nome;
+                    if (individuo.alcunha) {
+                        const primeiraAlcunha = individuo.alcunha.split(/[,/;]/)[0].trim();
+                        if (primeiraAlcunha) labelText += `\n(${primeiraAlcunha})`;
                     }
-
-                    const labelText = `${individuo.nome}${primeiraAlcunha ? '\n(' + primeiraAlcunha + ')' : ''}`;
-
-
 
                     nodes.push({
                         id: individuo.id,
-                        label: labelText,
-                        image: individuo.foto || '{% static 'controle/img/image_default.png' %}',
+                        label: labelText.toUpperCase(),
+                        image: individuo.foto || '{% static "controle/img/image_default.png" %}',
                         shape: 'circularImage',
-                        // AQUI ESTÁ A ALTERAÇÃO: usa a cor da situação penal
-                        color: { border: situacaoCores[individuo.situacao_penal] || 'gray' }, 
-                        level: individuo.nivel_orcrim === 'lider' ? 1 : (individuo.nivel_orcrim === 'influente' ? 2 : 3),
+                        color: { 
+                            border: situacaoCores[individuo.situacao_penal] || '#747d8c',
+                            background: '#1e272e' 
+                        },
                         borderWidth: 6,
+                        level: individuo.nivel_orcrim === 'lider' ? 1 : (individuo.nivel_orcrim === 'influente' ? 2 : 3),
+                        font: { color: '#ecf0f1', size: 12, multi: true }
                     });
 
                     if (individuo.nivel_orcrim === 'influente' && noPaiParaInfluentes) {
@@ -166,46 +208,31 @@
                     edges: new vis.DataSet(edges)
                 };
 
+                // Opções para o fundo escuro
                 const options = {
                     layout: {
                         hierarchical: {
                             direction: 'UD',
                             sortMethod: 'directed',
-                            levelSeparation: 200,
-                            nodeSpacing: 300,
+                            levelSeparation: 150,
+                            nodeSpacing: 200
                         }
                     },
                     physics: false,
-                    nodes: {
-                        size: 50,
-                        font: { size: 14, color: '#000000' },
-                    },
                     edges: {
-                        color: {
-                            color: 'lightgray', 
-                            highlight: 'gray',
-                            hover: 'gray',
-                            inherit: 'from',
-                            opacity: 1.0
-                        },
+                        color: { color: 'rgba(79, 185, 255, 0.4)', highlight: '#4fb9ff' },
                         width: 2,
-                        smooth: {
-                            type: 'cubicBezier', // Para linhas curvas
-                            forceDirection: 'vertical',
-                            roundness: 0.5
-                        },
-                        arrows: {
-                            to: {
-                                enabled: false,
-                            }
-                        }
+                        smooth: { type: 'cubicBezier', forceDirection: 'vertical', roundness: 0.5 }
                     }
                 };
-                
-                container.innerHTML = '';
-                const network = new vis.Network(container, data, options);
+
+                // Limpa a mensagem de "Carregando" antes de renderizar
+                organogramaDiv.innerHTML = '';
+                new vis.Network(organogramaDiv, data, options);
+
             } catch (error) {
                 console.error('Erro ao carregar o organograma:', error);
+                organogramaDiv.innerHTML = '<p class="text-danger text-center mt-5">Erro ao carregar dados da API.</p>';
             }
         }
         preencherOrcrims();

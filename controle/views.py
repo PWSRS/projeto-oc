@@ -256,13 +256,23 @@ class OrcrimListView(ListView):
     ordering = ["nome"]
 
     def get_queryset(self):
+        # 1. Começamos com o queryset base (todos os registros)
         queryset = super().get_queryset()
 
-        # A nova propriedade para cada Orcrim é 'total_individuos'
-        # annotate adiciona esse campo ao queryset
+        # 2. Mantemos sua lógica de contagem de indivíduos
         queryset = queryset.annotate(total_individuos=Count("individuo"))
-        return queryset
 
+        # 3. Capturamos o que o usuário digitou no campo 'q' do template
+        query = self.request.GET.get('q')
+
+        # 4. Se houver algo digitado, filtramos por Nome ou Sigla
+        if query:
+            queryset = queryset.filter(
+                Q(nome__icontains=query) | 
+                Q(sigla__icontains=query)
+            )
+
+        return queryset
 
 class OrcrimCreateView(CreateView):
     model = Orcrim

@@ -1,44 +1,129 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Cadastrar{% endblock %}
+{% block title %}ARI SUL - Cadastrar ORCRIM{% endblock %}
+
+{% block extra_head_css %}
+<style>
+    body {
+        background: radial-gradient(circle at center, #1e272e 0%, #0f1418 100%);
+        color: #ecf0f1;
+        min-height: 100vh;
+        padding-top: 70px;
+    }
+    .glass-card {
+        background: rgba(44, 62, 80, 0.4);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+    }
+    .text-info-tech { color: #4fb9ff !important; }
+
+    /* TRATAMENTO PARA INPUTS E SELECTS */
+    input, select, textarea {
+        background-color: rgba(0, 0, 0, 0.4) !important;
+        border: 1px solid rgba(79, 185, 255, 0.3) !important;
+        color: #fff !important;
+        border-radius: 8px !important;
+        padding: 10px !important;
+    }
+
+    /* Força o fundo escuro nas opções do Select (Dropdown) */
+    select option {
+        background-color: #1e272e !important;
+        color: #fff !important;
+    }
+
+    input:focus, select:focus {
+        border-color: #00e5ff !important;
+        box-shadow: 0 0 10px rgba(0, 229, 255, 0.3) !important;
+        background-color: rgba(0, 0, 0, 0.6) !important;
+        outline: none;
+    }
+
+    label {
+        color: #4fb9ff;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+    
+    .form-text { color: rgba(236, 240, 241, 0.5) !important; }
+
+    .btn-save-tech {
+        background-color: #00e5ff !important;
+        color: #000 !important;
+        font-weight: 800 !important;
+        border: none !important;
+        box-shadow: 0 0 15px rgba(0, 229, 255, 0.3);
+        transition: 0.3s;
+    }
+    .btn-save-tech:hover {
+        background-color: #fff !important;
+        transform: translateY(-2px);
+    }
+</style>
+{% endblock %}
 
 {% block content %}
-    
-
-<div class="container my-5"> {# Adiciona um container com margem para centralizar e dar respiro #}
-    <div class="row justify-content-center"> {# Centraliza o conteúdo na linha #}
-        <div class="col-md-8 col-lg-6"> {# Define a largura do formulário em telas médias e grandes #}
-            <div class="card shadow-sm"> {# Adiciona um cartão com sombra para um visual mais moderno #}
-                <div class="card-header bg-primary text-white text-center"> {# Cabeçalho do cartão #}
-                    <h3 class="mb-0">Cadastro de ORCRIM</h3> {# Título mais específico e como cabeçalho de cartão #}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            
+            <div class="glass-card shadow-lg animate__animated animate__fadeInUp">
+                <div class="card-header bg-dark bg-opacity-50 text-white py-3 border-bottom border-secondary text-center">
+                    <h4 class="mb-0 fw-bold">
+                        <i class="fa-solid fa-shield-halved me-2 text-info-tech"></i>
+                        CADASTRO DE <span class="text-info-tech">ORCRIM</span>
+                    </h4>
                 </div>
-                <div class="card-body"> {# Corpo do cartão para o formulário #}
-                    <form method="post" class="needs-validation" novalidate enctype="multipart/form-data"> {# Adiciona classes para validação Bootstrap #}
+
+                <div class="card-body p-4">
+                    <form method="post" class="needs-validation" novalidate enctype="multipart/form-data">
                         {% csrf_token %}
 
                         {% for field in form %}
-                            <div class="mb-3"> {# Adiciona margem inferior para cada campo #}
-                                {{ field.label_tag }}
-                                {{ field }}
+                            <div class="mb-4">
+                                <label for="{{ field.id_for_label }}">
+                                    <i class="fa-solid fa-caret-right me-1"></i> {{ field.label }}
+                                </label>
+                                
+                                {# Adicionando a classe form-control do Bootstrap dinamicamente via CSS acima #}
+                                <div class="input-group">
+                                    {{ field }}
+                                </div>
+
                                 {% if field.help_text %}
-                                    <div class="form-text text-muted">{{ field.help_text }}</div> {# Estilo para texto de ajuda #}
+                                    <div class="form-text small"><i class="fa-solid fa-circle-info me-1"></i> {{ field.help_text }}</div>
                                 {% endif %}
+                                
                                 {% for error in field.errors %}
-                                    <div class="invalid-feedback d-block"> {# Estilo para erros de validação #}
-                                        {{ error }}
+                                    <div class="text-danger small mt-1 fw-bold">
+                                        <i class="fa-solid fa-exclamation-triangle me-1"></i> {{ error }}
                                     </div>
                                 {% endfor %}
                             </div>
                         {% endfor %}
 
-                        <hr> {# Separador visual antes dos botões #}
+                        <hr class="border-secondary border-opacity-25 my-4">
 
-                        <div class="d-grid gap-2 d-md-flex justify-content-md-center"> {# Botões centralizados e com espaçamento #}
-                            <button type="submit" class="btn btn-success btn-lg">Salvar</button> {# Botão maior e com texto mais claro #}
-                            <a href="{% url 'orcrim_list' %}" class="btn btn-secondary btn-lg">Cancelar</a>
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                            <a href="{% url 'orcrim_list' %}" class="btn btn-outline-secondary px-4 fw-bold me-md-2">
+                                <i class="fa-solid fa-xmark me-2"></i> CANCELAR
+                            </a>
+                            <button type="submit" class="btn btn-save-tech px-5">
+                                <i class="fa-solid fa-check me-2"></i> SALVAR REGISTRO
+                            </button>
                         </div>
                     </form>
+                </div>
+                
+                <div class="card-footer bg-transparent border-0 text-center pb-3">
+                    <small class="text-muted font-monospace" style="font-size: 0.65rem; letter-spacing: 2px;">
+                        DEPARTAMENTO DE INTELIGÊNCIA - ARI SUL
+                    </small>
                 </div>
             </div>
         </div>
@@ -49,7 +134,15 @@
 {% block extra_body_js %}
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Bootstrap form validation
+        // Aplica a classe form-control do Bootstrap em todos os inputs do Django
+        const inputs = document.querySelectorAll('input, select, textarea');
+        inputs.forEach(el => {
+            if (el.type !== 'checkbox' && el.type !== 'radio') {
+                el.classList.add('form-control');
+            }
+        });
+
+        // Validação do Bootstrap
         var form = document.querySelector('.needs-validation');
         form.addEventListener('submit', function(event) {
             if (!form.checkValidity()) {

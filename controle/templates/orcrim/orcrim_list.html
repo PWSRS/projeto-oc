@@ -1,97 +1,214 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}ORCRIM{% endblock %} 
+{% block title %}ARI SUL - Monitoramento ORCRIM{% endblock %}
+
+{% block extra_head_css %}
+<style>
+    body {
+        background: radial-gradient(circle at center, #1e272e 0%, #0f1418 100%);
+        color: #ecf0f1;
+        min-height: 100vh;
+        padding-top: 70px;
+    }
+    .glass-card {
+            background: rgba(15, 20, 24, 0.8) !important; /* Força o fundo escuro do sistema */
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(79, 185, 255, 0.2);
+            border-radius: 15px;
+            overflow: hidden;
+        }
+    .text-info-tech { color: #4fb9ff !important; }
+
+    /* Barra de Busca Estilizada */
+    .search-container {
+        background: rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(79, 185, 255, 0.3);
+        border-radius: 10px;
+        padding: 5px 15px;
+        display: flex;
+        align-items: center;
+        transition: 0.3s;
+    }
+    .search-container:focus-within {
+        border-color: #00e5ff;
+        box-shadow: 0 0 10px rgba(0, 229, 255, 0.2);
+    }
+    .search-input {
+        background: transparent !important;
+        border: none !important;
+        color: white !important;
+        box-shadow: none !important;
+    }
+    .search-input::placeholder { color: rgba(255, 255, 255, 0.3); }
+
+    /* Estilo da Tabela ARI SUL */
+    /* Remove qualquer fundo branco residual da tabela ou das células */
+    .table, .table > :not(caption) > * > * {
+        background-color: transparent !important; 
+        color: #ecf0f1 !important;
+        border-bottom-color: rgba(255, 255, 255, 0.05) !important;
+    }
+    .table { color: #ecf0f1 !important; margin-bottom: 0; }
+.table thead th {
+        background: rgba(0, 0, 0, 0.4) !important;
+        color: #4fb9ff !important;
+        border-bottom: 2px solid #4fb9ff !important;
+    }
+    .table tbody tr {
+        background: transparent !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        transition: 0.3s;
+    }
+    .table tbody tr:hover { background: rgba(79, 185, 255, 0.05) !important; }
+    .table td { padding: 15px; border: none; vertical-align: middle; }
+
+ .badge-count {
+        background: rgba(255, 193, 7, 0.1) !important;
+        color: #ffc107 !important;
+        border: 1px solid rgba(255, 193, 7, 0.3) !important;
+        padding: 5px 10px;
+    }
+
+    /* Botão Adicionar */
+    .btn-add-tech {
+        background-color: #00e5ff;
+        color: #000;
+        font-weight: 800;
+        border-radius: 8px;
+        transition: 0.3s;
+    }
+    .btn-add-tech:hover {
+        background-color: #fff;
+        box-shadow: 0 0 15px rgba(0, 229, 255, 0.5);
+    }
+
+    .pagination .page-link { background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.1); color: #4fb9ff; }
+    .pagination .page-item.active .page-link { background: #4fb9ff; border-color: #4fb9ff; color: #000; }
+</style>
+{% endblock %}
 
 {% block content %}
+<div class="container py-4">
+    <div class="row align-items-center mb-4">
+        <div class="col-lg-4 mb-3 mb-lg-0">
+            <h3 class="mb-0 fw-bold"><i class="fa-solid fa-layer-group me-2 text-info-tech"></i>ORGANIZAÇÕES <span class="text-info-tech">CRIMINOSAS</span></h3>
+            <small class="text-muted text-uppercase letter-spacing-1">ARI SUL - Inteligência Territorial</small>
+        </div>
+        
+        <div class="col-lg-5 mb-3 mb-lg-0">
+            <form method="get" action="{% url 'orcrim_list' %}" class="search-container">
+                <i class="fa-solid fa-magnifying-glass text-info-tech"></i>
+                <input type="text" name="q" value="{{ request.GET.q|default:'' }}" class="form-control search-input" placeholder="Pesquisar por nome ou sigla...">
+                
+                {% if request.GET.q %}
+                    <a href="{% url 'orcrim_list' %}" class="btn btn-sm text-danger me-2" title="Limpar busca">
+                        <i class="fa-solid fa-xmark"></i>
+                    </a>
+                {% endif %}
+                
+                <button type="submit" class="btn btn-sm btn-link text-info-tech p-0 text-decoration-none fw-bold">FILTRAR</button>
+            </form>
+        </div>
 
-<div class="card">
-  <div class="card-body text-bg-primary p-3 text-center">
-    <h3>Organizações Criminosas</h3>
-  </div>
+        <div class="col-lg-3 text-lg-end">
+            <a href="{% url 'orcrim_add' %}" class="btn btn-add-tech w-100">
+                <i class="fa-solid fa-plus me-2"></i>NOVA ORCRIM
+            </a>
+        </div>
+    </div>
+
+    <div class="glass-card shadow-lg animate__animated animate__fadeIn">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead>
+                    <tr class="text-center">
+                        <th><i class="fa-solid fa-signature me-2"></i>Denominação</th>
+                        <th><i class="fa-solid fa-hashtag me-2"></i>Sigla</th>
+                        <th><i class="fa-solid fa-map-location-dot me-2"></i>Abrangência</th>
+                        <th><i class="fa-solid fa-gear me-2"></i>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for orcrim in object_list %}
+                    <tr class="text-center">
+                        <td class="fw-bold">
+                            {% if orcrim.nome %}
+                                <span class="text-white">{{ orcrim.nome|upper }}</span>
+                                <span class="ms-2 badge badge-count" title="Total de Indivíduos">
+                                    <i class="fa-solid fa-users me-1"></i>{{ orcrim.total_individuos }}
+                                </span>
+                            {% else %}
+                                <span class="text-muted">-</span>
+                            {% endif %}
+                        </td>
+                        <td class="font-monospace text-info-tech fw-bold">{{ orcrim.sigla|default:"---"|upper }}</td>
+                        <td>
+                            <span class="badge bg-dark border border-secondary text-uppercase" style="font-size: 0.7rem;">
+                                {{ orcrim.get_area_abrangencia_display }}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="btn-group">
+                                <a href="{% url 'orcrim_edit' pk=orcrim.pk %}" class="btn btn-sm btn-outline-warning border-0" title="Editar">
+                                    <i class="fa-solid fa-pen-to-square fs-5"></i>
+                                </a>
+                                <a href="{% url 'orcrim_delete' pk=orcrim.pk %}" class="btn btn-sm btn-outline-danger border-0" title="Excluir">
+                                    <i class="fa-solid fa-trash-can fs-5"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="py-5 text-center">
+                            <i class="fa-solid fa-magnifying-glass fa-3x mb-3 opacity-25"></i>
+                            <p class="text-muted">Nenhum registro encontrado para esta pesquisa.</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    {% if is_paginated %}
+    <div class="mt-4">
+        <nav aria-label="Paginação da Lista">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}page={{ page_obj.previous_page_number }}">
+                            <i class="fa-solid fa-chevron-left"></i>
+                        </a>
+                    </li>
+                {% endif %}
+
+                {% for i in page_obj.paginator.page_range %}
+                    {% if page_obj.number == i %}
+                        <li class="page-item active"><span class="page-link">{{ i }}</span></li>
+                    {% elif i > page_obj.number|add:'-3' and i < page_obj.number|add:'3' %}
+                        <li class="page-item">
+                            <a class="page-link" href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}page={{ i }}">{{ i }}</a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}page={{ page_obj.next_page_number }}">
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+        <div class="text-center mt-2">
+            <small class="text-muted font-monospace opacity-50">
+                PÁGINA {{ page_obj.number }} DE {{ page_obj.paginator.num_pages }} | TOTAL: {{ page_obj.paginator.count }} REGISTROS
+            </small>
+        </div>
+    </div>
+    {% endif %}
 </div>
-<br>
-<!--<a href="{% url 'orcrim_add' %}" class="btn btn-primary mb-3">+ Orcrim</a>-->
-<table class="table table-striped table-hover">
-  <thead class="table-dark text-center">
-    <tr class="align-middle">
-      <th>Denominação</th>
-      <th>Sigla</th>
-      <th>Abrangência</th>
-      <th>Ações</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for orcrim in object_list %}
-    <tr class="align-middle">
-        <td class="text-center">
-            {% if orcrim.nome %}
-                {{ orcrim.nome }} <span class="mx-1">|</span> 
-                    <span class="badge text-bg-warning">{{ orcrim.total_individuos }}</span> 
-            {% else %}
-                - 
-            {% endif %}
-        </td>
-        <td class="text-center">{{ orcrim.sigla|default:"-" }}</td>
-        <td class="text-center">{{ orcrim.get_area_abrangencia_display }}</td>
-        <td class="text-center">
-            <a href="{% url 'orcrim_edit' pk=orcrim.pk %}"><i class="bi bi-pencil-square link-warning"></i></a>
-            <a href="{% url 'orcrim_delete' pk=orcrim.pk %}"><i class="bi bi-person-x link-danger"></i></a>
-        </td>
-    </tr>
-    {% empty %}
-    <tr>
-        <td colspan="2">Nenhuma ORCRIM encontrada.</td>
-    </tr>
-    {% endfor %}
-</tbody>
-</table>
-
-{% if is_paginated %}
-<nav aria-label="Paginação da Lista">
-    <ul class="pagination justify-content-center">
-
-        {% if page_obj.has_previous %}
-            <li class="page-item">
-                <a class="page-link" href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}page={{ page_obj.previous_page_number }}" aria-label="Anterior">
-                    <span aria-hidden="true">&laquo;</span> Anterior
-                </a>
-            </li>
-        {% else %}
-            <li class="page-item disabled">
-                <span class="page-link"><span aria-hidden="true">&laquo;</span> Anterior</span>
-            </li>
-        {% endif %}
-
-        {% for i in page_obj.paginator.page_range %}
-            {% if page_obj.number == i %}
-                <li class="page-item active" aria-current="page">
-                    <span class="page-link">{{ i }}</span>
-                </li>
-            {% elif i > page_obj.number|add:'-3' and i < page_obj.number|add:'3' %}
-                <li class="page-item">
-                    <a class="page-link" href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}page={{ i }}">{{ i }}</a>
-                </li>
-            {% endif %}
-        {% endfor %}
-
-        {% if page_obj.has_next %}
-            <li class="page-item">
-                <a class="page-link" href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}page={{ page_obj.next_page_number }}" aria-label="Próxima">
-                    Próxima <span aria-hidden="true">&raquo;</span>
-                </a>
-            </li>
-        {% else %}
-            <li class="page-item disabled">
-                <span class="page-link">Próxima <span aria-hidden="true">&raquo;</span></span>
-            </li>
-        {% endif %}
-    </ul>
-</nav>
-
-<div class="text-center mb-4">
-    <small>Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}. Total de {{ page_obj.paginator.count }} ORCRIM.</small>
-</div>
-{% endif %}
-
 {% endblock content %}

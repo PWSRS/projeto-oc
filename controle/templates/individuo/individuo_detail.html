@@ -32,12 +32,7 @@
                         {% endif %}
                         
                         <div>
-                            <span class="badge rounded-pill px-4 py-2 
-                                {% if individuo.situacao_penal == 'recolhido' %} bg-danger
-                                {% elif 'recolhido' in individuo.situacao_penal %} bg-primary
-                                {% elif individuo.situacao_penal == 'liberdade' %} bg-success
-                                {% elif 'foragido' in individuo.situacao_penal or 'procurado' in individuo.situacao_penal %} bg-warning text-dark
-                                {% else %} bg-secondary {% endif %}">
+                            <span class="badge rounded-pill border shadow-sm {{ individuo.get_situacao_badge_class }}">
                                 {{ individuo.get_situacao_penal_display|upper }}
                             </span>
                         </div>

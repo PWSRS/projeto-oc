@@ -50,7 +50,15 @@
             </div>
         </form>
     </div>
-
+    <div class="p-3 border-bottom border-secondary border-opacity-25">
+        <div class="input-group">
+            <span class="input-group-text bg-dark border-secondary text-info-tech">
+                <i class="fa-solid fa-filter"></i>
+            </span>
+            <input type="text" id="quickSearch" class="form-control bg-dark text-white border-secondary" 
+                placeholder="Busca rápida por nome ou vulgo nesta lista...">
+        </div>
+    </div>
     <div class="glass-card shadow-lg">
         <div class="table-responsive">
             <table class="table table-hover align-middle mb-0">
@@ -115,9 +123,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
 
 <script>
-    // 2. "Tapa-buraco" para evitar que o individuo_form.js quebre
-    // O script original procura por #id_rg_cpf. Se não achar, ele buga.
-    // Criamos um elemento invisível apenas para o script original se distrair.
+    // 1. Tapa-buraco para o campo de CPF que o individuo_form.js exige
     if ($('#id_rg_cpf').length === 0) {
         $('body').append('<input type="hidden" id="id_rg_cpf">');
     }
@@ -129,24 +135,29 @@
     $(document).ready(function() {
         const urlParams = new URLSearchParams(window.location.search);
         
-        // Pegamos os valores da URL
+        // 2. Lógica para manter os filtros após o recarregamento
         const casaUrl = urlParams.get('casa_prisional');
         const pavUrl = urlParams.get('pavilhao');
         const galUrl = urlParams.get('galeria');
         const celUrl = urlParams.get('cela');
 
         if (casaUrl) {
-            console.log("Reiniciando filtros para Casa:", casaUrl);
-            
-            // Injetamos nas variáveis que o individuo_form.js usa internamente
-            // Usamos window. para garantir que o escopo seja global
             window.initialPavilhao = pavUrl;
             window.initialGaleria = galUrl;
             window.initialCela = celUrl;
-
-            // Seleciona a casa e dispara o evento que o seu JS original escuta
             $('#id_casa_prisional').val(casaUrl).trigger('change');
         }
+
+        // 3. Motor de busca em tempo real na tabela (Filtro rápido)
+        $("#quickSearch").on("keyup", function() {
+            var value = $(this).val().toLowerCase(); 
+            
+            $("table tbody tr").each(function() {
+                // Verifica se o texto da linha (nome, vulgo, etc) contém o que foi digitado
+                var rowText = $(this).text().toLowerCase();
+                $(this).toggle(rowText.indexOf(value) > -1);
+            });
+        });
     });
 </script>
 {% endblock %}

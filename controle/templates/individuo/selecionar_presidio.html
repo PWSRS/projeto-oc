@@ -13,7 +13,7 @@
     <div class="header-tech text-center mb-4 p-3 shadow">
         <h4 class="fw-bold mb-0">
             <i class="fa-solid fa-building-shield me-2 text-info-tech"></i>
-            ESTRUTURA DE <span class="text-info-tech">CUSTÓDIA</span>
+            ESTRUTURA <span class="text-info-tech">PRISIONAL</span>
         </h4>
     </div>
 
@@ -36,13 +36,19 @@
                                         <div class="d-flex justify-content-between align-items-center">
                                             
                                             <div class="d-flex align-items-center gap-3">
-                                                <p class="galeria-title text-white">
+                                                <p class="galeria-title text-white mb-0">
                                                     {% if galeria.pavilhao %}
                                                         <span class="pavilhao-prefix me-2">{{ galeria.pavilhao.nome }}</span>
                                                     {% endif %}
                                                     <span class="galeria-nome">{{ galeria.nome }}</span>
                                                 </p>
                                                 
+                                                <span class="badge rounded-pill bg-warning bg-opacity-10 text-warning border border-warning border-opacity-25 py-1 px-2" 
+                                                    style="font-size: 0.75rem; font-family: 'JetBrains Mono', monospace;">
+                                                    <i class="fa-solid fa-users me-1"></i> 
+                                                    {{ galeria.total_pessoas|default:"0" }}
+                                                </span>
+
                                                 <span class="badge badge-orcrim {% if galeria.orcrim %}bg-danger{% else %}bg-secondary{% endif %}">
                                                     <i class="fa-solid fa-skull-crossbones me-1"></i>
                                                     {{ galeria.orcrim.nome|default:"SEM DOMÍNIO" }}

@@ -400,16 +400,15 @@ from django.db.models import Prefetch  # Importe o Prefetch
 
 
 def selecionar_presidio(request):
-    # Criamos uma regra de busca para as galerias já ordenadas
-    # Ordena primeiro pelo nome do pavilhão, depois pelo nome da galeria
+    # Adicionamos .annotate(total_pessoas=Count('individuo'))
+    # Substitua 'individuo' pelo related_name se você definiu um no seu Model
     prefetch_galerias = Prefetch(
         "galeria_set",
-        queryset=Galeria.objects.select_related("pavilhao", "orcrim").order_by(
-            "pavilhao__nome", "nome"
-        ),
+        queryset=Galeria.objects.select_related("pavilhao", "orcrim")
+        .annotate(total_pessoas=Count("individuo"))
+        .order_by("pavilhao__nome", "nome"),
     )
 
-    # Lista todos os presídios usando a regra de ordenação acima
     presidios = CasaPrisional.objects.prefetch_related(
         prefetch_galerias, "galeria_set__alojamento_set"
     ).all()

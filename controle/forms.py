@@ -268,7 +268,7 @@ class OrcrimForm(forms.ModelForm):
                     "class": "form-control",
                 }
             ),
-            "logo_orcrim": forms.ClearableFileInput(attrs={"class": "form-control"}),
+            "logo_orcrim": forms.FileInput(attrs={"class": "form-control"}),
         }
 
 

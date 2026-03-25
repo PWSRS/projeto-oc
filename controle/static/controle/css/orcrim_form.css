@@ -1,59 +1,83 @@
 body {
-        background: radial-gradient(circle at center, #1e272e 0%, #0f1418 100%);
-        color: #ecf0f1;
-        min-height: 100vh;
-        padding-top: 70px;
-    }
-    .glass-card {
-        background: rgba(44, 62, 80, 0.4);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 15px;
-    }
-    .text-info-tech { color: #4fb9ff !important; }
+background: radial-gradient(circle at center, #1e272e 0%, #0f1418 100%);
+color: #ecf0f1;
+min-height: 100vh;
+padding-top: 70px;
+}
+.glass-card {
+background: rgba(44, 62, 80, 0.4);
+backdrop-filter: blur(10px);
+border: 1px solid rgba(255, 255, 255, 0.1);
+border-radius: 15px;
+}
+.text-info-tech { color: #4fb9ff !important; }
 
-    /* TRATAMENTO PARA INPUTS E SELECTS */
-    input, select, textarea {
-        background-color: rgba(0, 0, 0, 0.4) !important;
-        border: 1px solid rgba(79, 185, 255, 0.3) !important;
-        color: #fff !important;
-        border-radius: 8px !important;
-        padding: 10px !important;
-    }
+/* TRATAMENTO PARA INPUTS E SELECTS */
+input, select, textarea {
+background-color: rgba(0, 0, 0, 0.4) !important;
+border: 1px solid rgba(79, 185, 255, 0.3) !important;
+color: #fff !important;
+border-radius: 8px !important;
+padding: 10px !important;
+}
 
-    /* Força o fundo escuro nas opções do Select (Dropdown) */
-    select option {
-        background-color: #1e272e !important;
-        color: #fff !important;
-    }
+/* Força o fundo escuro nas opções do Select (Dropdown) */
+select option {
+background-color: #1e272e !important;
+color: #fff !important;
+}
 
-    input:focus, select:focus {
-        border-color: #00e5ff !important;
-        box-shadow: 0 0 10px rgba(0, 229, 255, 0.3) !important;
-        background-color: rgba(0, 0, 0, 0.6) !important;
-        outline: none;
-    }
+input:focus, select:focus {
+border-color: #00e5ff !important;
+box-shadow: 0 0 10px rgba(0, 229, 255, 0.3) !important;
+background-color: rgba(0, 0, 0, 0.6) !important;
+outline: none;
+}
 
-    label {
-        color: #4fb9ff;
-        font-size: 0.8rem;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        font-weight: bold;
-        margin-bottom: 5px;
-    }
-    
-    .form-text { color: rgba(236, 240, 241, 0.5) !important; }
 
-    .btn-save-tech {
-        background-color: #00e5ff !important;
-        color: #000 !important;
-        font-weight: 800 !important;
-        border: none !important;
-        box-shadow: 0 0 15px rgba(0, 229, 255, 0.3);
-        transition: 0.3s;
-    }
-    .btn-save-tech:hover {
-        background-color: #fff !important;
-        transform: translateY(-2px);
-    }
+
+label {
+color: #4fb9ff;
+font-size: 0.8rem;
+text-transform: uppercase;
+letter-spacing: 1px;
+font-weight: bold;
+margin-bottom: 5px;
+}
+
+.form-text { color: rgba(236, 240, 241, 0.5) !important; }
+
+.btn-save-tech {
+background-color: #00e5ff !important;
+color: #000 !important;
+font-weight: 800 !important;
+border: none !important;
+box-shadow: 0 0 15px rgba(0, 229, 255, 0.3);
+transition: 0.3s;
+}
+.btn-save-tech:hover {
+background-color: #fff !important;
+transform: translateY(-2px);
+}
+
+/* Estilização extra para o campo de foto */
+input[type="file"]::file-selector-button {
+    background-color: #0dcaf0;
+    color: #000;
+    font-weight: bold;
+    border: none;
+    padding: 0.2rem 0.75rem;
+    border-radius: 4px;
+    margin-right: 1rem;
+    transition: 0.3s;
+    cursor: pointer;
+}
+input[type="file"]::file-selector-button:hover {
+    background-color: #0aa2c0;
+}
+#image-preview {
+    max-height: 200px;
+    border: 2px dashed #0dcaf0;
+    padding: 5px;
+    background: rgba(0,0,0,0.2);
+}

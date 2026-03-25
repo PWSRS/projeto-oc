@@ -30,10 +30,24 @@
                                     <i class="fa-solid fa-caret-right me-1"></i> {{ field.label }}
                                 </label>
                                 
-                                {# Adicionando a classe form-control do Bootstrap dinamicamente via CSS acima #}
                                 <div class="input-group">
                                     {{ field }}
                                 </div>
+
+                                {# Lógica de Preview de Imagem #}
+                                {# O ID aqui é importante para o JavaScript encontrar #}
+                                {% if "foto" in field.name or "logo" in field.name or "imagem" in field.name %}
+                                    <div id="preview-container-{{ field.id_for_label }}" class="mt-3 {% if not field.value %}d-none{% endif %} text-center p-3 rounded" style="background: rgba(0,0,0,0.2);">
+                                        <img id="img-{{ field.id_for_label }}" 
+                                            src="{% if field.value %}{{ field.value.url }}{% else %}#{% endif %}" 
+                                            alt="Preview" 
+                                            class="img-thumbnail shadow-lg animate__animated animate__zoomIn"
+                                            style="max-height: 200px; border: 2px solid #0dcaf0; background: #1a1d20;">
+                                        <p class="small mt-2 fw-bold text-info" style="letter-spacing: 1px; text-transform: uppercase;">
+                                            <i class="fa-solid fa-image me-1"></i> Visualização do Logotipo
+                                        </p>
+                                    </div>
+                                {% endif %}
 
                                 {% if field.help_text %}
                                     <div class="form-text small"><i class="fa-solid fa-circle-info me-1"></i> {{ field.help_text }}</div>
@@ -74,7 +88,7 @@
 {% block extra_body_js %}
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Aplica a classe form-control do Bootstrap em todos os inputs do Django
+        // Aplica a classe form-control do Bootstrap
         const inputs = document.querySelectorAll('input, select, textarea');
         inputs.forEach(el => {
             if (el.type !== 'checkbox' && el.type !== 'radio') {
@@ -82,6 +96,25 @@
             }
         });
 
+       // 2. Lógica de Preview Melhorada
+        const fileInputs = document.querySelectorAll('input[type="file"]');
+        
+        fileInputs.forEach(input => {
+            input.addEventListener('change', function() {
+                const container = document.getElementById('preview-container-' + this.id);
+                const imgTag = document.getElementById('img-' + this.id);
+                
+                if (this.files && this.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        imgTag.src = e.target.result;
+                        container.classList.remove('d-none');
+                        container.style.display = 'block';
+                    }
+                    reader.readAsDataURL(this.files[0]);
+                }
+            });
+        });
         // Validação do Bootstrap
         var form = document.querySelector('.needs-validation');
         form.addEventListener('submit', function(event) {

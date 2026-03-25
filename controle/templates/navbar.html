@@ -45,7 +45,13 @@
             Casas Prisionais
           </a>
           <ul class="dropdown-menu shadow" aria-labelledby="navbarDropdownCasaPrisional">
-            <li><a class="dropdown-item" href="{% url 'selecionar_presidio' %}"><i class="fa-solid fa-building-columns me-2"></i>Detentos por galeria</a></li>
+            <li><a class="dropdown-item" href="{% url 'busca_por_cela' %}">
+              <i class="fa-solid fa-people-roof me-2"></i>Busca por Cela
+            </a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="{% url 'selecionar_presidio' %}">
+              <i class="fa-solid fa-building-columns me-2"></i>Detentos por galeria
+            </a></li>
           </ul>
         </li>
 
@@ -54,7 +60,6 @@
         <li class="nav-item dropdown ms-lg-3">
           <a class="nav-link dropdown-toggle text-info d-flex align-items-center" href="#" id="navbarDropdownGestao" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             <i class="fa-solid fa-users-gear me-1"></i> Gestão
-            {# Badge de pendentes aparece no título do dropdown se houver algo #}
             {% if pendentes_count > 0 %}
               <span class="badge rounded-pill bg-danger ms-1 border border-light animate__animated animate__pulse animate__infinite" 
                     style="font-size: 0.6rem;">
@@ -81,7 +86,7 @@
         </li>
         {% endif %}
 
-        {# --- LINKS DE CONTA (ALINHADOS À DIREITA NO DESKTOP) --- #}
+        {# --- LINKS DE CONTA --- #}
         <li class="nav-item ms-lg-auto d-flex align-items-center">
           <span class="navbar-text text-light me-3 d-none d-lg-inline">
             <i class="fa-solid fa-user-circle me-1"></i>

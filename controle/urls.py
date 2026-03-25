@@ -15,6 +15,8 @@ from controle.views import (
     CasaPrisionalUpdateView,
     CasaPrisionalDeleteView,
     individuos_por_orcrim,
+    orcrim_individuos_list,
+    busca_por_cela,
     organograma_view,
     orcrim_list,
     registro,
@@ -120,11 +122,19 @@ urlpatterns = [
     path("organograma/", views.organograma_view, name="organograma"),
     # URL da API para listar todas as Orcrims (Organizações Criminosas)
     path("api/orcrim/", views.orcrim_list, name="api_orcrim_list"),
+    # URL para listar individuos por cela
+    path("busca-por-cela/", views.busca_por_cela, name="busca_por_cela"),
     # URL da API para buscar os indivíduos de uma Orcrim específica
     path(
         "api/orcrim/<int:orcrim_id>/individuos/",
         views.individuos_por_orcrim,
         name="individuos_por_orcrim",
+    ),
+    # Lista os presos por orcrim
+    path(
+        "orcrim/<int:pk>/individuos/",
+        views.orcrim_individuos_list,
+        name="orcrim_individuos",
     ),
     # URL para listar indivíduos por galeria
     path("selecionar-presidio/", views.selecionar_presidio, name="selecionar_presidio"),

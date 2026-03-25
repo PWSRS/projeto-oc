@@ -1,0 +1,35 @@
+body { 
+    background: radial-gradient(circle at center, #1e272e 0%, #0f1418 100%); color: #ecf0f1;
+    min-height: 100vh; padding-top: 70px;
+}
+.glass-card { background: rgba(15, 20, 24, 0.8) !important; backdrop-filter: blur(12px); border: 1px solid rgba(79, 185, 255, 0.2); border-radius: 15px; }
+.text-info-tech { color: #4fb9ff !important; }
+
+/* Estilo dos Selects no modo Busca */
+.filter-select { 
+    background: rgba(0, 0, 0, 0.4) !important; 
+    color: white !important; 
+    border: 1px solid rgba(79, 185, 255, 0.3) !important;
+}
+.filter-select:focus { border-color: #4fb9ff; box-shadow: 0 0 8px rgba(79, 185, 255, 0.4); }
+
+.table, .table > :not(caption) > * > * { background-color: transparent !important; color: #ecf0f1 !important; }
+.table thead th { color: #4fb9ff !important; border-bottom: 2px solid #4fb9ff !important; text-transform: uppercase; font-size: 0.8rem; }
+
+/* Pequena animação para o botão de filtrar após mudar um select */
+.btn-pulse {
+    animation: pulse-blue 2s infinite;
+    background-color: #00e5ff !important;
+    color: #000 !important;
+}
+@keyframes pulse-blue {
+    0% { box-shadow: 0 0 0 0 rgba(0, 229, 255, 0.7); }
+    70% { box-shadow: 0 0 0 10px rgba(0, 229, 255, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(0, 229, 255, 0); }
+}
+
+select option {
+    background-color: #1e272e; /* Tom escuro igual ao fundo */
+    color: #ecf0f1;
+    padding: 10px;
+}

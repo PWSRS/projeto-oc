@@ -76,6 +76,11 @@
                                 {% if individuo.alcunha %}
                                     <br><small class="text-info-tech">Vulgo: {{ individuo.alcunha }}</small>
                                 {% endif %}
+                                {% if individuo.cela%}
+                                <span class="badge bg-dark border border-secondary text-warning fw-bold {{ detento.cela }}"> Cela: 
+                                    {{ individuo.cela|upper }}
+                                </span>
+                                {% endif %}
                             </a>
                         </td>
                         <td class="small">{{ individuo.data_nasc|date:"d/m/Y" }}</td>

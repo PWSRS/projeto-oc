@@ -400,8 +400,8 @@ from django.db.models import Prefetch  # Importe o Prefetch
 
 
 def selecionar_presidio(request):
-    # Adicionamos .annotate(total_pessoas=Count('individuo'))
-    # Substitua 'individuo' pelo related_name se você definiu um no seu Model
+    # Adicionado .annotate(total_pessoas=Count('individuo'))
+    # 'individuo' substituído pelo related_name do Model
     prefetch_galerias = Prefetch(
         "galeria_set",
         queryset=Galeria.objects.select_related("pavilhao", "orcrim")
@@ -409,9 +409,13 @@ def selecionar_presidio(request):
         .order_by("pavilhao__nome", "nome"),
     )
 
-    presidios = CasaPrisional.objects.prefetch_related(
-        prefetch_galerias, "galeria_set__alojamento_set"
-    ).all()
+    presidios = (
+        CasaPrisional.objects.prefetch_related(
+            prefetch_galerias, "galeria_set__alojamento_set"
+        )
+        .annotate(total_geral=Count("galeria__individuo"))
+        .all()
+    )
 
     context = {
         "presidios": presidios,
@@ -450,3 +454,54 @@ def gerar_pdf_individuo(request, pk):
     response = HttpResponse(pdf, content_type="application/pdf")
     response["Content-Disposition"] = f'inline; filename="Ficha_{individuo.nome}.pdf"'
     return response
+
+
+def orcrim_individuos_list(request, pk):
+    orcrim = get_object_or_404(Orcrim, pk=pk)
+    # Supondo que o campo no model Individuo se chame 'orcrim'
+    individuos = Individuo.objects.filter(orcrim=orcrim).select_related(
+        "casa_prisional", "galeria"
+    )
+
+    return render(
+        request,
+        "orcrim/orcrim_individuos.html",
+        {  # Mude de 'controle/' para 'orcrim/'
+            "orcrim": orcrim,
+            "individuos": individuos,
+        },
+    )
+
+
+def busca_por_cela(request):
+    # Pega todos os presídios para o primeiro select
+    casas = CasaPrisional.objects.all()
+
+    # Captura os filtros da URL (via GET)
+    casa_id = request.GET.get("casa_prisional")
+    pavilhao_id = request.GET.get("pavilhao")
+    galeria_id = request.GET.get("galeria")
+    cela_id = request.GET.get("cela")
+
+    # Query inicial (vazia ou todos, dependendo da sua preferência)
+    # Aqui vamos começar vazia para só mostrar ao filtrar
+    detentos = Individuo.objects.none()
+
+    if casa_id:
+        detentos = Individuo.objects.all()
+        detentos = detentos.filter(casa_prisional_id=casa_id)
+
+        if pavilhao_id:
+            detentos = detentos.filter(pavilhao_id=pavilhao_id)
+        if galeria_id:
+            detentos = detentos.filter(galeria_id=galeria_id)
+        if cela_id:
+            detentos = detentos.filter(cela_id=cela_id)
+
+    context = {
+        "casas": casas,
+        "detentos": detentos.select_related(
+            "orcrim", "casa_prisional", "galeria", "cela"
+        ),
+    }
+    return render(request, "orcrim/busca_por_cela.html", context)

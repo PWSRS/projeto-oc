@@ -53,10 +53,12 @@
                     <tr class="text-center">
                         <td class="fw-bold">
                             {% if orcrim.nome %}
-                                <span class="text-white">{{ orcrim.nome|upper }}</span>
-                                <span class="ms-2 badge badge-count" title="Total de Indivíduos">
-                                    <i class="fa-solid fa-users me-1"></i>{{ orcrim.total_individuos }}
-                                </span>
+                                <a href="{% url 'orcrim_individuos' orcrim.pk %}" class="text-decoration-none hover-info">
+                                    <span class="text-white">{{ orcrim.nome|upper }}</span>
+                                    <span class="ms-2 badge badge-count" title="Ver integrantes">
+                                        <i class="fa-solid fa-users me-1"></i>{{ orcrim.total_individuos }}
+                                    </span>
+                                </a>
                             {% else %}
                                 <span class="text-muted">-</span>
                             {% endif %}

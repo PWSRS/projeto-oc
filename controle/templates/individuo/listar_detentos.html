@@ -60,8 +60,11 @@
                             <td class="text-start">
                                 <span class="fw-bold text-white">{{ detento.nome|upper }}</span>
                                 {% if detento.alcunha %}
-                                    <br><small class="text-info-tech">Vulgo: {{ detento.alcunha }}</small>
+                                    <br><small class="text-info-tech">Vulgo: {{ detento.alcunha }}</small>                                
                                 {% endif %}
+                                <span class="badge bg-dark border border-secondary text-warning fw-bold {{ detento.cela }}"> Cela: 
+                                    {{ detento.cela|upper }}
+                                </span>
                             </td>
                             <td class="small font-monospace">{{ detento.rg_cpf|formatar_cpf_rg|default:"---" }}</td>
                             <td class="small">{{ detento.data_nasc|date:"d/m/Y" }}</td>

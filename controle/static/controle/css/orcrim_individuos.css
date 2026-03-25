@@ -1,0 +1,72 @@
+/* Base do Sistema */
+body {
+    background: radial-gradient(circle at center, #1e272e 0%, #0f1418 100%);
+    color: #ecf0f1;
+    min-height: 100vh;
+    padding-top: 70px;
+}
+
+/* Card com Efeito Glass */
+.glass-card {
+    background: rgba(15, 20, 24, 0.8) !important;
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(79, 185, 255, 0.2);
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.text-info-tech { color: #4fb9ff !important; }
+
+/* Estilo da Tabela ARI SUL */
+.table, .table > :not(caption) > * > * {
+    background-color: transparent !important; 
+    color: #ecf0f1 !important;
+    border-bottom-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+.table thead th {
+    background: rgba(0, 0, 0, 0.4) !important;
+    color: #4fb9ff !important;
+    border-bottom: 2px solid #4fb9ff !important;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+}
+
+.table tbody tr:hover { 
+    background: rgba(79, 185, 255, 0.05) !important; 
+}
+
+/* Badges Customizados */
+.badge-count {
+    background: rgba(255, 193, 7, 0.1) !important;
+    color: #ffc107 !important;
+    border: 1px solid rgba(255, 193, 7, 0.3) !important;
+    padding: 5px 10px;
+}
+
+.badge-localizacao {
+    background: rgba(79, 185, 255, 0.1) !important;
+    color: #4fb9ff !important;
+    border: 1px solid rgba(79, 185, 255, 0.3) !important;
+}
+
+/* Avatar do Indivíduo */
+.avatar-img {
+    width: 45px;
+    height: 45px;
+    object-fit: cover;
+    border: 2px solid rgba(79, 185, 255, 0.5);
+    box-shadow: 0 0 10px rgba(79, 185, 255, 0.2);
+}
+
+.btn-back-tech {
+    color: #4fb9ff;
+    border: 1px solid rgba(79, 185, 255, 0.4);
+    transition: 0.3s;
+}
+
+.btn-back-tech:hover {
+    background: rgba(79, 185, 255, 0.1);
+    color: #fff;
+}

@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}ARI SUL - Busca por Localização{% endblock %}
+
+{% block extra_head_css %}
+    <link rel="stylesheet" href="{% static 'controle/css/busca_por_cela.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <h3 class="fw-bold mb-4">
+        <i class="fa-solid fa- people-roof me-2 text-info-tech"></i>
+        BUSCA POR <span class="text-info-tech">LOCALIZAÇÃO / CELA</span>
+    </h3>
+
+    <div class="glass-card p-4 mb-4 animate__animated animate__fadeInDown">
+        <form method="get" id="filterForm" class="row g-3">
+            <div class="col-md-4">
+                <label class="small text-info-tech fw-bold">CASA PRISIONAL</label>
+                <select name="casa_prisional" id="id_casa_prisional" class="form-select filter-select">
+                    <option value="">---------</option>
+                    {% for casa in casas %}
+                        <option value="{{ casa.id }}" {% if request.GET.casa_prisional == casa.id|stringformat:"s" %}selected{% endif %}>{{ casa.nome }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="small text-info-tech fw-bold">PAVILHÃO</label>
+                <select name="pavilhao" id="id_pavilhao" class="form-select filter-select">
+                    <option value="">---------</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="small text-info-tech fw-bold">GALERIA</label>
+                <select name="galeria" id="id_galeria" class="form-select filter-select">
+                    <option value="">---------</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="small text-info-tech fw-bold">CELA</label>
+                <select name="cela" id="id_cela" class="form-select filter-select">
+                    <option value="">---------</option>
+                </select>
+            </div>
+            <div class="col-md-2 d-flex align-items-end">
+                <button type="submit" class="btn btn-info w-100 fw-bold">
+                    <i class="fa-solid fa-magnifying-glass me-2"></i>FILTRAR
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <div class="glass-card shadow-lg">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead>
+                    <tr class="text-center">
+                        <th>Foto</th>
+                        <th class="text-start">Nome</th>
+                        <th>ORCRIM</th>
+                        <th>Localização Exata</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for detento in detentos %}
+                    <tr class="text-center">
+                        <td>
+                            {% if detento.foto %}
+                                <img src="{{ detento.foto.url }}" class="rounded-circle border border-info" style="width: 40px; height: 40px; object-fit: cover;">
+                            {% else %}
+                                <i class="fa-solid fa-user-circle fa-2x text-muted"></i>
+                            {% endif %}
+                        </td>
+                        <td class="text-start">
+                            <div class="fw-bold">{{ detento.nome|upper }}</div>
+                            <small class="text-info-tech">{{ detento.alcunha|default:"---"|upper }}</small>
+                        </td>
+                        <td>
+                            <span class="badge bg-dark border border-secondary">{{ detento.orcrim.sigla }}</span>
+                        </td>
+                        <td>
+                            <small class="d-block text-info-tech ">{{ detento.casa_prisional.sigla }}</small>
+                            <span class="badge bg-info bg-opacity-10 text-info">
+                                {{ detento.pavilhao.nome_curto|default:"-" }} | {{ detento.galeria.nome }} | {{ detento.cela.numero }}
+                            </span>
+                        </td>
+                        <td>
+                            <a href="{% url 'individuo_detail' detento.pk %}" class="btn btn-sm btn-outline-info border-0">
+                                <i class="fa-solid fa-eye"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="py-5 text-center text-muted">
+                            {% if request.GET.casa_prisional %}
+                                Nenhum detento encontrado nesta cela/galeria.
+                            {% else %}
+                                Selecione os filtros acima para iniciar a busca.
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_body_js %}
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+
+<script>
+    // 2. "Tapa-buraco" para evitar que o individuo_form.js quebre
+    // O script original procura por #id_rg_cpf. Se não achar, ele buga.
+    // Criamos um elemento invisível apenas para o script original se distrair.
+    if ($('#id_rg_cpf').length === 0) {
+        $('body').append('<input type="hidden" id="id_rg_cpf">');
+    }
+</script>
+
+<script src="{% static 'controle/js/individuo_form.js' %}"></script>
+
+<script>
+    $(document).ready(function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        
+        // Pegamos os valores da URL
+        const casaUrl = urlParams.get('casa_prisional');
+        const pavUrl = urlParams.get('pavilhao');
+        const galUrl = urlParams.get('galeria');
+        const celUrl = urlParams.get('cela');
+
+        if (casaUrl) {
+            console.log("Reiniciando filtros para Casa:", casaUrl);
+            
+            // Injetamos nas variáveis que o individuo_form.js usa internamente
+            // Usamos window. para garantir que o escopo seja global
+            window.initialPavilhao = pavUrl;
+            window.initialGaleria = galUrl;
+            window.initialCela = celUrl;
+
+            // Seleciona a casa e dispara o evento que o seu JS original escuta
+            $('#id_casa_prisional').val(casaUrl).trigger('change');
+        }
+    });
+</script>
+{% endblock %}

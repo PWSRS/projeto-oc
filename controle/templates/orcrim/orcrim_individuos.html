@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}ARI SUL - Integrantes {{ orcrim.nome }}{% endblock %}
+
+{% block extra_head_css %}
+    <link rel="stylesheet" href="{% static 'controle/css/orcrim_individuos.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="mb-4">
+        <a href="{% url 'orcrim_list' %}" class="btn btn-sm btn-outline-secondary mb-3">
+            <i class="fa-solid fa-arrow-left me-2"></i>VOLTAR PARA LISTA
+        </a>
+        <h3 class="fw-bold">
+            <i class="fa-solid fa-users-gear me-2 text-info-tech"></i>
+            INTEGRANTES: <span class="text-info-tech">{{ orcrim.nome|upper }}</span>
+            <span class="badge bg-dark border border-info text-info ms-2" style="font-size: 1rem;">
+                {{ individuos.count }}
+            </span>
+        </h3>
+    </div>
+
+    <div class="glass-card shadow-lg animate__animated animate__fadeIn">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead>
+                    <tr class="text-center">
+                        <th>Foto</th>
+                        <th>Nome Completo</th>
+                        <th>Situaçã Penal</th>
+                        <th>Localização Atual</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for individuo in individuos %}
+                    <tr class="text-center">
+                        <td>
+                            {% if individuo.foto %}
+                                <img src="{{ individuo.foto.url }}" class="rounded-circle border border-info" style="width: 45px; height: 45px; object-fit: cover;">
+                            {% else %}
+                                <div class="bg-dark rounded-circle d-inline-flex align-items-center justify-content-center border border-secondary" style="width: 45px; height: 45px;">
+                                    <i class="fa-solid fa-user text-muted"></i>
+                                </div>
+                            {% endif %}
+                        </td>
+                        <td class="text-start">
+                            <div class="fw-bold text-white">{{ individuo.nome|upper }}</div>
+                            <small class="text-info-tech font-monospace">VULGO: {{ individuo.alcunha|default:"NÃO CONSTA"|upper }}</small>
+                        </td>
+                        <td>
+                            {% if individuo.situacao_penal %}
+                                <span class="badge rounded-pill border shadow-sm {{ individuo.get_situacao_badge_class }}">
+                                    {{ individuo.get_situacao_penal_display|upper }}
+                                </span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if individuo.casa_prisional or individuo.galeria.nome or individuo.cela %}
+                                <span class="badge bg-opacity-10 bg-info text-info border border-info border-opacity-25">
+                                    {{ individuo.casa_prisional.sigla|default:"" }} | {{ individuo.galeria.nome|default:"" }} | {{ individuo.cela|default:"" }} 
+                                </span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{% url 'individuo_detail' individuo.pk %}" class="btn btn-sm btn-outline-info">
+                                <i class="fa-solid fa-eye"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="py-5 text-center">
+                            <p class="text-info-tech letter-spacing-1">Nenhum indivíduo vinculado a esta organização no momento.</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

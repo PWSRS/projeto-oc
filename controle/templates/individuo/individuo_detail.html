@@ -42,7 +42,13 @@
                         <div class="col-md-8">
                             <dl class="row px-3">
                                 <div class="col-sm-6">
-                                    <dt>Documento (RG/CPF)</dt>
+                                    <dt>
+                                        {% if individuo.rg_cpf|length <= 10 %}
+                                            Documento (RG)
+                                        {% else %}
+                                            Documento (CPF)
+                                        {% endif %}
+                                    </dt>
                                     <dd>{{ individuo.rg_cpf|formatar_cpf_rg|default:"NÃO INFORMADO" }}</dd>
                                 </div>
                                 <div class="col-sm-6">
@@ -57,15 +63,21 @@
                                     <dt>Organização Criminosa</dt>
                                     <dd>
                                         {% if individuo.orcrim %}
-                                            <span class="badge bg-dark border border-secondary">{{ individuo.orcrim.nome|upper }}</span>
+                                            <span class="badge bg-dark border border-info text-info-tech">
+                                                {{ individuo.orcrim.nome|upper }}
+                                            </span>
                                         {% else %}
-                                            <span class="text-muted italic">Sem Orcrim Associada</span>
+                                            <span class="text-undefined">
+                                                <i class="bi bi-question-circle me-1 small"></i> Não vinculado
+                                            </span>
                                         {% endif %}
                                     </dd>
                                 </div>
                                 <div class="col-sm-6">
                                     <dt>Nível na Orcrim</dt>
-                                    <dd>{{ individuo.get_nivel_orcrim_display|default:"N/A" }}</dd>
+                                    <dd class="{{ individuo.get_hierarquia_color_class }} fw-bold">
+                                        {{ individuo.get_nivel_orcrim_display|upper }}
+                                    </dd>
                                 </div>
                                 <div class="col-sm-6">
                                     <dt>Prontuário / Cód. Preso</dt>
@@ -83,14 +95,14 @@
                         </div>
 
                         <div class="col-md-4 text-center">
-                            <div class="orcrim-logo-box mx-auto animate__animated animate__fadeInRight">
+                            <div class="orcrim-logo-box mx-auto {% if not individuo.orcrim.logo_orcrim %}logo-placeholder-box{% endif %}">
                                 <label class="text-info-tech small fw-bold mb-2 d-block">SÍMBOLO DA ORGANIZAÇÃO</label>
                                 {% if individuo.orcrim.logo_orcrim %}
                                     <img src="{{ individuo.orcrim.logo_orcrim.url }}" class="orcrim-logo-img rounded shadow-sm" alt="Logo">
                                 {% else %}
-                                    <div class="py-4 text-muted opacity-25">
-                                        <i class="fa-solid fa-shield-halved fa-4x"></i>
-                                        <p class="small mt-2 mb-0">Sem Logo</p>
+                                    <div class="py-4">
+                                        <i class="fa-solid fa-shield-halved fa-4x mb-2"></i>
+                                        <p class="text-undefined small mb-0">NENHUMA LOGO CADASTRADA</p>
                                     </div>
                                 {% endif %}
                             </div>

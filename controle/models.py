@@ -291,5 +291,13 @@ class Individuo(models.Model):
         # Retorna as classes baseadas no valor, ou um padrão caso não encontre
         return mapping.get(self.regime, "bg-secondary-subtle text-secondary")
 
+    def get_hierarquia_color_class(self):
+        mapping = {
+            "lider": "text-danger-tech",  # Vermelho para o topo
+            "influente": "text-warning-tech",  # Amarelo para os braços direitos
+            "sem_expressao": "text-info-tech",  # Azul para o operacional
+        }
+        return mapping.get(self.nivel_orcrim, "text-info-tech")
+
     def __str__(self):
         return self.nome

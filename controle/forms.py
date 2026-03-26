@@ -242,7 +242,9 @@ class IndividuoForm(forms.ModelForm):
                     "placeholder": "Separe por vírgulas as alcunhas.",
                 }
             ),
-            "foto": forms.ClearableFileInput(attrs={"class": "form-control"}),
+            "foto": forms.FileInput(
+                attrs={"class": "form-control", "accept": "image/*"}
+            ),
             "situacao_penal": forms.Select(attrs={"class": "form-control"}),
             "orcrim": forms.Select(attrs={"class": "form-control"}),
             "nivel_orcrim": forms.Select(attrs={"class": "form-control"}),

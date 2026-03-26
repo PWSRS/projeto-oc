@@ -6,7 +6,7 @@ body {
     padding-top: 70px;
 }
 
-.text-info-tech { color: #4fb9ff !important; }
+
 
 /* --- ESTRUTURA DO CARD (Unificada) --- */
 .card, .glass-card {
@@ -79,3 +79,44 @@ dd {
     transform: translateY(-2px);
     transition: all 0.3s ease;
 }
+
+/* Nível: Líder - Vermelho Intenso (Alerta Máximo) */
+.text-danger-tech { 
+    color: #ff3333 !important; 
+    text-shadow: 0 0 12px rgba(255, 51, 51, 0.6);
+    text-transform: uppercase;
+}
+
+/* Nível: Influente - Amarelo/Dourado (Atenção) */
+.text-warning-tech { 
+    color: #ffcc00 !important; 
+    text-shadow: 0 0 10px rgba(255, 204, 0, 0.4);
+    text-transform: uppercase;
+}
+
+/* Nível: Sem Expressão - Azul Ciano (Padrão do Sistema) */
+.text-info-tech { 
+    color: #4fb9ff !important; 
+    text-shadow: 0 0 8px rgba(79, 185, 255, 0.3);
+    text-transform: uppercase;
+}
+
+/* Texto para informações ausentes */
+.text-undefined {
+    color: rgba(255, 255, 255, 0.5) !important;
+    font-style: italic;
+    letter-spacing: 0.5px;
+}
+
+/* Melhoria no box do logo vazio */
+.logo-placeholder-box {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px dashed rgba(255, 255, 255, 0.2) !important;
+    color: rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease;
+}
+
+.logo-placeholder-box i {
+    color: rgba(79, 185, 255, 0.2); /* Um toque do seu azul tech, mas bem discreto */
+}
+

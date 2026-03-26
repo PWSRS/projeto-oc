@@ -1,0 +1,110 @@
+/* ============================================================
+   ESTILO BASE (HERDADO DA IDENTIDADE TECH)
+   ============================================================ */
+body {
+    background: radial-gradient(circle at center, #1e272e 0%, #0f1418 100%);
+    color: #ecf0f1;
+    min-height: 100vh;
+    padding-top: 70px;
+    font-family: 'Inter', sans-serif; /* Ou sua fonte padrão */
+}
+
+.text-info-tech { 
+    color: #4fb9ff !important; 
+}
+
+/* Glass Cards */
+.glass-card {
+    background: rgba(44, 62, 80, 0.4);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+}
+
+/* ============================================================
+   ESTILOS ESPECÍFICOS DO DASHBOARD (GRÁFICOS E TABELA)
+   ============================================================ */
+
+/* Ajuste de Canvas para os Gráficos */
+canvas { 
+    max-height: 280px !important; 
+    margin-top: 15px;
+}
+
+/* Números de Estatística com fonte Mono */
+.stats-number {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.4rem;
+    color: #4fb9ff;
+    text-shadow: 0 0 5px rgba(79, 185, 255, 0.3);
+}
+
+/* ============================================================
+   SISTEMA DE BARRAS DE PROGRESSO (DOMÍNIO DE GALERIA)
+   ============================================================ */
+
+/* Container da Barra (Trilha) */
+.progress-tech {
+    background-color: rgba(255, 255, 255, 0.08) !important;
+    height: 12px !important;
+    border-radius: 6px;
+    border: 1px solid rgba(79, 185, 255, 0.15);
+    overflow: hidden;
+    position: relative;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+}
+
+/* O Preenchimento (A Barra) */
+.progress-tech .progress-bar {
+    height: 100% !important;
+    display: block !important;
+    transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Status: Domínio Normal (Azul Tech) */
+.bg-info-tech {
+    background-color: #4fb9ff !important;
+    background-image: linear-gradient(90deg, #4fb9ff, #82ccff) !important;
+    box-shadow: 0 0 15px rgba(79, 185, 255, 0.6);
+}
+
+/* Status: Domínio Crítico (Vermelho Glow) */
+.bg-danger-glow {
+    background-color: #ff4f4f !important;
+    background-image: linear-gradient(90deg, #ff4f4f, #ff7e7e) !important;
+    box-shadow: 0 0 15px rgba(255, 79, 79, 0.8);
+}
+
+.percent-label {
+    font-size: 0.8rem;
+    color: rgba(79, 185, 255, 0.9);
+    font-family: 'JetBrains Mono', monospace;
+    min-width: 40px;
+}
+
+/* ============================================================
+   ESTILO DA TABELA DE DOMÍNIO
+   ============================================================ */
+.table-dark-tech {
+    --bs-table-bg: transparent;
+    --bs-table-color: #ecf0f1;
+    --bs-table-hover-bg: rgba(255, 255, 255, 0.03);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.table-dark-tech thead {
+    background: rgba(0, 0, 0, 0.3);
+    color: #4fb9ff;
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    letter-spacing: 1.5px;
+}
+
+.table-dark-tech tbody tr {
+    transition: 0.2s;
+}
+
+.table-dark-tech tbody tr:hover {
+    background: rgba(79, 185, 255, 0.05);
+}

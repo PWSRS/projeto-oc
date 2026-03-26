@@ -1,0 +1,176 @@
+/* --- BASE E TEMA --- */
+body {
+background: radial-gradient(circle at center, #1e272e 0%, #0f1418 100%);
+color: #ecf0f1;
+min-height: 100vh;
+padding-top: 70px;
+}
+
+.text-info-tech { color: #4fb9ff !important; }
+
+/* --- ESTRUTURA DO CARD (Unificada) --- */
+.card, .glass-card {
+background: rgba(44, 62, 80, 0.4) !important;
+backdrop-filter: blur(10px);
+border: 1px solid rgba(255, 255, 255, 0.1) !important;
+border-radius: 20px !important;
+box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+padding-top: 20px; /* Ajustado de 56px para não dar tanto espaço */
+}
+
+.card-body {
+border-radius: 20px !important;
+}
+
+/* --- AVATAR E PERFIL --- */
+.profile-avatar {
+width: 160px;
+height: 160px;
+object-fit: cover;
+border: 4px solid #4fb9ff;
+box-shadow: 0 0 20px rgba(79, 185, 255, 0.3);
+border-radius: 50%; /* Garante que seja circular */
+}
+
+/* --- LISTA TÉCNICA (dt/dd) --- */
+dt {
+color: #4fb9ff;
+font-size: 0.75rem;
+text-transform: uppercase;
+letter-spacing: 1px;
+margin-top: 10px;
+}
+
+dd {
+font-size: 1.1rem;
+border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+padding-bottom: 5px;
+margin-bottom: 15px;
+}
+
+/* --- LOGO DA ORCRIM (Versão Tática) --- */
+/* Removi o fundo branco do antigo CSS para combinar com o tema escuro */
+.orcrim-logo-box, .logo_orcrim {
+background: rgba(0, 0, 0, 0.3);
+border: 1px solid rgba(79, 185, 255, 0.2);
+padding: 15px;
+border-radius: 10px;
+max-width: 220px;
+text-align: center;
+}
+
+.orcrim-logo-img, .logo_orcrim img {
+max-width: 100%;
+height: auto;
+border-radius: 5px;
+}
+
+/* --- BOTÕES --- */
+.btn-edit-active {
+background-color: #00e5ff !important;
+color: #000 !important;
+border: none !important;
+font-weight: 800 !important;
+box-shadow: 0 0 15px rgba(0, 229, 255, 0.4);
+}
+
+.btn-edit-active:hover {
+background-color: #fff !important;
+transform: translateY(-2px);
+transition: all 0.3s ease;
+}
+
+.card-target {
+    border-top: 3px solid #4fb9ff;
+    transition: all 0.3s ease;
+}
+.card-target:hover {
+    transform: scale(1.02);
+    box-shadow: 0 0 20px rgba(79, 185, 255, 0.3);
+}
+.hierarquia-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-size: 0.65rem;
+    letter-spacing: 1px;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(5px);
+    padding: 4px 8px;
+    border: 1px solid rgba(79,185,255,0.3);
+    border-radius: 4px;
+}
+.img-target {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border: 3px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+}
+.label-tech {
+    font-size: 0.7rem;
+    color: rgba(255,255,255,0.5);
+    text-transform: uppercase;
+    margin-bottom: 0;
+}
+/* --- AJUSTE DE BOTÕES PARA O DASHBOARD/LIDERANÇAS --- */
+.btn-info-tech {
+    background: rgba(79, 185, 255, 0.1) !important;
+    color: #4fb9ff !important;
+    border: 1px solid #4fb9ff !important;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+}
+
+.btn-info-tech:hover {
+    background: #4fb9ff !important;
+    color: #000 !important; /* Inverte a cor para leitura total no hover */
+    box-shadow: 0 0 15px rgba(79, 185, 255, 0.5);
+}
+
+/* --- MELHORIA DE CONTRASTE NOS LABELS --- */
+.label-tech {
+    font-size: 0.7rem;
+    color: #4fb9ff !important; /* Mudei de cinza para o azul tech para dar destaque */
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 2px;
+}
+
+/* --- AJUSTE DO BADGE DE HIERARQUIA --- */
+.hierarquia-badge {
+    z-index: 10;
+    color: #4fb9ff;
+    border-color: #4fb9ff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+/* --- BOX DE UNIDADE (Onde estava escuro) --- */
+.glass-card.bg-black-50 {
+    background: rgba(0, 0, 0, 0.4) !important;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    color: #fff !important;
+}
+
+/* Garante que o texto dentro dos badges de situação não fique escuro demais */
+.badge {
+    font-weight: 700 !important;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+/* Se o dado (dd) estiver muito colado no rótulo (dt) */
+dd {
+    color: #ffffff; /* Branco puro para o dado principal */
+    font-weight: 500;
+    margin-left: 5px;
+}
+
+/* Efeito de scan na foto do alvo (opcional para dar um ar mais "tech") */
+.img-target {
+    filter: grayscale(20%) contrast(110%);
+    border-color: rgba(79, 185, 255, 0.4) !important;
+}

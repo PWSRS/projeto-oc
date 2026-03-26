@@ -100,7 +100,7 @@
                 const individuos = await response.json();
 
                 if (individuos.length === 0) {
-                    organogramaDiv.innerHTML = '<p class="text-center text-warning mt-5">Nenhum alvo vinculado a esta ORCRIM.</p>';
+                    organogramaDiv.innerHTML = '<p class="text-center text-warning mt-5">Não foram localizados indivíduos vinculados a esta ORCRIM.</p>';
                     return;
                 }
 

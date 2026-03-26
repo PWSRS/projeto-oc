@@ -59,9 +59,23 @@ class PavilhaoAdmin(admin.ModelAdmin):
 
 # Admin para Galeria
 class GaleriaAdmin(admin.ModelAdmin):
-    list_display = ["nome", "casa_prisional", "pavilhao"]
-    list_filter = ["casa_prisional", "pavilhao"]
+    # Adicionamos uma função para exibir as Orcrims na lista, já que ManyToMany não pode ir direto no list_display
+    list_display = ["nome", "casa_prisional", "pavilhao", "get_orcrims"]
+    list_filter = [
+        "casa_prisional",
+        "pavilhao",
+        "orcrims",
+    ]  # Agora pode filtrar pelas Orcrims
     search_fields = ["nome"]
+
+    # Isso cria a interface de "clicar e passar para o lado", muito melhor para selecionar várias
+    filter_horizontal = ("orcrims",)
+
+    def get_orcrims(self, obj):
+        # Retorna uma string com os nomes das Orcrims separadas por vírgula
+        return ", ".join([o.sigla or o.nome for o in obj.orcrims.all()])
+
+    get_orcrims.short_description = "Orcrims Relacionadas"
 
     def get_form(self, request, obj=None, **kwargs):
         form = super().get_form(request, obj, **kwargs)

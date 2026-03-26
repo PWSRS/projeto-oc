@@ -46,11 +46,14 @@
           </a>
           <ul class="dropdown-menu shadow" aria-labelledby="navbarDropdownCasaPrisional">
             <li><a class="dropdown-item" href="{% url 'busca_por_cela' %}">
-              <i class="fa-solid fa-people-roof me-2"></i>Busca por Cela
+              <i class="fa-solid fa-people-roof me-2"></i>Detentos por Cela
             </a></li>
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item" href="{% url 'selecionar_presidio' %}">
               <i class="fa-solid fa-building-columns me-2"></i>Detentos por galeria
+            </a></li>
+            <li><a class="dropdown-item" href="{% url 'visualizar_liderancas' %}">
+              <i class="bi bi-person-bounding-box me-1"></i>Lideranças
             </a></li>
           </ul>
         </li>
@@ -61,8 +64,7 @@
           <a class="nav-link dropdown-toggle text-info d-flex align-items-center" href="#" id="navbarDropdownGestao" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             <i class="fa-solid fa-users-gear me-1"></i> Gestão
             {% if pendentes_count > 0 %}
-              <span class="badge rounded-pill bg-danger ms-1 border border-light animate__animated animate__pulse animate__infinite" 
-                    style="font-size: 0.6rem;">
+              <span class="badge rounded-pill bg-danger ms-1 border border-light animate__animated animate__pulse animate__infinite" style="font-size: 0.6rem;">
                 {{ pendentes_count }}
               </span>
             {% endif %}
@@ -82,6 +84,20 @@
                 <i class="fa-solid fa-user-group me-2"></i>Usuários Ativos
               </a>
             </li>
+            <li>
+              <a class="dropdown-item" href="{% url 'dashboard' %}">
+                <i class="fa-solid fa-chart-line me-2"></i>Painel Estatístico
+              </a>
+            </li>
+            {# --- NOVO LINK PARA DJANGO ADMIN --- #}
+            <li><hr class="dropdown-divider"></li>
+            <li>
+              <a class="dropdown-item text-secondary" href="/admin/" target="_blank">
+                <i class="fa-solid fa-lock me-2"></i>Painel Admin
+              </a>
+            </li>
+            {# ------------------------------------ #}
+
           </ul>
         </li>
         {% endif %}

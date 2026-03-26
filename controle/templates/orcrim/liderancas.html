@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_head_css %}
+    <link rel="stylesheet" href="{% static 'controle/css/liderancas.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="text-info-tech mb-1"><i class="bi bi-shield-exclamation"></i> Alvos de Interesse</h2>
+            <p class="text-info-tech text-muted small">Indivíduos com nível de influência identificado em ORCRIM</p>
+        </div>
+        <div class="glass-card px-4 py-2 border-info text-info-tech">
+            <strong>TOTAL: {{ total }}</strong>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        {% for preso in liderancas %}
+        <div class="col-md-6 col-lg-4 col-xl-3">
+            <div class="glass-card card-target p-3 h-100 position-relative">
+                
+                <div class="hierarquia-badge text-info-tech fw-bold">
+                    {{ preso.get_nivel_orcrim_display|upper }}
+                </div>
+
+                <div class="text-center mt-3 mb-3">
+                    <img src="{{ preso.foto_url }}" class="img-target mb-2 shadow-sm" alt="{{ preso.nome }}">
+                    <h6 class="mb-0 text-white fw-bold">{{ preso.nome|truncatechars:25 }}</h6>
+                    <span class="text-info-tech small">"{{ preso.alcunha|default:'Sem Alcunha' }}"</span>
+                </div>
+
+                <hr class="border-secondary opacity-25">
+
+                <div class="row g-2">
+                    <div class="col-6">
+                        <p class="label-tech">ORCRIM</p>
+                        <span class="badge w-100 border border-info text-info-tech bg-dark">
+                            {{ preso.orcrim.sigla|default:"S/F" }}
+                        </span>
+                    </div>
+                    <div class="col-6">
+                        <p class="label-tech">Situação</p>
+                        <span class="badge w-100 {{ preso.get_situacao_badge_class }}">
+                            {{ preso.get_situacao_penal_display }}
+                        </span>
+                    </div>
+                    
+                    <div class="col-12">
+                        <p class="label-tech">Unidade Prisional</p>
+                        <div class="p-2 glass-card bg-black-50 small">
+                            {% if preso.casa_prisional %}
+                                <i class="bi bi-building"></i> {{ preso.casa_prisional.sigla }}
+                                {% if preso.galeria %} - {{ preso.galeria.nome }}{% endif %}
+                            {% else %}
+                                <span class="text-muted italic">Não Custodiado</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-3">
+                    <a href="{% url 'individuo_detail' preso.pk %}" class="btn btn-sm btn-info-tech w-100">
+                        <i class="bi bi-file-earmark-person"></i> Detalhes
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center py-5">
+            <p class="text-muted">Nenhuma liderança cadastrada até o momento.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

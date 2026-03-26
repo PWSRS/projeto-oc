@@ -15,6 +15,7 @@ from controle.views import (
     CasaPrisionalUpdateView,
     CasaPrisionalDeleteView,
     individuos_por_orcrim,
+    lista_liderancas,
     orcrim_individuos_list,
     busca_por_cela,
     organograma_view,
@@ -82,6 +83,12 @@ urlpatterns = [
         OrcrimDeleteView.as_view(),
         name="orcrim_delete",
     ),
+    # URL para lideranças de ocrim
+    path(
+        "visualizar_liderancas_orcrims/",
+        views.lista_liderancas,
+        name="visualizar_liderancas",
+    ),
     # URLs para Casa Prisional
     path(
         "visualizar_casas_prisionais/",
@@ -138,6 +145,8 @@ urlpatterns = [
     ),
     # URL para listar indivíduos por galeria
     path("selecionar-presidio/", views.selecionar_presidio, name="selecionar_presidio"),
+    # URL para dashboard
+    path("dashboard/", views.dashboard_estatistico, name="dashboard"),
     path(
         "galeria/<int:galeria_id>/detentos/",
         views.listar_detentos_por_galeria,

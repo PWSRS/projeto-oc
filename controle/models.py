@@ -145,12 +145,12 @@ class Galeria(models.Model):
     nome = models.CharField(
         max_length=100, verbose_name="Galeria", null=True, blank=True
     )
-    orcrim = models.ForeignKey(
+    # Alterado de ForeignKey para ManyToManyField
+    orcrims = models.ManyToManyField(
         "Orcrim",
-        on_delete=models.SET_NULL,
-        null=True,
         blank=True,
-        verbose_name="Orcrim Relacionada",
+        verbose_name="Orcrims Relacionadas",
+        related_name="galerias",
     )
 
     class Meta:

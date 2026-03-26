@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}ARI SUL - Painel de Inteligência{% endblock %}
+
+{% block extra_head_css %}
+    <link rel="stylesheet" href="{% static 'controle/css/dashboard.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    
+    {# Cabeçalho #}
+    <div class="glass-card p-4 mb-4 animate__animated animate__fadeInDown">
+        <div class="row align-items-center">
+            <div class="col-12 text-center">
+                <h4 class="mb-0 text-info-tech fw-bold text-uppercase" style="letter-spacing: 2px;">
+                    <i class="fa-solid fa-chart-line me-2"></i>Monitoramento Estatístico
+                </h4>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-4">
+        {# Gráfico 1: Domínio Orcrim #}
+        <div class="col-lg-7 animate__animated animate__fadeInLeft">
+            <div class="glass-card p-4 h-100 shadow-lg">
+                <h6 class="text-info-tech fw-bold border-bottom border-secondary border-opacity-25 pb-2">
+                    <i class="fa-solid fa-skull-crossbones me-2"></i>DOMÍNIO POR ORCRIM (TOTAL)
+                </h6>
+                <canvas id="chartOrcrim"></canvas>
+            </div>
+        </div>
+
+        {# Gráfico 2: Regimes #}
+        <div class="col-lg-5 animate__animated animate__fadeInRight">
+            <div class="glass-card p-4 h-100 shadow-lg">
+                <h6 class="text-info-tech fw-bold border-bottom border-secondary border-opacity-25 pb-2">
+                    <i class="fa-solid fa-scale-balanced me-2"></i>DISTRIBUIÇÃO POR REGIME
+                </h6>
+                <canvas id="chartRegime"></canvas>
+            </div>
+        </div>
+    </div>
+
+    {# Tabela de Resumo de Galerias #}
+    <div class="glass-card shadow-lg overflow-hidden animate__animated animate__fadeInUp">
+        <div class="p-4 border-bottom border-secondary border-opacity-25 bg-black bg-opacity-25">
+            <h6 class="text-info-tech fw-bold mb-0">
+                <i class="fa-solid fa-sitemap me-2"></i>ANÁLISE DE DOMÍNIO POR LOCALIZAÇÃO (GALERIAS)
+            </h6>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-dark-tech table-hover align-middle mb-0 text-center">
+                <thead>
+                    <tr>
+                        <th class="ps-4 text-start">CASA PRISIONAL</th>
+                        <th>POPULAÇÃO ATUAL</th>
+                        <th>GRUPO PREDOMINANTE</th>
+                        <th class="pe-4">NÍVEL DE DOMÍNIO</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for galeria in dados_galerias %}
+                    <tr>
+                        <td class="ps-4 text-start">
+                            <span class="text-white fw-bold">{{ galeria.nome }}</span>
+                        </td>
+                        <td class="stats-number text-center">{{ galeria.total }}</td>
+                        <td>
+                            <span class="badge bg-dark border border-info text-info-tech px-3">
+                                {{ galeria.dominio_sigla }}
+                            </span>
+                        </td>
+                        <td class="pe-4" style="min-width: 250px;">
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="progress progress-tech flex-grow-1">
+                                    <div class="progress-bar {% if galeria.porcentagem >= 80 %}bg-danger-glow{% else %}bg-info-tech{% endif %}" 
+                                        role="progressbar" 
+                                        style="width: {{ galeria.porcentagem|stringformat:'f' }}%;">
+                                    </div>
+                                </div>
+                                <span class="percent-label">{{ galeria.porcentagem|floatformat:0 }}%</span>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="text-muted italic py-4">Nenhuma galeria com efetivo monitorado.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    Chart.defaults.color = 'rgba(255, 255, 255, 0.7)';
+    Chart.defaults.font.family = "'JetBrains Mono', monospace";
+    Chart.defaults.borderColor = 'rgba(255, 255, 255, 0.1)';
+
+    // Gráfico de Barras - Mantém a estatística geral por Orcrim
+    const ctxBar = document.getElementById('chartOrcrim').getContext('2d');
+    new Chart(ctxBar, {
+        type: 'bar',
+        data: {
+            labels: [{% for item in stats_orcrim %}"{{ item.sigla|default:item.nome }}",{% endfor %}],
+            datasets: [{
+                label: 'Indivíduos',
+                data: [{% for item in stats_orcrim %}{{ item.total }},{% endfor %}],
+                backgroundColor: 'rgba(79, 185, 255, 0.5)',
+                borderColor: '#4fb9ff',
+                borderWidth: 2,
+                borderRadius: 4
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: { grid: { color: 'rgba(255, 255, 255, 0.05)' }, beginAtZero: true }
+            },
+            plugins: { legend: { display: false } }
+        }
+    });
+
+    // Gráfico de Pizza - Regime
+    const ctxPie = document.getElementById('chartRegime').getContext('2d');
+    new Chart(ctxPie, {
+        type: 'doughnut',
+        data: {
+            labels: [{% for item in stats_regime %}"{{ item.regime|upper }}",{% endfor %}],
+            datasets: [{
+                data: [{% for item in stats_regime %}{{ item.total }},{% endfor %}],
+                backgroundColor: ['#4fb9ff', '#ff4f4f', '#ffc107', '#28a745', '#6c757d'],
+                borderWidth: 0,
+                hoverOffset: 15
+            }]
+        },
+        options: {
+            cutout: '75%',
+            plugins: {
+                legend: { position: 'bottom', labels: { padding: 20 } }
+            }
+        }
+    });
+</script>
+{% endblock %}

@@ -400,11 +400,11 @@ from django.db.models import Prefetch  # Importe o Prefetch
 
 
 def selecionar_presidio(request):
-    # Adicionado .annotate(total_pessoas=Count('individuo'))
-    # 'individuo' substituído pelo related_name do Model
+    # Definimos como as galerias devem ser carregadas
     prefetch_galerias = Prefetch(
         "galeria_set",
-        queryset=Galeria.objects.select_related("pavilhao", "orcrim")
+        queryset=Galeria.objects.select_related("pavilhao")  # Removido "orcrim" daqui
+        .prefetch_related("orcrims")  # Adicionado para carregar as múltiplas Orcrims
         .annotate(total_pessoas=Count("individuo"))
         .order_by("pavilhao__nome", "nome"),
     )
@@ -472,6 +472,21 @@ def orcrim_individuos_list(request, pk):
         },
     )
 
+def lista_liderancas(request):
+    # Filtramos quem não é "sem_expressao"
+    # Assumindo que NIVEL_CHOICES tem 'lideranca', 'frente', etc.
+    liderancas = (
+        Individuo.objects.exclude(nivel_orcrim="sem_expressao")
+        .select_related("orcrim", "casa_prisional", "pavilhao", "galeria")
+        .order_by("nome")
+    )
+
+    context = {
+        "liderancas": liderancas,
+        "total": liderancas.count(),
+    }
+    return render(request, "orcrim/liderancas.html", context)
+
 
 def busca_por_cela(request):
     # Pega todos os presídios para o primeiro select
@@ -505,3 +520,77 @@ def busca_por_cela(request):
         ),
     }
     return render(request, "orcrim/busca_por_cela.html", context)
+
+
+def dashboard_estatistico(request):
+    total_geral = Individuo.objects.count()
+
+    # --- 1. DADOS PARA O GRÁFICO DE BARRAS (ORCRIMS GERAL) ---
+    stats_orcrim = (
+        Orcrim.objects.annotate(total=Count("individuo"))
+        .filter(total__gt=0)
+        .order_by("-total")
+    )
+
+    # --- 2. DADOS PARA O GRÁFICO DE PIZZA (REGIMES GERAL) ---
+    stats_regime = (
+        Individuo.objects.values("regime")
+        .annotate(total=Count("id"))
+        .order_by("-total")
+    )
+
+    # --- 3. DADOS PARA A TABELA (DOMÍNIO POR GALERIA) ---
+    galerias = Galeria.objects.annotate(total_presos=Count("individuo")).filter(
+        total_presos__gt=0
+    )
+
+    dados_galerias = []
+    for gal in galerias:
+        contagem_orcrim = (
+            Individuo.objects.filter(galeria=gal)
+            .values("orcrim__nome")
+            .annotate(total=Count("id"))
+            .order_by("-total")
+        )
+
+        predominante = contagem_orcrim[0] if contagem_orcrim else None
+
+        if predominante and gal.total_presos > 0:
+            porcentagem_dominio = (predominante["total"] / gal.total_presos) * 100
+            sigla_dominante = (
+                predominante["orcrim__nome"] if predominante["orcrim__nome"] else "S/F"
+            )
+        else:
+            porcentagem_dominio = 0
+            sigla_dominante = "N/A"
+
+        # --- LÓGICA DE UNIDADE ADAPTATIVA ---
+        sigla_unidade = "S/U"
+
+        if gal.pavilhao and gal.pavilhao.casa_prisional:
+            # Caso padrão: Galeria vinculada a Pavilhão que tem Casa Prisional
+            sigla_unidade = gal.pavilhao.casa_prisional.sigla
+        elif hasattr(gal, "casa_prisional") and gal.casa_prisional:
+            # Caso direto: Se você adicionou FK de CasaPrisional direto na Galeria
+            sigla_unidade = gal.casa_prisional.sigla
+
+        # Se for o caso específico de Pelotas e estiver vindo vazio,
+        # você pode até forçar uma busca por nome ou deixar o S/U para identificar erros de cadastro.
+
+        dados_galerias.append(
+            {
+                "nome": f"{sigla_unidade} - {gal.nome}",
+                "total": gal.total_presos,
+                "dominio_sigla": sigla_dominante,
+                "porcentagem": porcentagem_dominio,
+            }
+        )
+
+    context = {
+        "stats_orcrim": stats_orcrim,
+        "stats_regime": stats_regime,
+        "dados_galerias": dados_galerias,
+        "total_geral": total_geral,
+    }
+
+    return render(request, "orcrim/dashboard.html", context)

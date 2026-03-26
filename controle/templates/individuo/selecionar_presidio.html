@@ -56,10 +56,20 @@
                                                     {{ galeria.total_pessoas|default:"0" }}
                                                 </span>
 
-                                                <span class="badge badge-orcrim {% if galeria.orcrim %}bg-danger{% else %}bg-secondary{% endif %}">
-                                                    <i class="fa-solid fa-skull-crossbones me-1"></i>
-                                                    {{ galeria.orcrim.nome|default:"SEM DOMÍNIO" }}
-                                                </span>
+                                                {# --- BADGES DAS ORCRIMS (MULTISELEÇÃO) --- #}
+                                                <div class="d-flex gap-1">
+                                                    {% for orcrim in galeria.orcrims.all %}
+                                                        <span class="badge badge-orcrim bg-danger border border-light border-opacity-25 shadow-sm" style="font-size: 0.7rem;">
+                                                            <i class="fa-solid fa-skull-crossbones me-1"></i>
+                                                            {{ orcrim.nome|default:orcrim.sigla }}
+                                                        </span>
+                                                    {% empty %}
+                                                        <span class="badge badge-orcrim bg-secondary opacity-50" style="font-size: 0.7rem;">
+                                                            <i class="fa-solid fa-ban me-1"></i>
+                                                            SEM DOMÍNIO
+                                                        </span>
+                                                    {% endfor %}
+                                                </div>
 
                                                 <div class="d-none d-lg-flex gap-1 ms-2 border-start border-secondary ps-3">
                                                     {% for alojamento in galeria.alojamento_set.all|slice:":8" %}

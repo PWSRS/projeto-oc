@@ -32,7 +32,7 @@ body {
     display: flex;
     align-items: center; 
     justify-content: center;
-    padding-top: 70px; 
+    padding-top: 30px; 
     overflow: hidden; /* Garante que não apareça barra de rolagem horizontal */
 }
 .content-overlay {

@@ -3,48 +3,11 @@
 
 {% block title %}ARI SUL - Solicitar Acesso{% endblock %}
 
+{% block extra_head_css %}
+    <link rel="stylesheet" href="{% static 'controle/css/registro.css' %}">
+{% endblock %}
+
 {% block content %}
-<style>
-    body { background: radial-gradient(circle at center, #1e272e 0%, #0f1418 100%); color: #ecf0f1; min-height: 100vh; }
-    .register-wrapper { display: flex; align-items: center; justify-content: center; padding: 40px 15px; }
-    
-    .glass-card-sm {
-        background: rgba(44, 62, 80, 0.4);
-        backdrop-filter: blur(12px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 15px;
-        padding: 30px;
-        width: 100%;
-        max-width: 500px; /* Um pouco mais largo que o login para caber as colunas */
-    }
-
-    .brand-icon-sm {
-        width: 50px; height: 50px; background: #3498db; color: white;
-        display: flex; align-items: center; justify-content: center;
-        border-radius: 50%; margin: 0 auto 15px;
-        box-shadow: 0 0 15px rgba(52, 152, 219, 0.3);
-    }
-
-    .form-label-sm { color: #a5b1be !important; font-size: 0.7rem; letter-spacing: 0.5px; font-weight: 700; margin-bottom: 4px; }
-    
-    /* Inputs mais compactos */
-    .form-control-sm-custom { 
-        background-color: rgba(255, 255, 255, 0.9) !important; 
-        border: none !important; 
-        color: #1a202c !important;
-        font-size: 0.85rem;
-        padding: 8px 12px;
-    }
-
-    .btn-tech { 
-        background: linear-gradient(45deg, #2980b9, #3498db); 
-        border: none; color: white; font-weight: bold; 
-        transition: 0.3s; letter-spacing: 1px;
-    }
-
-    .help-text-sm { font-size: 0.65rem; color: #63b3ed; margin-top: 3px; }
-    .error-text-sm { font-size: 0.7rem; color: #ff7675; list-style: none; padding: 0; margin: 0; }
-</style>
 
 <div class="register-wrapper">
     <div class="glass-card-sm shadow-lg">

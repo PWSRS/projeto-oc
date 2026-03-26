@@ -22,7 +22,7 @@
         <div class="col-md-6 col-lg-4 col-xl-3">
             <div class="glass-card card-target p-3 h-100 position-relative">
                 
-                <div class="hierarquia-badge text-info-tech fw-bold">
+                <div class="{{ preso.get_hierarquia_color_class }} fw-bold">
                     {{ preso.get_nivel_orcrim_display|upper }}
                 </div>
 
@@ -37,8 +37,9 @@
                 <div class="row g-2">
                     <div class="col-6">
                         <p class="label-tech">ORCRIM</p>
-                        <span class="badge w-100 border border-info text-info-tech bg-dark">
-                            {{ preso.orcrim.sigla|default:"S/F" }}
+                        <span class="badge w-100 border border-info text-info-tech bg-dark text-truncate d-block" 
+                            title="{{ preso.orcrim.nome }}">
+                            {{ preso.orcrim.nome|default:"N/D" }}
                         </span>
                     </div>
                     <div class="col-6">

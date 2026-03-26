@@ -174,3 +174,31 @@ dd {
     filter: grayscale(20%) contrast(110%);
     border-color: rgba(79, 185, 255, 0.4) !important;
 }
+
+/* Nível: Líder - Vermelho Intenso (Alerta Máximo) */
+.text-danger-tech { 
+    color: #ff3333 !important; 
+    text-shadow: 0 0 12px rgba(255, 51, 51, 0.6);
+    text-transform: uppercase;
+}
+
+/* Nível: Influente - Amarelo/Dourado (Atenção) */
+.text-warning-tech { 
+    color: #ffcc00 !important; 
+    text-shadow: 0 0 10px rgba(255, 204, 0, 0.4);
+    text-transform: uppercase;
+}
+
+/* Nível: Sem Expressão - Azul Ciano (Padrão do Sistema) */
+.text-info-tech { 
+    color: #4fb9ff !important; 
+    text-shadow: 0 0 8px rgba(79, 185, 255, 0.3);
+    text-transform: uppercase;
+}
+
+/* Texto para informações ausentes */
+.text-undefined {
+    color: rgba(255, 255, 255, 0.5) !important;
+    font-style: italic;
+    letter-spacing: 0.5px;
+}

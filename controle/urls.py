@@ -18,6 +18,7 @@ from controle.views import (
     lista_liderancas,
     orcrim_individuos_list,
     busca_por_cela,
+    buscar_detento,
     organograma_view,
     orcrim_list,
     registro,
@@ -70,6 +71,8 @@ urlpatterns = [
     path(
         "individuo/<int:pk>/pdf/", views.gerar_pdf_individuo, name="gerar_pdf_individuo"
     ),
+    # URL Busca de detento
+    path("busca_individuos/", views.buscar_detento, name="buscar_detento"),
     # URLs para Orcrim
     path("visualizar_orcrims/", OrcrimListView.as_view(), name="orcrim_list"),
     path("adicionar_orcrim/", OrcrimCreateView.as_view(), name="orcrim_add"),

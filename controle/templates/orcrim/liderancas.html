@@ -37,15 +37,15 @@
                 <div class="row g-2">
                     <div class="col-6">
                         <p class="label-tech">ORCRIM</p>
-                        <span class="badge w-100 border border-info text-info-tech bg-dark text-truncate d-block" 
+                        <span class="badge w-100 border border-info text-info-tech bg-dark text-truncate d-block py-2" 
                             title="{{ preso.orcrim.nome }}">
-                            {{ preso.orcrim.nome|default:"N/D" }}
+                            {{ preso.orcrim.nome|default:"N/D"|upper }}
                         </span>
                     </div>
                     <div class="col-6">
                         <p class="label-tech">Situação</p>
-                        <span class="badge w-100 {{ preso.get_situacao_badge_class }}">
-                            {{ preso.get_situacao_penal_display }}
+                        <span class="badge w-100 d-block py-2 {{ preso.get_situacao_badge_class }}">
+                            {{ preso.get_situacao_penal_display|upper }}
                         </span>
                     </div>
                     
@@ -56,7 +56,7 @@
                                 <i class="bi bi-building"></i> {{ preso.casa_prisional.sigla }}
                                 {% if preso.galeria %} - {{ preso.galeria.nome }}{% endif %}
                             {% else %}
-                                <span class="text-muted italic">Não Custodiado</span>
+                                <span class="text-undefined small mb-0">Não Custodiado</span>
                             {% endif %}
                         </div>
                     </div>

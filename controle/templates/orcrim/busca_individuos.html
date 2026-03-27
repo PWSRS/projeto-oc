@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}ARI SUL - Busca de Indivíduos{% endblock %}
+
+{% block extra_head_css %}
+    <link rel="stylesheet" href="{% static 'controle/css/busca_individuos.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="glass-card p-3 mb-4">
+        <form method="GET" action="{% url 'buscar_detento' %}" class="row g-2 align-items-center">
+            <div class="col-md-10">
+                <div class="input-group">
+                    <span class="input-group-text bg-transparent border-secondary text-info-tech">
+                        <i class="bi bi-search"></i>
+                    </span>
+                    <input type="text" name="q" class="form-control search-tech" 
+                           placeholder="Pesquisar por Nome, Alcunha ou CPF..." value="{{ query|default:'' }}">
+                </div>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-info-tech w-100">FILTRAR</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="table-responsive shadow-lg">
+        <table class="table table-tech align-middle">
+            <thead>
+                <tr>
+                    <th width="65">Foto</th>
+                    <th>Identificação</th>
+                    <th>Alcunha</th>
+                    <th>ORCRIM</th>
+                    <th>Localização (P | G | C)</th>
+                    <th class="text-center">Situação</th>
+                    <th width="80">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for detento in resultados %}
+                <tr>
+                    <td>
+                        <img src="{{ detento.foto_url }}" class="img-table" alt="Alvo">
+                    </td>
+                    <td>
+                        <div class="fw-bold text-white">{{ detento.nome|upper }}</div>
+                        <small class="text-muted" style="font-size: 0.65rem;">ID: {{ detento.id }}</small>
+                    </td>
+                    <td>
+                        <span class="text-info-tech italic">"{{ detento.alcunha|default:'-' }}"</span>
+                    </td>
+                    <td>
+                        <span class="badge border border-secondary small">{{ detento.orcrim.sigla|default:"N/D" }}</span>
+                    </td>
+                    <td>
+                        <div class="d-flex align-items-center gap-2 small">
+                            <span class="text-white-50">{{ detento.casa_prisional.sigla|default:"FORA" }}</span>
+                            {% if detento.casa_prisional %}
+                                <i class="bi bi-chevron-right opacity-50"></i>
+                                <span>{{ detento.pavilhao.nome_curto|default:"-" }}</span>
+                                <i class="bi bi-chevron-right opacity-50"></i>
+                                <span class="badge badge-cela">CELA {{ detento.cela.numero }}</span>
+                            {% endif %}
+                        </div>
+                    </td>
+                    <td class="text-center">
+                        <span class="badge {{ detento.get_situacao_badge_class }} w-100">
+                            {{ detento.get_situacao_penal_display|upper }}
+                        </span>
+                    </td>
+                    <td class="text-center">
+                        <a href="{% url 'individuo_detail' detento.pk %}" class="btn btn-sm btn-info-tech">
+                            <i class="bi bi-file-earmark-person"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="text-center py-5">
+                        <div class="text-muted">
+                            <i class="bi bi-search display-6 d-block mb-3 opacity-25"></i>
+                            Nenhum registro encontrado para "{{ query }}".
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

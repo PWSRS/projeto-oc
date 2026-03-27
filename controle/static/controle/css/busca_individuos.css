@@ -1,0 +1,121 @@
+/* ==========================================================================
+   ARI SUL - FOLHA DE ESTILO: BUSCA TÁTICA DE INDIVÍDUOS
+   ========================================================================== */
+
+/* --- TEMA BASE E FUNDO --- */
+body {
+    background: radial-gradient(circle at center, #1e272e 0%, #0f1418 100%) !important;
+    color: #ecf0f1;
+    min-height: 100vh;
+    padding-top: 70px; /* Espaço para a navbar fixa */
+}
+
+/* --- COMPONENTES GLASSMORPHISM --- */
+.glass-card {
+    background: rgba(44, 62, 80, 0.4) !important;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 15px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+/* --- CAMPO DE BUSCA (ESTILO TECH) --- */
+.search-tech {
+    background-color: rgba(0, 0, 0, 0.3) !important;
+    border: 1px solid rgba(79, 185, 255, 0.2) !important;
+    color: #ffffff !important;
+    font-weight: 500;
+}
+
+.search-tech::placeholder {
+    color: rgba(255, 255, 255, 0.4) !important;
+    font-style: italic;
+}
+
+.search-tech:focus {
+    background-color: rgba(0, 0, 0, 0.5) !important;
+    border-color: #4fb9ff !important;
+    box-shadow: 0 0 10px rgba(79, 185, 255, 0.4) !important;
+    outline: none;
+}
+
+/* --- TABELA TÁTICA (RESET DE FUNDO BRANCO) --- */
+.table-responsive {
+    background: rgba(44, 62, 80, 0.2);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+}
+
+.table-tech {
+    --bs-table-bg: transparent !important; /* Anula o fundo do Bootstrap */
+    --bs-table-color: #ecf0f1 !important;
+    background-color: transparent !important;
+    margin-bottom: 0;
+}
+
+/* Força transparência em todas as partes da tabela */
+.table-tech th, 
+.table-tech td, 
+.table-tech tr {
+    background-color: transparent !important;
+    color: #ecf0f1 !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+
+.table-tech thead th {
+    color: #4fb9ff !important;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+    padding: 15px;
+    border-bottom: 2px solid rgba(79, 185, 255, 0.3) !important;
+    background: rgba(0, 0, 0, 0.4) !important;
+}
+
+.table-tech tbody tr:hover {
+    background-color: rgba(79, 185, 255, 0.08) !important;
+    box-shadow: inset 4px 0 0 #4fb9ff;
+}
+
+/* --- ELEMENTOS VISUAIS --- */
+.img-table {
+    width: 45px;
+    height: 45px;
+    object-fit: cover;
+    border: 2px solid rgba(79, 185, 255, 0.3);
+    border-radius: 8px;
+    transition: 0.3s;
+}
+
+.img-table:hover {
+    transform: scale(1.2);
+    border-color: #4fb9ff;
+    box-shadow: 0 0 15px rgba(79, 185, 255, 0.5);
+}
+
+.badge-cela {
+    background: #ffcc00 !important;
+    color: #000 !important;
+    font-weight: 800;
+    padding: 4px 10px;
+    border-radius: 6px;
+    box-shadow: 0 0 10px rgba(255, 204, 0, 0.4);
+}
+
+/* --- BOTÕES E TEXTOS --- */
+.btn-info-tech {
+    background-color: transparent;
+    border: 1px solid #4fb9ff !important;
+    color: #4fb9ff !important;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.btn-info-tech:hover {
+    background-color: #4fb9ff;
+    color: #000 !important;
+    box-shadow: 0 0 15px rgba(79, 185, 255, 0.5);
+}
+
+.text-info-tech { color: #4fb9ff !important; }

@@ -91,7 +91,10 @@
                         <td>
                             <small class="d-block text-info-tech ">{{ detento.casa_prisional.sigla }}</small>
                             <span class="badge bg-info bg-opacity-10 text-info">
-                                {{ detento.pavilhao.nome_curto|default:"-" }} | {{ detento.galeria.nome }} | {{ detento.cela.numero }}
+                                {% if detento.pavilhao.nome_curto %}
+                                    {{ detento.pavilhao.nome_curto }} | 
+                                {% endif %}
+                                {{ detento.galeria.nome }} | {{ detento.cela.numero }}
                             </span>
                         </td>
                         <td>

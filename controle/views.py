@@ -472,6 +472,7 @@ def orcrim_individuos_list(request, pk):
         },
     )
 
+
 def lista_liderancas(request):
     # Filtramos quem não é "sem_expressao"
     # Assumindo que NIVEL_CHOICES tem 'lideranca', 'frente', etc.
@@ -594,3 +595,23 @@ def dashboard_estatistico(request):
     }
 
     return render(request, "orcrim/dashboard.html", context)
+
+
+# TODO Essa busca deve buscar o indivíduo e todos que estão na mesma cela dele
+def buscar_detento(request):
+    query = request.GET.get("q")
+    resultados = []
+
+    if query:
+        # O select_related carrega os dados relacionados em uma única consulta ao banco
+        resultados = Individuo.objects.filter(
+            Q(nome__icontains=query) | Q(alcunha__icontains=query)
+        ).select_related(
+            "casa_prisional", "pavilhao", "galeria", "cela"
+        )  # Adicione 'cela' aqui
+
+    return render(
+        request,
+        "orcrim/busca_individuos.html",
+        {"resultados": resultados, "query": query},
+    )

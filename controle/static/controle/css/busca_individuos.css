@@ -1,6 +1,6 @@
 /* ==========================================================================
-   ARI SUL - FOLHA DE ESTILO: BUSCA TÁTICA DE INDIVÍDUOS
-   ========================================================================== */
+ARI SUL - FOLHA DE ESTILO: BUSCA TÁTICA DE INDIVÍDUOS
+========================================================================== */
 
 /* --- TEMA BASE E FUNDO --- */
 body {
@@ -20,11 +20,21 @@ body {
 }
 
 /* --- CAMPO DE BUSCA (ESTILO TECH) --- */
+.input-group > .search-container {
+    flex: 1 1 auto; /* Faz o container ocupar todo o espaço restante do grupo */
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
 .search-tech {
     background-color: rgba(0, 0, 0, 0.3) !important;
     border: 1px solid rgba(79, 185, 255, 0.2) !important;
     color: #ffffff !important;
     font-weight: 500;
+    width: 100%; /* Garante que o input preencha o container */
+    padding-right: 40px !important; /* Espaço para o X */
+    border-radius: 0 8px 8px 0 !important; /* Ajusta a quina com o ícone de lupa */
 }
 
 .search-tech::placeholder {
@@ -55,8 +65,8 @@ body {
 }
 
 /* Força transparência em todas as partes da tabela */
-.table-tech th, 
-.table-tech td, 
+.table-tech th,
+.table-tech td,
 .table-tech tr {
     background-color: transparent !important;
     color: #ecf0f1 !important;
@@ -118,4 +128,42 @@ body {
     box-shadow: 0 0 15px rgba(79, 185, 255, 0.5);
 }
 
-.text-info-tech { color: #4fb9ff !important; }
+.text-info-tech {
+    color: #4fb9ff !important;
+}
+
+/* Estilo do botão X (Limpar) */
+.btn-clear-search {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 100; /* Força o X a ficar na frente de tudo */
+    color: #dc3545 !important;
+    text-decoration: none;
+    transition: all 0.2s;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.btn-clear-search:hover {
+    transform: translateY(-50%) scale(1.2);
+    color: #ff4d5a !important;
+}
+
+/* Espaço para o texto não sobrepor o X */
+.search-tech {
+    padding-right: 40px !important;
+}
+
+/* Ajuste da Identificação (Nome e Alcunha) */
+.identificacao-wrapper {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2; /* Aproxima as linhas */
+}
+
+.vulgo-text {
+    font-size: 0.85rem;
+    margin-top: 1px; /* Controle milimétrico da distância */
+}

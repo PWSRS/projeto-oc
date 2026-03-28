@@ -16,8 +16,21 @@
                     <span class="input-group-text bg-transparent border-secondary text-info-tech">
                         <i class="bi bi-search"></i>
                     </span>
-                    <input type="text" name="q" class="form-control search-tech" 
-                           placeholder="Pesquisar por Nome, Alcunha ou CPF..." value="{{ query|default:'' }}">
+
+                    <div class="search-container">
+                        <input 
+                            type="text"
+                            name="q" 
+                            class="form-control search-tech" 
+                            placeholder="Pesquisar..."
+                            value="{{ query|default:'' }}"
+                        >
+                        {% if request.GET.q %}
+                            <a href="{% url 'buscar_detento' %}" class="btn-clear-search">
+                                <i class="fa-solid fa-xmark"></i>
+                            </a>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
             <div class="col-md-2">
@@ -32,9 +45,8 @@
                 <tr>
                     <th width="65">Foto</th>
                     <th>Identificação</th>
-                    <th>Alcunha</th>
                     <th>ORCRIM</th>
-                    <th>Localização (P | G | C)</th>
+                    <th>Localização</th>
                     <th class="text-center">Situação</th>
                     <th width="80">Ações</th>
                 </tr>
@@ -46,11 +58,12 @@
                         <img src="{{ detento.foto_url }}" class="img-table" alt="Alvo">
                     </td>
                     <td>
-                        <div class="fw-bold text-white">{{ detento.nome|upper }}</div>
-                        <small class="text-muted" style="font-size: 0.65rem;">ID: {{ detento.id }}</small>
-                    </td>
-                    <td>
-                        <span class="text-info-tech italic">"{{ detento.alcunha|default:'-' }}"</span>
+                        <div class="identificacao-wrapper">
+                            <span class="fw-bold text-white">{{ detento.nome|upper }}</span>
+                            {% if detento.alcunha %}
+                                <span class="text-info-tech vulgo-text">Vulgo: {{ detento.alcunha }}</span>
+                            {% endif %}
+                        </div>
                     </td>
                     <td>
                         <span class="badge border border-secondary small">{{ detento.orcrim.sigla|default:"N/D" }}</span>
@@ -58,11 +71,22 @@
                     <td>
                         <div class="d-flex align-items-center gap-2 small">
                             <span class="text-white-50">{{ detento.casa_prisional.sigla|default:"FORA" }}</span>
+
                             {% if detento.casa_prisional %}
-                                <i class="bi bi-chevron-right opacity-50"></i>
-                                <span>{{ detento.pavilhao.nome_curto|default:"-" }}</span>
-                                <i class="bi bi-chevron-right opacity-50"></i>
-                                <span class="badge badge-cela">CELA {{ detento.cela.numero }}</span>
+                                {% if detento.pavilhao %}
+                                    <i class="bi bi-chevron-right opacity-50"></i>
+                                    <span class="pavilhao-prefix">{{ detento.pavilhao.nome }}</span>
+                                {% endif %}
+
+                                {% if detento.galeria %}
+                                    <i class="bi bi-chevron-right opacity-50"></i>
+                                    <span class="galeria-nome">{{ detento.galeria.nome }}</span>
+                                {% endif %}
+
+                                {% if detento.cela %}
+                                    <i class="bi bi-chevron-right opacity-50"></i>
+                                    <span class="badge badge-cela">CELA {{ detento.cela.numero }}</span>
+                                {% endif %}
                             {% endif %}
                         </div>
                     </td>
@@ -78,14 +102,6 @@
                     </td>
                 </tr>
                 {% empty %}
-                <tr>
-                    <td colspan="7" class="text-center py-5">
-                        <div class="text-muted">
-                            <i class="bi bi-search display-6 d-block mb-3 opacity-25"></i>
-                            Nenhum registro encontrado para "{{ query }}".
-                        </div>
-                    </td>
-                </tr>
                 {% endfor %}
             </tbody>
         </table>

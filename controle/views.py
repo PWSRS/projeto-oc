@@ -597,21 +597,43 @@ def dashboard_estatistico(request):
     return render(request, "orcrim/dashboard.html", context)
 
 
-# TODO Essa busca deve buscar o indivíduo e todos que estão na mesma cela dele
 def buscar_detento(request):
     query = request.GET.get("q")
-    resultados = []
+    resultados = Individuo.objects.none() # Inicia um queryset vazio
 
     if query:
-        # O select_related carrega os dados relacionados em uma única consulta ao banco
-        resultados = Individuo.objects.filter(
+        # 1. Encontramos os indivíduos que batem com o nome ou alcunha
+        # FORMA RECOMENDADA (Limpa e legível)
+        # Busca na tabela Individuos e aplica um filtro
+        alvos = Individuo.objects.filter(
+            # Verifica se tem o nome ou alcunha digitada (case-insensitive)
             Q(nome__icontains=query) | Q(alcunha__icontains=query)
-        ).select_related(
-            "casa_prisional", "pavilhao", "galeria", "cela"
-        )  # Adicione 'cela' aqui
+            # Agora que você separou essas pessoas, ignore o nome, a foto e o CPF delas.
+            # Eu quero apenas uma lista com os números (IDs) das celas onde elas estão.
+        ).values_list(
+            # O flat=True faz com que o resultado seja uma lista simples [1, 2, 3]
+            'cela_id', flat=True
+            # Se nessa lista de IDs houver números repetidos, remova as duplicatas.
+        ).distinct()
+
+        # 2. Se encontramos alguém, buscamos todos que estão nessas celas
+        if alvos:
+            # Filtramos todos os indivíduos cujas celas estejam na lista de 'alvos'
+            # O select_related continua sendo vital para a performance do template
+            resultados = Individuo.objects.filter(
+                # "Traga TODOS os presos cujo ID da cela esteja dentro daquela lista que acabamos de criar". 
+                # É assim que pegamos os companheiros de cela do João, mesmo que o nome deles não seja João.
+                cela_id__in=alvos
+            ).select_related(
+                # Ele traz o Preso, a Casa Prisional, o Pavilhão, a Galeria e a Cela em uma única viagem ao banco de dados
+                "casa_prisional", "pavilhao", "galeria", "cela"
+                # ordena por cela e nome
+            ).order_by("cela", "nome")
 
     return render(
         request,
-        "orcrim/busca_individuos.html",
+        "casaprisional/busca_individuos.html",
         {"resultados": resultados, "query": query},
     )
+    
+

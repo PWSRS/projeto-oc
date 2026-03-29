@@ -12,7 +12,7 @@
       <ul class="navbar-nav w-100 align-items-center">
 
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="{% url 'home' %}">Home</a>
+          <a class="nav-link active" aria-current="page" href="{% url 'quantidade_individuos_por_orcrim' %}">Home</a>
         </li>
 
         {# DROPDOWN INDIVÍDUOS #}
@@ -45,8 +45,8 @@
             Casas Prisionais
           </a>
           <ul class="dropdown-menu shadow" aria-labelledby="navbarDropdownCasaPrisional">
-            <li><a class="dropdown-item" href="{% url 'buscar_detento' %}"><i class="fa-solid fa-list me-2"></i>Pesquisar Detentos</a></li>
-            <li><a class="dropdown-item" href="{% url 'busca_por_cela' %}"><i class="fa-solid fa-people-roof me-2"></i>Pesquisar Detentos por Cela</a></li>
+            <li><a class="dropdown-item" href="{% url 'buscar_detento' %}"><i class="fa-solid fa-list me-2"></i>Detentos</a></li>
+            <li><a class="dropdown-item" href="{% url 'busca_por_cela' %}"><i class="fa-solid fa-people-roof me-2"></i>Detentos por Presídio</a></li>
             <li><a class="dropdown-item" href="{% url 'selecionar_presidio' %}"><i class="fa-solid fa-building-columns me-2"></i>Estrutura dos Presídios</a></li>
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item" href="{% url 'visualizar_liderancas' %}">

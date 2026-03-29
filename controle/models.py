@@ -234,7 +234,7 @@ class Individuo(models.Model):
         Orcrim, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Orcrim"
     )
     regime = models.CharField(
-        max_length=50, choices=REGIME_CHOICES, verbose_name="Regime"
+        max_length=50, choices=REGIME_CHOICES, null=True, blank=True, verbose_name="Regime"
     )
     casa_prisional = models.ForeignKey(
         CasaPrisional, on_delete=models.SET_NULL, null=True, blank=True

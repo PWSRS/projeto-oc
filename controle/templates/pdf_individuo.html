@@ -1,3 +1,4 @@
+{% load format_filters %}
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -78,7 +79,7 @@
 
             <div class="campo" style="width: 45%; float: right;">
                 <span class="label">RG / CPF</span>
-                <div class="valor">{{ individuo.rg_cpf }}</div>
+                <div class="valor">{{ individuo.rg_cpf|formatar_cpf_rg|default:"NÃO INFORMADO" }}</div>
             </div>
 
             <div class="row clearfix">
@@ -162,8 +163,10 @@
     {% endif %}
 
     <div class="footer">
-        DOCUMENTO PARA USO EXCLUSIVO EM SERVIÇO - GERADO POR {{ user.get_full_name|upper }} EM {% now "d/m/Y H:i:s" %}
-        <br><strong>CONFIDENCIAL - ARI SUL</strong>
+        DOCUMENTO PARA USO EXCLUSIVO EM SERVIÇO - GERADO POR 
+        {{ user.get_full_name|upper|default:user.username|upper }} 
+        EM {% now "d/m/Y H:i:s" %}
+        <br><strong>RESERVADO - ARI SUL</strong>
     </div>
 
 </body>

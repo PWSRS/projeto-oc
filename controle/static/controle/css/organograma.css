@@ -21,7 +21,9 @@ body {
     width: 100%;
     max-width: 400px;
 }
-#selecaoOrcrim option { background-color: #1e272e; }
+#selecaoOrcrim option {
+    background-color: #1e272e;
+}
 
 /* Container do Organograma */
 #organograma-container {
@@ -30,13 +32,15 @@ body {
     border-radius: 15px;
     border: 1px solid rgba(255, 255, 255, 0.1);
     margin-top: 20px;
-    height: 700px; /* Garante altura para o gráfico */
+    min-height: 600px; /* Garante altura para o gráfico */
+    overflow: hidden;
 }
 
 #organograma {
     width: 100%;
-    height: 600px; /* IMPORTANTE: Sem isso, o gráfico fica invisível */
+    height: 500px; /* IMPORTANTE: Sem isso, o gráfico fica invisível */
     min-height: 500px;
+    margin-top: -80px;
 }
 
 /* Legenda Flutuante Estilizada */
@@ -51,8 +55,15 @@ body {
     z-index: 10;
     font-size: 0.85rem;
 }
-.legenda-item { display: flex; align-items: center; margin-bottom: 5px; }
-.cor-legenda { 
-    width: 12px; height: 12px; border-radius: 50%; 
-    margin-right: 10px; border: 1px solid rgba(255,255,255,0.2);
+.legenda-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+}
+.cor-legenda {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
 }

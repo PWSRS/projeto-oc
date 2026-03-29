@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}ARI SUL - Estatísticas por ORCRIM{% endblock %}
+
+{% block extra_head_css %}
+    <link rel="stylesheet" href="{% static 'controle/css/quantidade_por_orcrim.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="d-flex align-items-center mb-5">
+        <div class="me-3">
+            <i class="bi bi-pie-chart-fill text-info-tech display-5"></i>
+        </div>
+        <div>
+            <h2 class="text-white mb-0">DISTRIBUIÇÃO POR ORCRIM</h2>
+            <p class="text-white-50 mb-0">Análise quantitativa de indivíduos vinculados por OrCrim</p>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        {% for orcrim in dados %}
+        <div class="col-md-4 col-lg-3">
+            <div class="glass-card p-4 card-orcrim text-center">
+                <div class="icon-box">
+                    <i class="bi bi-shield-lock text-info-tech fs-4"></i>
+                </div>
+                
+                <h4 class="text-info-tech orcrim-sigla mb-2">{{ orcrim.sigla|default:"N/D" }}</h4>
+                <p class="text-white-50 small text-uppercase mb-3" style="min-height: 40px;">
+                    {{ orcrim.nome }}
+                </p>
+
+                <div class="count-number text-white">{{ orcrim.total }}</div>
+                
+                <div class="mt-3">
+                    <a href="{% url 'orcrim_individuos' orcrim.pk %}" class="text-decoration-none hover-info">
+                        <span class="badge rounded-pill bg-dark border border-secondary text-white-50 px-3">
+                            INDIVÍDUOS
+                        </span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center py-5 glass-card">
+            <p class="text-muted">Nenhum dado estatístico disponível no momento.</p>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <div class="mt-5 text-center">
+        <a href="{% url 'buscar_detento' %}" class="btn btn-info-tech px-4">
+            <i class="bi bi-arrow-left me-2"></i> VOLTAR PARA BUSCA
+        </a>
+    </div>
+</div>
+{% endblock %}

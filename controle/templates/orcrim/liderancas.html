@@ -10,7 +10,7 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <h2 class="text-info-tech mb-1"><i class="bi bi-shield-exclamation"></i> Alvos de Interesse</h2>
-            <p class="text-info-tech text-muted small">Indivíduos com nível de influência identificado em ORCRIM</p>
+            <p class="text-info-tech text-muted small">Indivíduos com nível de influência identificado nas ORCRIM</p>
         </div>
         <div class="glass-card px-4 py-2 border-info text-info-tech">
             <strong>TOTAL: {{ total }}</strong>
@@ -39,7 +39,8 @@
                         <p class="label-tech">ORCRIM</p>
                         <span class="badge w-100 border border-info text-info-tech bg-dark text-truncate d-block py-2" 
                             title="{{ preso.orcrim.nome }}">
-                            {{ preso.orcrim.nome|default:"N/D"|upper }}
+                            <!-- {{ preso.orcrim.nome|default:"N/D"|upper }} -->
+                            {% firstof preso.orcrim.nome preso.ocrim.sigla "---" %}
                         </span>
                     </div>
                     <div class="col-6">

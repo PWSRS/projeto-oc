@@ -17,6 +17,7 @@ from controle.views import (
     individuos_por_orcrim,
     lista_liderancas,
     orcrim_individuos_list,
+    quantidade_individuos_por_orcrim,
     busca_por_cela,
     buscar_detento,
     organograma_view,
@@ -75,6 +76,7 @@ urlpatterns = [
     path("busca_individuos/", views.buscar_detento, name="buscar_detento"),
     # URLs para Orcrim
     path("visualizar_orcrims/", OrcrimListView.as_view(), name="orcrim_list"),
+    path("quantidade-individuos-por-orcrim/", views.quantidade_individuos_por_orcrim, name="quantidade_individuos_por_orcrim"),
     path("adicionar_orcrim/", OrcrimCreateView.as_view(), name="orcrim_add"),
     path(
         "editar_orcrim/<int:pk>/",

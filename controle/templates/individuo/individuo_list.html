@@ -89,7 +89,7 @@
                             <span class="badge bg-dark border border-secondary">{{ individuo.orcrim|default:"N/D" }}</span>
                         </td>
                         <td class="small text-uppercase">
-                            {{ individuo.casa_prisional|default:"---" }}
+                            {% firstof individuo.casa_prisional.sigla individuo.casa_prisional.nome "---" %}
                         </td>
                         <td>
                             <span class="badge rounded-pill border shadow-sm {{ individuo.get_situacao_badge_class }}">

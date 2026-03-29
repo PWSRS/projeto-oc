@@ -2,8 +2,10 @@ body {
     /* Compensa o navbar fixo, garantindo que o conteúdo não fique escondido */
     padding-top: 56px;
     /* Transição suave para mudança de tema (opcional) */
-    transition: background-color 0.3s, color 0.3s;
-    font-family: Verdana, Geneva, Tahoma, sans-serif
+    transition:
+        background-color 0.3s,
+        color 0.3s;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
 .card {
@@ -20,12 +22,10 @@ body {
     border-radius: 20px !important;
 }
 
-
-
 /* Efeito Glassmorphism na Navbar */
 .navbar-ari {
     background: rgba(15, 20, 24, 0.7) !important; /* Fundo escuro semi-transparente */
-    backdrop-filter: blur(12px);                 /* Desfoque do fundo */
+    backdrop-filter: blur(12px); /* Desfoque do fundo */
     -webkit-backdrop-filter: blur(12px);
     border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Linha sutil inferior */
     transition: all 0.3s ease;
@@ -67,4 +67,38 @@ body {
 /* Badge de pendentes com animação mais suave */
 .navbar-ari .badge.bg-danger {
     box-shadow: 0 0 10px rgba(220, 53, 69, 0.4);
+}
+
+/* Alertas em Estilo Glassmorphism */
+.alert-glass-success,
+.alert-success {
+    background: rgba(40, 167, 69, 0.15) !important;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(40, 167, 69, 0.3) !important;
+    border-left: 5px solid #28a745 !important;
+    color: #a2ffb8 !important;
+}
+
+.alert-glass-error,
+.alert-glass-danger,
+.alert-danger {
+    background: rgba(220, 53, 69, 0.15) !important;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(220, 53, 69, 0.3) !important;
+    border-left: 5px solid #dc3545 !important;
+    color: #ff8e98 !important;
+}
+
+.alert-glass-info,
+.alert-info {
+    background: rgba(79, 185, 255, 0.15) !important;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(79, 185, 255, 0.3) !important;
+    border-left: 5px solid #4fb9ff !important;
+    color: #4fb9ff !important;
+}
+
+/* Ajuste para o botão de fechar branco nos alertas escuros */
+.btn-close-white {
+    filter: invert(1) grayscale(100%) brightness(200%);
 }

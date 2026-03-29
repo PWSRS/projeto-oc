@@ -164,8 +164,10 @@
                         hierarchical: {
                             direction: 'UD',
                             sortMethod: 'directed',
-                            levelSeparation: 200, // Espaço entre níveis (Cima/Baixo)
-                            nodeSpacing: 300      // Espaço entre nós do mesmo nível (Lado a Lado)
+                            levelSeparation: 150, // Espaço entre níveis (Cima/Baixo)
+                            nodeSpacing: 300,      // Espaço entre nós do mesmo nível (Lado a Lado)
+                            edgeMinimization: true,
+                            blockShifting: false // Desativar isso ajuda a fixar melhor o topo
                         }
                     },
                     physics: false,

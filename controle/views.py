@@ -443,11 +443,12 @@ def gerar_pdf_individuo(request, pk):
         "pdf_individuo.html",
         {
             "individuo": individuo,
-            "request": request,  # Passar o request ajuda a resolver URLs
+            "request": request,
+            "user": request.user,  # <--- ADICIONE ESTA LINHA
         },
     )
 
-    # O segredo para fotos no Windows/Pycharm é o base_url
+    # O restante do seu código (WeasyPrint) continua igual
     html = HTML(string=html_string, base_url=request.build_absolute_uri("/"))
     pdf = html.write_pdf()
 
@@ -637,3 +638,11 @@ def buscar_detento(request):
     )
     
 
+def quantidade_individuos_por_orcrim(request):
+    # Buscamos a partir do modelo Orcrim (é mais lógico se queremos cards de Orcrim)
+    # Isso garante que mesmo Orcrims com ZERO presos apareçam (se você quiser)
+    dados = Orcrim.objects.annotate(
+        total=Count('individuo') # 'individuo' é o nome do modelo relacionado em minúsculo
+    ).filter(total__gt=0).order_by('-total')
+
+    return render(request, "orcrim/quantidade_por_orcrim.html", {"dados": dados})

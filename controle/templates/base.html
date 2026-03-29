@@ -32,17 +32,48 @@
     <main class="flex-shrink-0 flex-grow-1"> 
         <div class="container mt-4"> 
             
-            {# 1. MENSAGENS DO SISTEMA #}
+            {# 1. MENSAGENS DO SISTEMA (ESTILIZADO TECH) #}
             <div id="messages-container">
                 {% if messages %}
                     {% for message in messages %}
-                        <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show" role="alert">
-                            {{ message }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        <div class="alert alert-glass-{{ message.tags|default:'info' }} alert-dismissible fade show animate__animated animate__fadeInDown" role="alert">
+                            <div class="d-flex align-items-center">
+                                {% if message.tags == 'success' %}
+                                    <i class="bi bi-check-all me-2 fs-5"></i>
+                                {% elif message.tags == 'error' or message.tags == 'danger' %}
+                                    <i class="bi bi-shield-exclamation me-2 fs-5"></i>
+                                {% else %}
+                                    <i class="bi bi-info-circle me-2 fs-5"></i>
+                                {% endif %}
+                                
+                                <div>{{ message }}</div>
+                            </div>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
                     {% endfor %}
                 {% endif %}
             </div>
+
+            {# 2. ERROS DE FORMULÁRIO (CAPTURA SILENCIOSA) #}
+            {% if form.errors %}
+                <div class="alert alert-danger alert-glass-danger animate__animated animate__shakeX" role="alert">
+                    <div class="d-flex align-items-center mb-2">
+                        <i class="bi bi-shield-exclamation me-2 fs-5"></i>
+                        <strong>Existem erros no preenchimento:</strong>
+                    </div>
+                    <ul class="mb-0 small">
+                        {% for field in form %}
+                            {% for error in field.errors %}
+                                <li><strong>{{ field.label }}:</strong> {{ error }}</li>
+                            {% endfor %}
+                        {% endfor %}
+                        {% for error in form.non_field_errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endif %}
 
             {# 2. CONTEÚDO PRINCIPAL #}
             {% block content %}

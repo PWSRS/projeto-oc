@@ -28,7 +28,7 @@
                         {% csrf_token %}
                         
                         <div class="row align-items-end">
-                            <div class="col-md-4 mb-3">
+                            <div class="col-md-3 mb-3">
                                 <label>Identificação Visual</label>
                                 <div class="d-flex align-items-center gap-2 p-2 rounded bg-black bg-opacity-10 border border-secondary border-opacity-25">
                                     <div class="foto-preview-container" id="preview-box">
@@ -44,7 +44,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-5 mb-3">
+                            <div class="col-md-6 mb-3">
                                 {{ form.nome.label_tag }}
                                 {% render_field form.nome class="form-control" placeholder="Nome completo" %}
                             </div>
@@ -61,7 +61,7 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 {{ form.alcunha.label_tag }}
-                                {% render_field form.alcunha class="form-control" placeholder="Apelido / Vulgo" %}
+                                {% render_field form.alcunha class="form-control" %}
                             </div>
                             <div class="col-md-3 mb-3">
                                 {{ form.codigo_detento.label_tag }}
@@ -93,7 +93,7 @@
 
                         <div class="col-md-3 mb-3">
                             <label class="text-info-tech fw-bold"><i class="fa-solid fa-calendar-day me-1"></i> Entrada Real</label>
-                            {% render_field form.data_entrada_unidade class="form-control" type="datetime-local" %}
+                            {% render_field form.data_entrada_unidade class="form-control" type="date" %}
                         </div>
 
                         <div class="col-md-2 mb-3">

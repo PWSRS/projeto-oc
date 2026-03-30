@@ -138,11 +138,21 @@ label[for$='-clear'] {
 }
 
 /* Estilo para o calendário nativo do navegador */
-input[type='datetime-local']::-webkit-calendar-picker-indicator {
-    filter: invert(1); /* Deixa o ícone do calendário branco */
+input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1) sepia(1) saturate(5) hue-rotate(175deg); /* Deixa o ícone azul tech */
     cursor: pointer;
+    opacity: 0.7;
 }
 
-input[type='datetime-local'] {
-    color-scheme: dark; /* Faz o seletor interno do Chrome/Edge ficar escuro */
+input[type="date"]::-webkit-calendar-picker-indicator:hover {
+    opacity: 1;
+}
+
+/* Garante que o texto da data não fique preto no fundo escuro */
+input[type="date"] {
+    color-scheme: dark; /* Faz o seletor nativo do navegador seguir o tema escuro */
+}
+
+::placeholder{
+    color: rgba(239, 245, 249, 0.5) !important;
 }

@@ -240,7 +240,7 @@ class IndividuoForm(forms.ModelForm):
             "alcunha": forms.TextInput(
                 attrs={
                     "class": "form-control",
-                    "placeholder": "Separe por vírgulas as alcunhas.",
+                    "placeholder": "Separe por vírgula as alcunhas.",
                 }
             ),
             "foto": forms.FileInput(
@@ -256,6 +256,9 @@ class IndividuoForm(forms.ModelForm):
             "cela": forms.Select(attrs={"class": "form-control"}),
             "alojamento": forms.Select(attrs={"class": "form-control"}),
             "observacao": forms.TextInput(attrs={"class": "form-control"}),
+            "data_entrada_unidade": forms.DateInput(
+                attrs={"type": "date", "class": "form-control search-tech"}
+            ),
         }
 
 

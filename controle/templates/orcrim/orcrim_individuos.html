@@ -59,8 +59,9 @@
                         </td>
                         <td>
                             {% if individuo.casa_prisional or individuo.galeria.nome or individuo.cela %}
+                            {% firstof individuo.casa_prisional.sigla individuo.casa_prisional.nome "---" %}<br>
                                 <span class="badge bg-opacity-10 bg-info text-info border border-info border-opacity-25">
-                                    {{ individuo.casa_prisional.sigla|default:"" }} | {{ individuo.galeria.nome|default:"" }} | {{ individuo.cela|default:"" }} 
+                                    {{ individuo.galeria.nome|default:"" }} | {{ individuo.cela|default:"" }} 
                                 </span>
                             {% endif %}
                         </td>

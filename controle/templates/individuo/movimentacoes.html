@@ -37,17 +37,17 @@
                         <th class="ps-4">DATA ENTRADA</th>
                         <th>DATA SAÍDA</th>
                         <th>CASA PRISIONAL</th>
-                        <th>LOCALIZAÇÃO</th>
+                        <th>LOCALIZAÇÃO (P/G/C/A)</th>
                         <th class="pe-4">STATUS</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for mov in historico %}
                     <tr class="text-center">
-                        <td class="ps-4 font-monospace">{{ mov.data_entrada|date:"d/m/Y H:i" }}</td>
+                        <td class="ps-4 font-monospace">{{ mov.data_entrada|date:"d/m/Y"}}</td>
                         <td class="font-monospace">
                             {% if mov.data_saida %}
-                                {{ mov.data_saida|date:"d/m/Y H:i" }}
+                                {{ mov.data_saida|date:"d/m/Y" }}
                             {% else %}
                                 <span class="opacity-50">---</span>
                             {% endif %}
@@ -55,15 +55,15 @@
                         <td class="fw-bold">{{ mov.casa_prisional.sigla|upper }}</td>
                         <td class="small text-uppercase">
                         {% if mov.pavilhao %}
-                        Pav. <span class="text-info-tech">{{ mov.pavilhao.nome }}</span> / 
+                        {{ mov.pavilhao.nome }}</span> / 
                         {% endif %}
 
                         {% if mov.galeria %}
-                        Gal. {{ mov.galeria.nome }} / 
+                        {{ mov.galeria.nome }} / 
                         {% endif %}
 
                         {% if mov.cela %}
-                        CELA. {{ mov.cela.numero }}
+                        {{ mov.cela.numero }}
                         {% endif %}
 
                         {% if mov.alojamento %}

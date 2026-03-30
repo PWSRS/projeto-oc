@@ -27,9 +27,9 @@
                     <i class="bi bi-shield-lock text-info-tech fs-4"></i>
                 </div>
                 
-                <h4 class="text-info-tech orcrim-sigla mb-2">{{ orcrim.sigla|default:"N/D" }}</h4>
+                <h4 class="text-info-tech orcrim-sigla mb-2">{{ orcrim.nome|default:"" }}</h4>
                 <p class="text-white-50 small text-uppercase mb-3" style="min-height: 40px;">
-                    {{ orcrim.nome }}
+                    {{ orcrim.sigla|default:"-" }}
                 </p>
 
                 <div class="count-number text-white">{{ orcrim.total }}</div>

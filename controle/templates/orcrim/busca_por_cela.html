@@ -67,7 +67,7 @@
                         <th>Foto</th>
                         <th class="text-start">Nome</th>
                         <th>ORCRIM</th>
-                        <th>Localização Exata</th>
+                        <th>Localização</th>
                         <th>Ações</th>
                     </tr>
                 </thead>
@@ -89,7 +89,7 @@
                             <span class="badge bg-dark border border-secondary">{{ detento.orcrim.nome }}</span>
                         </td>
                         <td>
-                            <small class="d-block text-info-tech ">{{ detento.casa_prisional.sigla }}</small>
+                            <small class="d-block text-info-tech ">{% firstof detento.casa_prisional.sigla detento.casa_prisional.nome "---" %}</small>
                             <span class="badge bg-info bg-opacity-10 text-info">
                                 {% if detento.pavilhao.nome_curto %}
                                     {{ detento.pavilhao.nome_curto }} | 

@@ -400,21 +400,25 @@ from django.db.models import Prefetch  # Importe o Prefetch
 
 
 def selecionar_presidio(request):
-    # Definimos como as galerias devem ser carregadas
+    # 1. Prefetch das Galerias (como você já tinha, mas otimizado)
     prefetch_galerias = Prefetch(
         "galeria_set",
-        queryset=Galeria.objects.select_related("pavilhao")  # Removido "orcrim" daqui
-        .prefetch_related("orcrims")  # Adicionado para carregar as múltiplas Orcrims
+        queryset=Galeria.objects.select_related("pavilhao")
+        .prefetch_related("orcrims")
         .annotate(total_pessoas=Count("individuo"))
         .order_by("pavilhao__nome", "nome"),
     )
 
+    # 2. Busca dos Presídios
     presidios = (
         CasaPrisional.objects.prefetch_related(
-            prefetch_galerias, "galeria_set__alojamento_set"
+            prefetch_galerias, 
+            "alojamento_set"  # IMPORTANTE: Carrega os alojamentos diretos da unidade
         )
-        .annotate(total_geral=Count("galeria__individuo"))
-        .all()
+        # CORREÇÃO DO CONTADOR: Conta todos os indivíduos da unidade, 
+        # seja de cela ou de alojamento.
+        .annotate(total_geral=Count("individuo")) 
+        .order_by("sigla")
     )
 
     context = {
@@ -600,43 +604,33 @@ def dashboard_estatistico(request):
 
 def buscar_detento(request):
     query = request.GET.get("q")
-    resultados = Individuo.objects.none() # Inicia um queryset vazio
+    resultados = Individuo.objects.none()
 
     if query:
-        # 1. Encontramos os indivíduos que batem com o nome ou alcunha
-        # FORMA RECOMENDADA (Limpa e legível)
-        # Busca na tabela Individuos e aplica um filtro
-        alvos = Individuo.objects.filter(
-            # Verifica se tem o nome ou alcunha digitada (case-insensitive)
+        # 1. Buscamos os alvos pelo nome/alcunha
+        # Mas agora pegamos tanto o ID da cela quanto o ID do alojamento
+        alvos_info = Individuo.objects.filter(
             Q(nome__icontains=query) | Q(alcunha__icontains=query)
-            # Agora que você separou essas pessoas, ignore o nome, a foto e o CPF delas.
-            # Eu quero apenas uma lista com os números (IDs) das celas onde elas estão.
-        ).values_list(
-            # O flat=True faz com que o resultado seja uma lista simples [1, 2, 3]
-            'cela_id', flat=True
-            # Se nessa lista de IDs houver números repetidos, remova as duplicatas.
-        ).distinct()
+        ).values('cela_id', 'alojamento_id')
 
-        # 2. Se encontramos alguém, buscamos todos que estão nessas celas
-        if alvos:
-            # Filtramos todos os indivíduos cujas celas estejam na lista de 'alvos'
-            # O select_related continua sendo vital para a performance do template
+        # Criamos duas listas separadas de IDs (removendo os Nones)
+        celas_ids = [item['cela_id'] for item in alvos_info if item['cela_id']]
+        alojamentos_ids = [item['alojamento_id'] for item in alvos_info if item['alojamento_id']]
+
+        # 2. Buscamos TODOS que compartilham esses espaços
+        if celas_ids or alojamentos_ids:
             resultados = Individuo.objects.filter(
-                # "Traga TODOS os presos cujo ID da cela esteja dentro daquela lista que acabamos de criar". 
-                # É assim que pegamos os companheiros de cela do João, mesmo que o nome deles não seja João.
-                cela_id__in=alvos
+                # "Traga quem está na mesma cela OU no mesmo alojamento que o alvo"
+                Q(cela_id__in=celas_ids) | Q(alojamento_id__in=alojamentos_ids)
             ).select_related(
-                # Ele traz o Preso, a Casa Prisional, o Pavilhão, a Galeria e a Cela em uma única viagem ao banco de dados
-                "casa_prisional", "pavilhao", "galeria", "cela"
-                # ordena por cela e nome
-            ).order_by("cela", "nome")
+                "casa_prisional", "pavilhao", "galeria", "cela", "alojamento"
+            ).order_by("casa_prisional", "cela", "alojamento", "nome")
 
     return render(
         request,
         "casaprisional/busca_individuos.html",
-        {"resultados": resultados, "query": query},
-    )
-    
+        {"resultados": resultados, "query": query}
+    )    
 
 def quantidade_individuos_por_orcrim(request):
     # Buscamos a partir do modelo Orcrim (é mais lógico se queremos cards de Orcrim)
@@ -646,3 +640,33 @@ def quantidade_individuos_por_orcrim(request):
     ).filter(total__gt=0).order_by('-total')
 
     return render(request, "orcrim/quantidade_por_orcrim.html", {"dados": dados})
+
+#TODO View que lista o histórico de movimentações dos detentos, 
+# mostrando as casas prisionais por onde passaram, as datas e os motivos das 
+# transferências. Isso pode ser útil para análises de perfil e histórico de cada indivíduo.
+def perfil_individuo(request, pk):
+    individuo = get_object_or_404(Individuo, pk=pk)
+    # Buscamos o histórico ordenado pela data mais recente
+    historico = individuo.historico_movimentacoes.all().order_by('-data_entrada')
+    
+    return render(request, 'individuo/movimentacoes.html', {
+        'individuo': individuo,
+        'historico': historico,
+    })
+    
+def listar_detentos_por_alojamento(request, alojamento_id):
+    # Busca o alojamento ou retorna 404
+    alojamento = get_object_or_404(Alojamento, id=alojamento_id)
+    
+    # Filtra os detentos vinculados a este alojamento
+    detentos = Individuo.objects.filter(alojamento=alojamento).select_related(
+        'orcrim', 'casa_prisional'
+    ).order_by("nome")
+
+    context = {
+        "alojamento": alojamento,
+        "detentos": detentos,
+        "titulo": f"ALOJAMENTO: {alojamento.nome}",
+    }
+    # Reutilizamos o seu template de listagem para manter o padrão
+    return render(request, "casaprisional/listar_detentos_alojamento.html", context)

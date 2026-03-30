@@ -37,63 +37,66 @@
                     
                     <div id="collapse-{{ presidio.id }}" class="accordion-collapse collapse" data-bs-parent="#presidiosAccordion">
                         <div class="accordion-body">
-                            {% if presidio.galeria_set.all %}
-                                {% for galeria in presidio.galeria_set.all %}
-                                    <div class="galeria-card">
-                                        <div class="d-flex justify-content-between align-items-center">
+                        {# --- BLOCO DE GALERIAS (ESTILO ORIGINAL) --- #}
+                        {% if presidio.galeria_set.all %}
+                            {% for galeria in presidio.galeria_set.all %}
+                                <div class="galeria-card mb-2">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="d-flex align-items-center gap-3">
+                                            <p class="galeria-title text-white mb-0">
+                                                {% if galeria.pavilhao %}
+                                                    <span class="pavilhao-prefix me-2">{{ galeria.pavilhao.nome }}</span>
+                                                {% endif %}
+                                                <span class="galeria-nome">{{ galeria.nome }}</span>
+                                            </p>
                                             
-                                            <div class="d-flex align-items-center gap-3">
-                                                <p class="galeria-title text-white mb-0">
-                                                    {% if galeria.pavilhao %}
-                                                        <span class="pavilhao-prefix me-2">{{ galeria.pavilhao.nome }}</span>
-                                                    {% endif %}
-                                                    <span class="galeria-nome">{{ galeria.nome }}</span>
-                                                </p>
-                                                
-                                                <span class="badge rounded-pill bg-warning bg-opacity-10 text-warning border border-warning border-opacity-25 py-1 px-2" 
-                                                    style="font-size: 0.75rem; font-family: 'JetBrains Mono', monospace;">
-                                                    <i class="fa-solid fa-users me-1"></i> 
-                                                    {{ galeria.total_pessoas|default:"0" }}
-                                                </span>
-
-                                                {# --- BADGES DAS ORCRIMS (MULTISELEÇÃO) --- #}
-                                                <div class="d-flex gap-1">
-                                                    {% for orcrim in galeria.orcrims.all %}
-                                                        <span class="badge badge-orcrim bg-danger border border-light border-opacity-25 shadow-sm" style="font-size: 0.7rem;">
-                                                            <i class="fa-solid fa-skull-crossbones me-1"></i>
-                                                            {{ orcrim.nome|default:orcrim.sigla }}
-                                                        </span>
-                                                    {% empty %}
-                                                        <span class="badge badge-orcrim bg-secondary opacity-50" style="font-size: 0.7rem;">
-                                                            <i class="fa-solid fa-ban me-1"></i>
-                                                            SEM DOMÍNIO
-                                                        </span>
-                                                    {% endfor %}
-                                                </div>
-
-                                                <div class="d-none d-lg-flex gap-1 ms-2 border-start border-secondary ps-3">
-                                                    {% for alojamento in galeria.alojamento_set.all|slice:":8" %}
-                                                        <span class="alojamento-badge">{{ alojamento.nome }}</span>
-                                                    {% endfor %}
-                                                    {% if galeria.alojamento_set.count > 8 %}
-                                                        <span class="text-muted small">+{{ galeria.alojamento_set.count|add:"-8" }}</span>
-                                                    {% endif %}
-                                                </div>
-                                            </div>
-
-                                            <div>
-                                                <a href="{% url 'listar_detentos_por_galeria' galeria.id %}" class="btn btn-sm btn-outline-info py-0 px-2" title="Listar Detentos">
-                                                    <i class="fa-solid fa-users-rectangle fs-6"></i>
-                                                </a>
-                                            </div>
-
+                                            <span class="badge rounded-pill bg-warning bg-opacity-10 text-warning border border-warning border-opacity-25 py-1 px-2" style="font-size: 0.75rem;">
+                                                <i class="fa-solid fa-users me-1"></i> 
+                                                {{ galeria.total_pessoas|default:"0" }}
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <a href="{% url 'listar_detentos_por_galeria' galeria.id %}" class="btn btn-sm btn-outline-info py-0 px-2">
+                                                <i class="fa-solid fa-users-rectangle fs-6"></i>
+                                            </a>
                                         </div>
                                     </div>
-                                {% endfor %}
-                            {% else %}
-                                <p class="text-center text-muted small py-2">Nenhuma galeria vinculada.</p>
-                            {% endif %}
-                        </div>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+
+                        {# --- BLOCO DE ALOJAMENTOS (MESMA APARÊNCIA DAS GALERIAS) --- #}
+                        {% if presidio.alojamento_set.all %}
+                            {% for alojamento in presidio.alojamento_set.all %}
+                                <div class="galeria-card mb-2" style="border-left: 3px solid #ffc107 !important;"> 
+                                    {# Note: usei uma borda amarela discreta só para você diferenciar visualmente no sistema #}
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="d-flex align-items-center gap-3">
+                                            <p class="galeria-title text-white mb-0">
+                                                <i class="fa-solid fa-bed me-2 opacity-50" style="font-size: 0.8rem;"></i>
+                                                <span class="galeria-nome">{{ alojamento.nome|upper }}</span>
+                                            </p>
+                                            
+                                            <span class="badge rounded-pill bg-warning bg-opacity-10 text-warning border border-warning border-opacity-25 py-1 px-2" style="font-size: 0.75rem;">
+                                                <i class="fa-solid fa-users me-1"></i> 
+                                                {{ alojamento.individuo_set.count|default:"0" }}
+                                            </span>
+                                        </div>
+                                        <div>
+                                            {# Aqui você precisará criar uma URL específica para listar por alojamento depois #}
+                                            <a href="{% url 'listar_detentos_por_alojamento' alojamento.id %}" class="btn btn-sm btn-outline-info py-0 px-2" title="Listar Alojamento">
+                                                <i class="fa-solid fa-users-rectangle fs-6"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+
+                        {% if not presidio.galeria_set.all and not presidio.alojamento_set.all %}
+                            <p class="text-center text-muted small py-2">Nenhuma estrutura (Galeria ou Alojamento) cadastrada.</p>
+                        {% endif %}
+                    </div>
                     </div>
                 </div>
             {% endfor %}

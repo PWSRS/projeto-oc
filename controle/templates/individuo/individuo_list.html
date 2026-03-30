@@ -81,6 +81,11 @@
                                     {{ individuo.cela|upper }}
                                 </span>
                                 {% endif %}
+                                {% if individuo.alojamento%}
+                                <span class="badge bg-dark border border-secondary text-warning fw-bold {{ detento.alojamento }}"> Aloj: 
+                                    {{ individuo.alojamento|upper }}
+                                </span>
+                                {% endif %}
                             </a>
                         </td>
                         <td class="small">{{ individuo.data_nasc|date:"d/m/Y" }}</td>
@@ -98,6 +103,9 @@
                         </td>
                         <td class="pe-4 text-nowrap">
                             <div class="btn-group shadow-sm">
+                                <a href="{% url 'perfil_individuo' individuo.pk %}" class="btn btn-sm btn-outline-light" title="Histórico de Movimentações">
+                                    <i class="fa-solid fa-clock-rotate-left text-info-tech"></i>
+                                </a>
                                 <a href="{% url 'gerar_pdf_individuo' individuo.id %}" target="_blank" class="btn btn-sm btn-outline-light" title="PDF">
                                     <i class="fa-solid fa-file-pdf text-danger"></i>
                                 </a>

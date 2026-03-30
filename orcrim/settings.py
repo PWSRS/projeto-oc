@@ -14,7 +14,9 @@ SECRET_KEY = "django-insecure-&v-ow&5y+fg2e2c0m#mfj#-)9pt%wfb%v6o)5pqq7eg61!izrv
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
+# Substitua pelo endereço EXATO que aparece na barra do seu colega
+CSRF_TRUSTED_ORIGINS = ['https://sidney-impleadable-diurnally.ngrok-free.dev']
 
 
 # Application definition

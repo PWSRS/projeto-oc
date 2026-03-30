@@ -19,6 +19,12 @@ class Command(BaseCommand):
                 "Pelotas",
                 "5dpr",  # deve ser o valor da escolha, não o texto
             ),
+            (
+                "Penitenciário Estadual de Rio Grande",
+                "PERG",
+                "Rio Grande",
+                "5dpr",  # deve ser o valor da escolha, não o texto
+            ),
         ]
 
         self.stdout.write(

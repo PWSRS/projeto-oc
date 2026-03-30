@@ -219,6 +219,7 @@ class IndividuoForm(forms.ModelForm):
             "alojamento",
             "observacao",
             "nivel_orcrim",
+            "data_entrada_unidade",
         ]
 
         widgets = {

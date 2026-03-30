@@ -10,15 +10,19 @@ body {
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 15px;
 }
-.text-info-tech { color: #4fb9ff !important; }
+.text-info-tech {
+    color: #4fb9ff !important;
+}
 
 /* Estilização dos inputs para modo dark */
-.form-control, .form-select {
+.form-control,
+.form-select {
     background-color: rgba(0, 0, 0, 0.2) !important;
     border: 1px solid rgba(255, 255, 255, 0.1) !important;
     color: #ecf0f1 !important;
 }
-.form-control:focus, .form-select:focus {
+.form-control:focus,
+.form-select:focus {
     background-color: rgba(0, 0, 0, 0.3) !important;
     border-color: #4fb9ff !important;
     box-shadow: 0 0 0 0.25rem rgba(79, 185, 255, 0.25);
@@ -35,15 +39,15 @@ label {
 
 /* Container da Foto Compacto */
 .foto-preview-container {
-width: 50px;
-height: 50px;
-border-radius: 8px;
-overflow: hidden;
-background: rgba(0,0,0,0.2);
-display: flex;
-align-items: center;
-justify-content: center;
-border: 1px solid rgba(79, 185, 255, 0.2);
+    width: 50px;
+    height: 50px;
+    border-radius: 8px;
+    overflow: hidden;
+    background: rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(79, 185, 255, 0.2);
 }
 .foto-preview-container img {
     width: 100%;
@@ -55,35 +59,43 @@ border: 1px solid rgba(79, 185, 255, 0.2);
     color: rgba(79, 185, 255, 0.4);
 }
 
-hr { opacity: 0.1; border-color: #fff; }
+hr {
+    opacity: 0.1;
+    border-color: #fff;
+}
 
-.btn-success { background-color: #27ae60; border: none; }
-.btn-success:hover { background-color: #2ecc71; }
+.btn-success {
+    background-color: #27ae60;
+    border: none;
+}
+.btn-success:hover {
+    background-color: #2ecc71;
+}
 /* Estilização das opções dentro do Select (o dropdown em si) */
 select option {
-background-color: #1e272e; /* Tom escuro igual ao fundo */
-color: #ecf0f1;
-padding: 10px;
+    background-color: #1e272e; /* Tom escuro igual ao fundo */
+    color: #ecf0f1;
+    padding: 10px;
 }
 
 /* Quando o mouse passa por cima da opção ou ela é selecionada */
-select option:hover, 
-select option:focus, 
+select option:hover,
+select option:focus,
 select option:active {
-background-color: #2c3e50 !important;
-color: #4fb9ff !important;
+    background-color: #2c3e50 !important;
+    color: #4fb9ff !important;
 }
 
 /* Ajuste específico para o Chrome/Edge que às vezes ignora o estilo acima */
 .form-select {
-background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%234fb9ff' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e") !important;
-background-repeat: no-repeat !important;
-background-position: right 0.75rem center !important;
-background-size: 16px 12px !important;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%234fb9ff' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e") !important;
+    background-repeat: no-repeat !important;
+    background-position: right 0.75rem center !important;
+    background-size: 16px 12px !important;
 }
 
 /* Container do campo de foto - Ajustado para ser compacto na linha */
-input[type="file"].form-control-sm {
+input[type='file'].form-control-sm {
     background: rgba(0, 0, 0, 0.2) !important;
     border: 1px solid rgba(255, 255, 255, 0.1) !important;
     padding: 4px 8px !important; /* Padding reduzido para alinhar com a foto */
@@ -94,7 +106,7 @@ input[type="file"].form-control-sm {
 }
 
 /* Botão "Escolher arquivo" dentro do input */
-input[type="file"].form-control-sm::file-selector-button {
+input[type='file'].form-control-sm::file-selector-button {
     background: #4fb9ff !important;
     color: #000 !important;
     border: none !important;
@@ -107,9 +119,9 @@ input[type="file"].form-control-sm::file-selector-button {
 }
 
 /* Esconder resíduos do Django (Crucial para limpar o layout) */
-.clearablefileinput, 
-input[type="checkbox"][name$="-clear"], 
-label[for$="-clear"] {
+.clearablefileinput,
+input[type='checkbox'][name$='-clear'],
+label[for$='-clear'] {
     display: none !important;
 }
 
@@ -120,6 +132,17 @@ label[for$="-clear"] {
     box-shadow: 0 0 5px rgba(79, 185, 255, 0.2);
 }
 /* Esconde aquele texto chato do Django de "Limpar" se você não usar o FileInput */
-.form-check, .clearablefileinput {
-display: none !important; 
+.form-check,
+.clearablefileinput {
+    display: none !important;
+}
+
+/* Estilo para o calendário nativo do navegador */
+input[type='datetime-local']::-webkit-calendar-picker-indicator {
+    filter: invert(1); /* Deixa o ícone do calendário branco */
+    cursor: pointer;
+}
+
+input[type='datetime-local'] {
+    color-scheme: dark; /* Faz o seletor interno do Chrome/Edge ficar escuro */
 }

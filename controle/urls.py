@@ -18,6 +18,7 @@ from controle.views import (
     lista_liderancas,
     orcrim_individuos_list,
     quantidade_individuos_por_orcrim,
+    listar_detentos_por_alojamento,
     busca_por_cela,
     buscar_detento,
     organograma_view,
@@ -29,6 +30,7 @@ from controle.views import (
     aprovar_usuario,
     rejeitar_usuario,
     revogar_acesso,
+    perfil_individuo,
 )
 
 urlpatterns = [
@@ -72,6 +74,10 @@ urlpatterns = [
     path(
         "individuo/<int:pk>/pdf/", views.gerar_pdf_individuo, name="gerar_pdf_individuo"
     ),
+    # Movimentações
+    path('individuo/<int:pk>/movimentacoes/', views.perfil_individuo, name='perfil_individuo'),
+    # Detentos por Alojamento
+    path('alojamento/<int:alojamento_id>/detentos/', views.listar_detentos_por_alojamento, name='listar_detentos_por_alojamento'),
     # URL Busca de detento
     path("busca_individuos/", views.buscar_detento, name="buscar_detento"),
     # URLs para Orcrim

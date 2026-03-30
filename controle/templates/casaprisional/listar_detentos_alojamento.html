@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% load static %}
+{% load format_filters %}
+
+{% block title %}Detentos - {{ alojamento.nome }}{% endblock %}
+
+{% block extra_head_css %}
+    <link rel="stylesheet" href="{% static 'controle/css/listar_detentos.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    
+    <div class="glass-card p-4 mb-4 animate__animated animate__fadeInDown">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h4 class="mb-1 text-info-tech fw-bold">
+                    <i class="fa-solid fa-bed me-2"></i>ALOJAMENTO: {{ alojamento.nome|upper }}
+                </h4>
+                <p class="mb-0 small text-uppercase fw-bold text-info-tech" style="opacity: 0.8; letter-spacing: 0.5px;">
+                    <i class="fa-solid fa-map-location-dot me-1"></i>
+                    {{ alojamento.casa_prisional.nome }} ({{ alojamento.casa_prisional.sigla }})
+                </p>
+            </div>
+            <div class="col-md-4 text-end">
+                <a href="{% url 'selecionar_presidio' %}" class="btn-voltar fw-bold">
+                    <i class="fa-solid fa-arrow-left-long me-2"></i>Voltar aos Presídios
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="glass-card shadow-lg overflow-hidden animate__animated animate__fadeInUp">
+        <div class="table-responsive">
+            {% if detentos %}
+                <table class="table table-dark-tech table-hover align-middle mb-0">
+                    <thead>
+                        <tr class="text-center">
+                            <th>Foto</th>
+                            <th class="text-start">Nome / Alcunha</th>
+                            <th>RG/CPF</th>
+                            <th>Nascimento</th>
+                            <th>Situação Penal</th>
+                            <th>ORCRIM</th>
+                            <th>Regime</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for detento in detentos %}
+                        <tr class="text-center">
+                            <td>
+                                {% if detento.foto %}
+                                    <img src="{{ detento.foto.url }}" class="img-table shadow">
+                                {% else %}
+                                    <div class="bg-dark rounded-circle mx-auto d-flex align-items-center justify-content-center" style="width:45px; height:45px; border: 1px dashed #4fb9ff;">
+                                        <i class="fa-solid fa-user-secret text-info-tech opacity-50"></i>
+                                    </div>
+                                {% endif %}
+                            </td>
+                            <td class="text-start">
+                                <span class="fw-bold text-white">{{ detento.nome|upper }}</span>
+                                {% if detento.alcunha %}
+                                    <br><small class="text-info-tech">Vulgo: {{ detento.alcunha }}</small>                                
+                                {% endif %}
+                                <span class="badge bg-dark border border-secondary text-warning fw-bold"> 
+                                    <i class="fa-solid fa-bed me-1" style="font-size: 0.7rem;"></i>
+                                    {{ alojamento.nome|upper }}
+                                </span>
+                            </td>
+                            <td class="small font-monospace">{{ detento.rg_cpf|formatar_cpf_rg|default:"---" }}</td>
+                            <td class="small">{{ detento.data_nasc|date:"d/m/Y" }}</td>
+                            <td>
+                                <span class="badge rounded-pill shadow-sm border {{ detento.get_situacao_badge_class }}">
+                                    {{ detento.get_situacao_penal_display|upper }}
+                                </span>
+                            </td>
+                            <td>
+                                <span class="badge bg-dark border border-secondary text-danger fw-bold">
+                                    {{ detento.orcrim|default:"N/D" }}
+                                </span>
+                            </td>
+                            <td>
+                                <span class="badge rounded-pill shadow-sm border {{ detento.get_regime_badge_class }}">
+                                    {{ detento.get_regime_display|upper }}
+                                </span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <div class="text-center py-5">
+                    <i class="fa-solid fa-folder-open fa-3x mb-3 d-block opacity-25"></i>
+                    <p class="mb-0 text-muted italic">Nenhum detento custodiado neste alojamento.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

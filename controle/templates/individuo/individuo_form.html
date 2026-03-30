@@ -86,28 +86,45 @@
                             </div>
                         </div>
 
-                        <div class="row">
-                            <div class="col-md-4 mb-3">
-                                {{ form.casa_prisional.label_tag }}
-                                {% render_field form.casa_prisional class="form-select" %}
+                        <div class="row align-items-end"> <div class="col-md-3 mb-3">
+                            {{ form.casa_prisional.label_tag }}
+                            {% render_field form.casa_prisional class="form-select" %}
+                        </div>
+
+                        <div class="col-md-3 mb-3">
+                            <label class="text-info-tech fw-bold"><i class="fa-solid fa-calendar-day me-1"></i> Entrada Real</label>
+                            {% render_field form.data_entrada_unidade class="form-control" type="datetime-local" %}
+                        </div>
+
+                        <div class="col-md-2 mb-3">
+                            {{ form.regime.label_tag }}
+                            {% render_field form.regime class="form-select" %}
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            
+                            <div id="estrutura-pgc" class="animate__animated animate__fadeIn">
+                                <div class="row gx-2"> <div class="col-4 text-center">
+                                        <label style="font-size: 0.7rem;">PAV.</label>
+                                        {% render_field form.pavilhao class="form-control text-center p-1" placeholder="-" %}
+                                    </div>
+                                    <div class="col-4 text-center">
+                                        <label style="font-size: 0.7rem;">GAL.</label>
+                                        {% render_field form.galeria class="form-control text-center p-1" placeholder="-" %}
+                                    </div>
+                                    <div class="col-4 text-center">
+                                        <label style="font-size: 0.7rem;">CELA</label>
+                                        {% render_field form.cela class="form-control text-center p-1" placeholder="-" %}
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col-md-2 mb-3">
-                                {{ form.regime.label_tag }}
-                                {% render_field form.regime class="form-select" %}
-                            </div>
-                            <div class="col-md-2 mb-3">
-                                {{ form.pavilhao.label_tag }}
-                                {% render_field form.pavilhao class="form-control text-center" %}
-                            </div>
-                            <div class="col-md-2 mb-3">
-                                {{ form.galeria.label_tag }}
-                                {% render_field form.galeria class="form-control text-center" %}
-                            </div>
-                            <div class="col-md-2 mb-3">
-                                {{ form.cela.label_tag }}
-                                {% render_field form.cela class="form-control text-center" %}
+
+                            <div id="estrutura-alojamento" class="animate__animated animate__fadeIn" style="display: none;">
+                                <label class="text-info-tech fw-bold" style="font-size: 0.8rem;">Alojamento</label>
+                                {% render_field form.alojamento class="form-select form-select-sm" %}
                             </div>
                         </div>
+                    </div>
 
                         <div class="row">
                             <div class="col-md-12 mb-3">

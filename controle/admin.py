@@ -8,8 +8,13 @@ from .models import (
     Alojamento,
     Individuo,
     Orcrim,
+    Movimentacao,
 )
 
+@admin.register(Movimentacao)
+class MovimentacaoAdmin(admin.ModelAdmin):
+    list_display = ('individuo', 'casa_prisional', 'pavilhao', 'galeria', 'data_entrada', 'data_saida')
+    list_filter = ('casa_prisional', 'data_entrada')
 
 # Admin para Cidade
 class CidadeAdmin(admin.ModelAdmin):

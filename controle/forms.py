@@ -277,6 +277,23 @@ class OrcrimForm(forms.ModelForm):
             "logo_orcrim": forms.FileInput(attrs={"class": "form-control"}),
         }
 
+    def clean_nome(self):
+        # Pegamos o nome e limpamos (caixa alta e sem espaços extras)
+        nome = self.cleaned_data.get("nome").upper().strip()
+
+        # Verificamos se já existe outra Orcrim com esse nome
+        # O self.instance.pk serve para ignorar o próprio registro em caso de Edição
+        if (
+            Orcrim.objects.filter(nome__iexact=nome)
+            .exclude(pk=self.instance.pk)
+            .exists()
+        ):
+            raise forms.ValidationError(
+                "Já existe uma organização cadastrada com este nome."
+            )
+
+        return nome
+
 
 class CasaPrisionalForm(forms.ModelForm):
     class Meta:

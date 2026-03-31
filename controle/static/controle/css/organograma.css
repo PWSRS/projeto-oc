@@ -31,7 +31,7 @@ body {
     background: rgba(30, 39, 46, 0.4);
     border-radius: 15px;
     border: 1px solid rgba(255, 255, 255, 0.1);
-    margin-top: 20px;
+    margin-top: 60px;
     min-height: 600px; /* Garante altura para o gráfico */
     overflow: hidden;
 }

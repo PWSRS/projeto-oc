@@ -156,3 +156,8 @@ input[type="date"] {
 ::placeholder{
     color: rgba(239, 245, 249, 0.5) !important;
 }
+
+/* Força o texto a aparecer em maiúsculo nos inputs do formulário */
+input [type="text"] {
+    text-transform: uppercase;
+}

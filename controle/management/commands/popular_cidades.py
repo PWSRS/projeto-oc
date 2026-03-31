@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from ocorrencias.models import Cidade
+from controle.models import Cidade
 
 
 class Command(BaseCommand):

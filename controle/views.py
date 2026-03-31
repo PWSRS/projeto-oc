@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.db.models import Q, Count
+from django.db.models.functions import Coalesce
 from django.contrib.auth.decorators import login_required
 from rest_framework import generics
 from .models import Individuo

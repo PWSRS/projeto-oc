@@ -90,6 +90,16 @@ class Orcrim(models.Model):
         verbose_name_plural = "Orcrims"
         ordering = ["nome"]
 
+    def save(self, *args, **kwargs):
+        if self.nome:
+            self.nome = self.nome.upper().strip()
+
+        # Sugestão: Padronizar a sigla também
+        if self.sigla:
+            self.sigla = self.sigla.upper().strip()
+
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return self.nome
 
@@ -311,6 +321,8 @@ class Individuo(models.Model):
         return mapping.get(self.nivel_orcrim, "text-info-tech")
 
     def save(self, *args, **kwargs):
+        if self.nome:
+            self.nome = self.nome.upper().strip()
         # Lógica para verificar se é edição
         if self.pk:
             old_instance = Individuo.objects.get(pk=self.pk)
@@ -372,12 +384,15 @@ class Movimentacao(models.Model):
     # Os campos de controle de tempo
     # Agora o usuário pode editar, mas o padrão é o momento atual
     data_entrada = models.DateField(
-        default=timezone.now, verbose_name="Data de Entrada"
+        default=timezone.now, verbose_name="Data de Entrada", null=True, blank=True
     )
 
     # Campo de auditoria (invisível no formulário, mas salvo no banco)
     data_registro = models.DateField(
-        auto_now_add=True, verbose_name="Data do Registro no Sistema"
+        auto_now_add=True,
+        verbose_name="Data do Registro no Sistema",
+        null=True,
+        blank=True,
     )
     data_saida = models.DateField(verbose_name="Data de Saída", null=True, blank=True)
 

@@ -4,53 +4,119 @@
 <head>
     <meta charset="UTF-8">
     <style>
-        @page { size: A4; margin: 1.5cm; }
-        body { font-family: 'Helvetica', 'Arial', sans-serif; color: #222; line-height: 1.4; font-size: 11px; }
-        
-        /* Cabeçalho Oficial */
-        .header { text-align: center; border-bottom: 2px solid #333; margin-bottom: 20px; padding-bottom: 10px; }
-        .header h2 { margin: 0; text-transform: uppercase; font-size: 16px; }
-        .header p { margin: 5px 0 0 0; font-weight: bold; color: #555; }
+        /* Configurações de Página */
+        @page { size: A4; margin: 1.2cm; }
+        body { 
+            font-family: 'Helvetica', 'Arial', sans-serif; 
+            color: #1a1a1a; 
+            line-height: 1.3; 
+            font-size: 10px; 
+            margin: 0;
+            padding: 0;
+        }
 
-        /* Layout Principal */
-        .row { width: 100%; clear: both; }
-        .col-left { float: left; width: 70%; }
-        .col-right { float: right; width: 28%; text-align: right; }
-        
-        /* Foto */
+        /* Cabeçalho Institucional */
+        .header { 
+            text-align: center; 
+            border-bottom: 2px solid #000; 
+            margin-bottom: 15px; 
+            padding-bottom: 8px; 
+        }
+        .header h2 { margin: 0; text-transform: uppercase; font-size: 13px; letter-spacing: 1px; }
+        .header p { margin: 3px 0 0 0; font-weight: bold; color: #444; font-size: 11px; }
+
+        /* Estrutura de Colunas (Grid Simulado) */
+        .row { width: 100%; clear: both; display: block; }
+        .col-dados { float: left; width: 72%; }
+        .col-foto { float: right; width: 25%; text-align: right; }
+
+        /* Box da Foto */
         .foto-box { 
-            width: 140px; height: 170px; 
-            border: 2px solid #333; 
+            width: 130px; 
+            height: 160px; 
+            border: 2px solid #000; 
             display: inline-block;
-            background: #f8f9fa;
-            text-align: center;
+            background: #fdfdfd;
+            overflow: hidden;
         }
         .foto-box img { width: 100%; height: 100%; object-fit: cover; }
-        .sem-foto { padding-top: 70px; color: #ccc; font-weight: bold; font-size: 10px; }
+        .sem-foto { 
+            padding-top: 65px; 
+            text-align: center; 
+            color: #bbb; 
+            font-weight: bold; 
+            font-size: 9px; 
+        }
 
-        /* Blocos de Informação */
+        /* Seções e Campos */
         .secao-titulo { 
-            background: #333; color: #fff; 
-            padding: 4px 8px; font-weight: bold; 
-            text-transform: uppercase; margin-top: 15px;
-            letter-spacing: 1px;
+            background: #222; 
+            color: #fff; 
+            padding: 5px 10px; 
+            font-weight: bold; 
+            text-transform: uppercase; 
+            margin-top: 12px;
+            font-size: 10px;
+            clear: both;
         }
-        .campo { margin-bottom: 8px; border-bottom: 1px solid #eee; padding: 2px 0; }
-        .label { font-weight: bold; color: #666; font-size: 9px; text-transform: uppercase; display: block; }
-        .valor { font-size: 12px; color: #000; font-weight: 500; }
+        .campo { 
+            margin-bottom: 6px; 
+            border-bottom: 1px solid #eee; 
+            padding: 2px 0; 
+        }
+        .label { 
+            font-weight: bold; 
+            color: #555; 
+            font-size: 8px; 
+            text-transform: uppercase; 
+            display: block; 
+            margin-bottom: 1px;
+        }
+        .valor { 
+            font-size: 11px; 
+            color: #000; 
+            font-weight: 600; 
+            text-transform: uppercase;
+        }
 
-        /* Alerta de Facção */
-        .alerta-orcrim { 
-            border: 1px solid #000; padding: 10px; margin-top: 15px;
-            background-color: {% if individuo.orcrim %}#fff3f3{% else %}#f9f9f9{% endif %}; 
+        /* Tabela de Histórico (Padrão ARI) */
+        .tabela-historico {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 8px;
         }
+        .tabela-historico th {
+            background-color: #f0f0f0;
+            color: #333;
+            text-align: left;
+            font-size: 8px;
+            text-transform: uppercase;
+            padding: 6px;
+            border: 1px solid #ccc;
+        }
+        .tabela-historico td {
+            padding: 6px;
+            border: 1px solid #eee;
+            font-size: 9px;
+            vertical-align: top;
+        }
+        .tabela-historico tr:nth-child(even) { background-color: #f9f9f9; }
 
         /* Rodapé de Segurança */
         .footer { 
-            position: fixed; bottom: 0; width: 100%; 
-            font-size: 8px; color: #777; border-top: 1px solid #ccc;
-            padding-top: 5px; text-align: center;
+            position: fixed; 
+            bottom: 0; 
+            width: 100%; 
+            font-size: 8px; 
+            color: #666; 
+            border-top: 1px solid #000;
+            padding-top: 4px; 
+            text-align: center;
+            background: white;
         }
+        .status-atual { color: #d32f2f; font-weight: bold; }
+        .status-vigente { color: #2e7d32; font-weight: bold; }
+        
         .clearfix::after { content: ""; clear: both; display: table; }
     </style>
 </head>
@@ -59,71 +125,72 @@
     <div class="header">
         <h2>Estado do Rio Grande do Sul</h2>
         <h2>Secretaria da Segurança Pública</h2>
-        <h2>Brigada Militar</h2>
-        <h2>CRPM S</h2>
-        <h2>Sistema de Inteligência</h2>
-        <p>Agência Regional de Inteligência - ARI Sul</p>
+        <h2>Brigada Militar - CRPM Sul</h2>
+        <p>Agência Regional de Inteligência - ARI SUL</p>
+        <p>Ficha Individual</p>
     </div>
 
     <div class="row clearfix">
-        <div class="col-left">
+        <div class="col-dados">
             <div class="campo">
                 <span class="label">Nome Completo</span>
-                <div class="valor" style="font-size: 16px; font-weight: bold;">{{ individuo.nome }}</div>
+                <div class="valor" style="font-size: 14px;">{{ individuo.nome }}</div>
             </div>
             
-            <div class="campo" style="width: 45%; float: left;">
-                <span class="label">Alcunha / Vulgo</span>
-                <div class="valor">{{ individuo.alcunha|default:"NADA CONSTA"|upper }}</div>
-            </div>
-
-            <div class="campo" style="width: 45%; float: right;">
-                <span class="label">RG / CPF</span>
-                <div class="valor">{{ individuo.rg_cpf|formatar_cpf_rg|default:"NÃO INFORMADO" }}</div>
+            <div class="row clearfix">
+                <div class="campo" style="width: 48%; float: left;">
+                    <span class="label">Alcunha / Vulgo</span>
+                    <div class="valor">{{ individuo.alcunha|default:"NADA CONSTA" }}</div>
+                </div>
+                <div class="campo" style="width: 48%; float: right;">
+                    <span class="label">RG / CPF</span>
+                    <div class="valor">{{ individuo.rg_cpf|formatar_cpf_rg|default:"NÃO INFORMADO" }}</div>
+                </div>
             </div>
 
             <div class="row clearfix">
-                <div class="campo" style="width: 45%; float: left;">
+                <div class="campo" style="width: 48%; float: left;">
                     <span class="label">Data de Nascimento</span>
                     <div class="valor">{{ individuo.data_nasc|date:"d/m/Y" }}</div>
                 </div>
-                <div class="campo" style="width: 45%; float: right;">
+                <div class="campo" style="width: 48%; float: right;">
                     <span class="label">Cód. Detento</span>
                     <div class="valor">{{ individuo.codigo_detento|default:"---" }}</div>
                 </div>
             </div>
         </div>
 
-        <div class="foto-box">
-            {% if individuo.foto %}
-                {# Usamos .path para o WeasyPrint ler direto do disco #}
-                <img src="file:///{{ individuo.foto.path }}" style="width: 140px; height: 170px; object-fit: cover;">
-            {% else %}
-                <div class="sem-foto" style="padding-top: 70px; color: #ccc;">SEM FOTO</div>
-            {% endif %}
+        <div class="col-foto">
+            <div class="foto-box">
+                {% if individuo.foto %}
+                    <img src="file:///{{ individuo.foto.path }}">
+                {% else %}
+                    <div class="sem-foto">FOTO NÃO DISPONÍVEL</div>
+                {% endif %}
+            </div>
         </div>
     </div>
 
     <div class="secao-titulo">Vínculo em Organização Criminosa</div>
-    <div class="alerta-orcrim">
-        <table style="width: 100%; border-collapse: collapse;">
+    <div style="border: 1px solid #000; padding: 8px; margin-top: 5px; background: #fffcfc;">
+        <table style="width: 100%;">
             <tr>
-                <td style="width: 50%; vertical-align: top;">
+                <td style="width: 50%;">
                     <span class="label">OrCrim</span>
-                    <div class="valor"><strong>{{ individuo.orcrim.nome|default:"NÃO POSSUI VINCULAÇÃO" }}</strong></div>
+                    <div class="valor" style="color: #c00;">{{ individuo.orcrim.nome|default:"SEM VINCULAÇÃO CONFIRMADA" }}</div>
                 </td>
-                <td style="width: 50%; vertical-align: top; border-left: 1px solid #ddd; padding-left: 15px;">
-                    <span class="label">Nível Hierárquico</span>
+                <td style="width: 50%;">
+                    <span class="label">Status dentro da OrCrim</span>
                     <div class="valor">{{ individuo.get_nivel_orcrim_display }}</div>
                 </td>
             </tr>
         </table>
     </div>
 
-    <div class="secao-titulo">Situação Penal e Localização</div>
-    <div class="row clearfix" style="margin-top: 10px;">
+    <div class="secao-titulo">Situação Penal e Localização Atual</div>
+    <div class="row clearfix" style="margin-top: 5px;">
         <div style="width: 33%; float: left;" class="campo">
-            <span class="label">Situação Atual</span>
+            <span class="label">Situação Penal</span>
             <div class="valor">{{ individuo.get_situacao_penal_display }}</div>
         </div>
         <div style="width: 33%; float: left;" class="campo">
@@ -131,7 +198,7 @@
             <div class="valor">{{ individuo.get_regime_display }}</div>
         </div>
         <div style="width: 33%; float: left;" class="campo">
-            <span class="label">Unidade</span>
+            <span class="label">Unidade (Sigla)</span>
             <div class="valor">{{ individuo.casa_prisional.sigla|default:"---" }}</div>
         </div>
     </div>
@@ -156,17 +223,52 @@
     </div>
 
     {% if individuo.observacao %}
-    <div class="secao-titulo">Observações Relevantes</div>
-    <div style="padding: 10px; border: 1px solid #eee; min-height: 60px;">
+    <div class="secao-titulo">Observações Técnicas</div>
+    <div style="padding: 8px; border: 1px solid #ddd; background: #fafafa; min-height: 40px;">
         {{ individuo.observacao }}
     </div>
     {% endif %}
 
+    <div class="secao-titulo">Histórico de Movimentações Recentes</div>
+    <table class="tabela-historico">
+        <thead>
+            <tr>
+                <th>Unidade Prisional</th>
+                <th>Localização Interna</th>
+                <th>Entrada</th>
+                <th>Saída</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for mov in individuo.historico_movimentacoes.all %}
+            <tr>
+                <td><strong>{{ mov.casa_prisional.sigla|default:"---" }}</strong></td>
+                <td>
+                    P: {{ mov.pavilhao.nome|default:"-" }} | 
+                    G: {{ mov.galeria.nome|default:"-" }} | 
+                    C: {{ mov.cela.numero|default:"-" }}
+                </td>
+                <td>{{ mov.data_entrada|date:"d/m/Y" }}</td>
+                <td>
+                    {% if mov.data_saida %}
+                        {{ mov.data_saida|date:"d/m/Y" }}
+                    {% else %}
+                        <span class="status-vigente">ATUAL</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4" style="text-align: center; color: #999;">Nenhum registro de movimentação encontrado no sistema.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
     <div class="footer">
-        DOCUMENTO PARA USO EXCLUSIVO EM SERVIÇO - GERADO POR 
-        {{ user.get_full_name|upper|default:user.username|upper }} 
-        EM {% now "d/m/Y H:i:s" %}
-        <br><strong>RESERVADO - ARI SUL</strong>
+        DOCUMENTO RESERVADO - GERADO POR: {{ user.get_full_name|upper|default:user.username|upper }} 
+        EM {% now "d/m/Y H:i:s" %} - ARI SUL / BRIGADA MILITAR
+        <br><strong>USO EXCLUSIVO EM SERVIÇO</strong>
     </div>
 
 </body>

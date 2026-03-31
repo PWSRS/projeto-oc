@@ -74,7 +74,16 @@ input[type="file"]::file-selector-button {
 }
 input[type="file"]::file-selector-button:hover {
     background-color: #0aa2c0;
+
 }
+
+
+/* Força o texto a aparecer em maiúsculo nos inputs do formulário */
+input [type="text"] {
+    text-transform: uppercase;
+}
+
+
 #image-preview {
     max-height: 200px;
     border: 2px dashed #0dcaf0;

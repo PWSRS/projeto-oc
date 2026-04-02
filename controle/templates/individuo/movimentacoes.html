@@ -39,6 +39,7 @@
                         <th>CASA PRISIONAL</th>
                         <th>LOCALIZAÇÃO (P/G/C/A)</th>
                         <th class="pe-4">STATUS</th>
+                        <th class="pe-4">AÇÕES</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -86,6 +87,21 @@
                                     ENCERRADO
                                 </span>
                             {% endif %}
+                        </td>
+                        <td class="pe-4">
+                            <div class="d-flex justify-content-center gap-2">
+                                <a href="{% url 'editar_movimentacao' mov.pk %}" class="btn btn-outline-warning btn-sm border-0" title="Editar">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </a>
+
+                                <form action="{% url 'excluir_movimentacao' mov.pk %}" method="post" style="display:inline;" 
+                                    onsubmit="return confirm('Tem certeza que deseja excluir este registro histórico?');">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-outline-danger btn-sm border-0 shadow-none">
+                                        <i class="fa-solid fa-trash-can"></i>
+                                    </button>
+                                </form>
+                            </div>
                         </td>
                     </tr>
                     {% empty %}

@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}ARI SUL - Lista de Foragidos e Procurados{% endblock %}
+
+
+{% block extra_head_css %}
+    <link rel="stylesheet" href="{% static 'controle/css/individuo_list.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    
+    {# Cabeçalho com Filtro #}
+    <div class="glass-card p-4 mb-4 border-start border-danger border-5 animate__animated animate__fadeInDown">
+        <div class="row align-items-center">
+            <div class="col-md-4">
+                <h4 class="mb-0 text-danger fw-bold">
+                    <i class="fa-solid fa-person-running me-2"></i>FORAGIDOS E PROCURADOS
+                </h4>
+            </div>
+            <div class="col-md-6">
+                <form method="GET" action="{% url 'listar_foragidos_procurados' %}" class="d-flex">
+                    <div class="input-group">
+                        <input type="text" name="q" class="form-control search-tech border-secondary border-opacity-25" 
+                               placeholder="Pesquisar por nome, alcunha ou documento..." value="{{ query|default:'' }}">
+                        <button class="btn btn-danger px-4" type="submit">FILTRAR</button>
+                        {% if query %}
+                            <a href="{% url 'listar_foragidos_procurados' %}" class="btn btn-outline-secondary">LIMPAR</a>
+                        {% endif %}
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-2 text-end">
+                <div class="d-inline-flex align-items-center bg-dark bg-opacity-50 border border-danger border-opacity-25 rounded p-2 shadow-sm">
+                    <div class="me-2 bg-danger bg-opacity-10 rounded p-2 text-danger">
+                        <i class="fa-solid fa-users-viewfinder fs-5"></i>
+                    </div>
+                    <div class="text-start">
+                        <small class="text-muted d-block lh-1" style="font-size: 0.55rem; letter-spacing: 1px;">ALVOS ATIVOS</small>
+                        <span class="text-danger fw-bold fs-4 lh-1" style="text-shadow: 0 0 10px rgba(220, 53, 69, 0.4);">
+                            {{ foragidos.count }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# Tabela de Resultados #}
+    <div class="glass-card shadow-lg overflow-hidden animate__animated animate__fadeInUp">
+        <div class="table-responsive">
+            <table class="table table-dark-tech table-hover align-middle mb-0">
+                <thead>
+                    <tr class="text-center">
+                        <th class="ps-4" style="width: 80px;">FOTO</th>
+                        <th class="text-start">DADOS DO INDIVÍDUO</th>
+                        <th>ORCRIM</th>
+                        <th>ÚLTIMA LOCALIZAÇÃO</th>
+                        <th>SITUAÇÃO</th>
+                        <th class="pe-4" style="width: 150px;">AÇÕES</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for individuo in foragidos %}
+                    <tr class="text-center">
+                        <td class="ps-4">
+                            <img src="{% if individuo.foto %}{{ individuo.foto.url }}{% else %}{% static 'controle/img/image_default.png' %}{% endif %}" 
+                                 class="rounded-circle img-table shadow {% if individuo.situacao_penal == 'foragido' %}border-danger{% else %}border-warning{% endif %}">
+                        </td>
+                        <td class="text-start">
+                            <div class="fw-bold text-white mb-0">{{ individuo.nome|upper }}</div>
+                            <small class="text-info-tech">VULGO: {{ individuo.alcunha|default:"NÃO INFORMADO"|upper }}</small>
+                            <div class="text-muted" style="font-size: 0.75rem;">NASC: {{ individuo.data_nasc|date:"d/m/Y" }}</div>
+                        </td>
+                        <td>
+                            <span class="badge bg-dark border border-secondary">
+                                {{ individuo.orcrim.sigla|default:individuo.orcrim.nome|default:"S/F" }}
+                            </span>
+                        </td>
+                        <td class="small text-uppercase">
+                            {% firstof individuo.casa_prisional.sigla individuo.casa_prisional.nome "SISTEMA" %}
+                            <br><span class="text-muted" style="font-size: 0.7rem;">{{ individuo.galeria.nome|default:"" }}</span>
+                        </td>
+                        <td>
+                            {# Badge Dinâmico baseado na situação #}
+                            <span class="badge rounded-pill border shadow-sm px-3 
+                                {% if individuo.situacao_penal == 'foragido' %}
+                                    bg-danger bg-opacity-10 text-danger border-danger
+                                {% else %}
+                                    bg-warning bg-opacity-10 text-warning border-warning
+                                {% endif %}">
+                                {{ individuo.get_situacao_penal_display|upper }}
+                            </span>
+                        </td>
+                        <td class="pe-4">
+                            <div class="btn-group">
+                                <a href="{% url 'individuo_detail' individuo.pk %}" class="btn btn-sm btn-outline-light" title="Ver Perfil">
+                                    <i class="fa-solid fa-user-shield text-info-tech"></i>
+                                </a>
+                                <a href="{% url 'gerar_pdf_individuo' individuo.id %}" target="_blank" class="btn btn-sm btn-outline-light" title="Cartaz de Busca">
+                                    <i class="fa-solid fa-file-pdf text-danger"></i>
+                                </a>
+                                <a href="{% url 'individuo_edit' pk=individuo.pk %}" class="btn btn-sm btn-outline-light" title="Editar Informações">
+                                    <i class="fas fa-edit text-warning"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center py-5 text-muted italic">
+                            <i class="fa-solid fa-magnifying-glass-chart fa-3x mb-3 opacity-25"></i>
+                            <p>Nenhum alvo localizado com os critérios informados.</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

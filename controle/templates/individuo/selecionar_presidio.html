@@ -54,6 +54,11 @@
                                                 <i class="fa-solid fa-users me-1"></i> 
                                                 {{ galeria.total_pessoas|default:"0" }}
                                             </span>
+                                            {% for orcrim in galeria.orcrims.all %}
+                                                <span class="badge bg-danger">{{ orcrim.nome }}</span>
+                                            {% empty %}
+                                                <span class="text-muted">S/F</span>
+                                            {% endfor %}
                                         </div>
                                         <div>
                                             <a href="{% url 'listar_detentos_por_galeria' galeria.id %}" class="btn btn-sm btn-outline-info py-0 px-2">

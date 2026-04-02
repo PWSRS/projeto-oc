@@ -30,8 +30,15 @@ from .models import (
     Galeria,
     Cela,
     Alojamento,
+    Movimentacao,
 )
-from .forms import IndividuoForm, OrcrimForm, CasaPrisionalForm, CadastroUsuarioForm
+from .forms import (
+    IndividuoForm,
+    OrcrimForm,
+    CasaPrisionalForm,
+    CadastroUsuarioForm,
+    MovimentacaoForm,
+)
 
 
 # View para página inicial
@@ -413,13 +420,12 @@ def selecionar_presidio(request):
     # 2. Busca dos Presídios
     presidios = (
         CasaPrisional.objects.prefetch_related(
-            prefetch_galerias, 
-            "alojamento_set"  # IMPORTANTE: Carrega os alojamentos diretos da unidade
+            prefetch_galerias,
+            "alojamento_set",  # IMPORTANTE: Carrega os alojamentos diretos da unidade
         )
-        # CORREÇÃO DO CONTADOR: Conta todos os indivíduos da unidade, 
+        # CORREÇÃO DO CONTADOR: Conta todos os indivíduos da unidade,
         # seja de cela ou de alojamento.
-        .annotate(total_geral=Count("individuo")) 
-        .order_by("sigla")
+        .annotate(total_geral=Count("individuo")).order_by("sigla")
     )
 
     context = {
@@ -604,65 +610,118 @@ def dashboard_estatistico(request):
 
 
 def buscar_detento(request):
-    query = request.GET.get("q")
+    query = request.GET.get("q", "").strip()  # .strip() evita erros com espaços vazios
     resultados = Individuo.objects.none()
 
     if query:
-        # 1. Buscamos os alvos pelo nome/alcunha
-        # Mas agora pegamos tanto o ID da cela quanto o ID do alojamento
-        alvos_info = Individuo.objects.filter(
+        # 1. Primeiro, buscamos os indivíduos que batem com o nome/vulgo
+        alvos = Individuo.objects.filter(
             Q(nome__icontains=query) | Q(alcunha__icontains=query)
-        ).values('cela_id', 'alojamento_id')
+        )
 
-        # Criamos duas listas separadas de IDs (removendo os Nones)
-        celas_ids = [item['cela_id'] for item in alvos_info if item['cela_id']]
-        alojamentos_ids = [item['alojamento_id'] for item in alvos_info if item['alojamento_id']]
+        # 2. Pegamos os IDs de onde esses alvos estão
+        # Usamos values_list com flat=True para simplificar
+        celas_ids = list(alvos.values_list("cela_id", flat=True).exclude(cela_id=None))
+        alojamentos_ids = list(
+            alvos.values_list("alojamento_id", flat=True).exclude(alojamento_id=None)
+        )
 
-        # 2. Buscamos TODOS que compartilham esses espaços
-        if celas_ids or alojamentos_ids:
-            resultados = Individuo.objects.filter(
-                # "Traga quem está na mesma cela OU no mesmo alojamento que o alvo"
-                Q(cela_id__in=celas_ids) | Q(alojamento_id__in=alojamentos_ids)
-            ).select_related(
-                "casa_prisional", "pavilhao", "galeria", "cela", "alojamento"
-            ).order_by("casa_prisional", "cela", "alojamento", "nome")
+        # 3. CONSTRUÇÃO DO RESULTADO:
+        # Queremos: Os próprios alvos + quem compartilha a cela + quem compartilha o alojamento
+        filtros = Q(
+            id__in=alvos.values_list("id", flat=True)
+        )  # Inclui os alvos originais sempre
+
+        if celas_ids:
+            filtros |= Q(cela_id__in=celas_ids)
+        if alojamentos_ids:
+            filtros |= Q(alojamento_id__in=alojamentos_ids)
+
+        resultados = (
+            Individuo.objects.filter(filtros)
+            .select_related(
+                "casa_prisional", "pavilhao", "galeria", "cela", "alojamento", "orcrim"
+            )
+            .order_by("casa_prisional", "cela", "alojamento", "nome")
+            .distinct()  # Importante para não repetir nomes se o filtro bater duas vezes
+        )
 
     return render(
         request,
         "casaprisional/busca_individuos.html",
-        {"resultados": resultados, "query": query}
-    )    
+        {"resultados": resultados, "query": query},
+    )
+
 
 def quantidade_individuos_por_orcrim(request):
     # Buscamos a partir do modelo Orcrim (é mais lógico se queremos cards de Orcrim)
     # Isso garante que mesmo Orcrims com ZERO presos apareçam (se você quiser)
-    dados = Orcrim.objects.annotate(
-        total=Count('individuo') # 'individuo' é o nome do modelo relacionado em minúsculo
-    ).filter(total__gt=0).order_by('-total')
+    dados = (
+        Orcrim.objects.annotate(
+            total=Count(
+                "individuo"
+            )  # 'individuo' é o nome do modelo relacionado em minúsculo
+        )
+        .filter(total__gt=0)
+        .order_by("-total")
+    )
 
     return render(request, "orcrim/quantidade_por_orcrim.html", {"dados": dados})
 
-#TODO View que lista o histórico de movimentações dos detentos, 
-# mostrando as casas prisionais por onde passaram, as datas e os motivos das 
+
+# TODO View que lista o histórico de movimentações dos detentos,
+# mostrando as casas prisionais por onde passaram, as datas e os motivos das
 # transferências. Isso pode ser útil para análises de perfil e histórico de cada indivíduo.
 def perfil_individuo(request, pk):
     individuo = get_object_or_404(Individuo, pk=pk)
     # Buscamos o histórico ordenado pela data mais recente
-    historico = individuo.historico_movimentacoes.all().order_by('-data_entrada')
-    
-    return render(request, 'individuo/movimentacoes.html', {
-        'individuo': individuo,
-        'historico': historico,
-    })
-    
+    historico = individuo.historico_movimentacoes.all().order_by("-data_entrada")
+
+    return render(
+        request,
+        "individuo/movimentacoes.html",
+        {
+            "individuo": individuo,
+            "historico": historico,
+        },
+    )
+
+
+def editar_movimentacao(request, pk):
+    mov = get_object_or_404(Movimentacao, pk=pk)
+    if request.method == "POST":
+        form = MovimentacaoForm(request.POST, instance=mov)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Movimentação atualizada!")
+            return redirect("perfil_individuo", pk=mov.individuo.pk)
+    else:
+        form = MovimentacaoForm(instance=mov)
+
+    return render(
+        request, "individuo/editar_movimentacao.html", {"form": form, "mov": mov}
+    )
+
+
+def excluir_movimentacao(request, mov_pk):
+    mov = get_object_or_404(Movimentacao, pk=mov_pk)
+    individuo_id = mov.individuo.pk
+    if request.method == "POST":
+        mov.delete()
+        messages.success(request, "Movimentação removida com sucesso.")
+    return redirect("perfil_individuo", pk=individuo_id)
+
+
 def listar_detentos_por_alojamento(request, alojamento_id):
     # Busca o alojamento ou retorna 404
     alojamento = get_object_or_404(Alojamento, id=alojamento_id)
-    
+
     # Filtra os detentos vinculados a este alojamento
-    detentos = Individuo.objects.filter(alojamento=alojamento).select_related(
-        'orcrim', 'casa_prisional'
-    ).order_by("nome")
+    detentos = (
+        Individuo.objects.filter(alojamento=alojamento)
+        .select_related("orcrim", "casa_prisional")
+        .order_by("nome")
+    )
 
     context = {
         "alojamento": alojamento,
@@ -671,3 +730,33 @@ def listar_detentos_por_alojamento(request, alojamento_id):
     }
     # Reutilizamos o seu template de listagem para manter o padrão
     return render(request, "casaprisional/listar_detentos_alojamento.html", context)
+
+
+def listar_foragidos_procurados(request):
+    # 1. Pega o termo digitado (se não houver, fica None)
+    query = request.GET.get("q", "").strip()
+
+    # 2. Filtro base (Sempre traz apenas foragidos e procurados)
+    queryset = Individuo.objects.filter(situacao_penal__in=["foragido", "procurado"])
+
+    # 3. Se o usuário digitou algo, filtramos dentro do resultado anterior
+    if query:
+        queryset = queryset.filter(
+            Q(nome__icontains=query)
+            | Q(alcunha__icontains=query)
+            | Q(codigo_detento__icontains=query)  # Adicionei o código também
+        )
+
+    # 4. Otimização de banco de dados
+    foragidos = queryset.select_related("orcrim", "casa_prisional", "galeria").order_by(
+        "nome"
+    )
+
+    return render(
+        request,
+        "individuo/foragidos_procurados.html",
+        {
+            "foragidos": foragidos,
+            "query": query,  # Enviamos de volta para o input não esvaziar
+        },
+    )

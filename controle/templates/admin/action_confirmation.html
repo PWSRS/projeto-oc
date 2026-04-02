@@ -1,0 +1,39 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls static %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+<a href="{% url 'admin:index' %}">{% translate 'Home' %}</a>
+&rsaquo; <a href="{% url 'admin:app_list' app_label=opts.app_label %}">{{ opts.app_config.verbose_name }}</a>
+&rsaquo; <a href="{% url 'admin:controle_galeria_changelist' %}">{{ opts.verbose_name_plural|capfirst }}</a>
+&rsaquo; Gerar Celas em Massa
+</div>
+{% endblock %}
+
+{% block content %}
+<div id="content-main">
+    <p>Você está gerando celas para a galeria: <strong>{{ queryset.first.nome }}</strong></p>
+    
+    <form action="" method="post">
+        {% csrf_token %}
+        
+        <fieldset class="module aligned">
+            <div class="form-row">
+                {{ form.as_p }}
+            </div>
+        </fieldset>
+
+        {% for obj in queryset %}
+        <input type="hidden" name="_selected_action" value="{{ obj.pk }}" />
+        {% endfor %}
+        
+        <input type="hidden" name="action" value="gerar_celas_em_massa" />
+        <input type="hidden" name="apply" value="True" />
+
+        <div class="submit-row">
+            <input type="submit" value="CADASTRAR CELAS AGORA" class="default" />
+            <a href="#" onclick="window.history.back();" class="button cancel-link">Cancelar</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

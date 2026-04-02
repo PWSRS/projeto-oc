@@ -1,6 +1,14 @@
 import re
 from django import forms
-from .models import Individuo, Orcrim, CasaPrisional, Cidade, Pavilhao, Alojamento
+from .models import (
+    Individuo,
+    Orcrim,
+    CasaPrisional,
+    Cidade,
+    Pavilhao,
+    Alojamento,
+    Movimentacao,
+)
 from django.db.models.signals import post_save
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import get_user_model
@@ -295,6 +303,17 @@ class OrcrimForm(forms.ModelForm):
         return nome
 
 
+class CelasEmMassaForm(forms.Form):
+    _selected_action = forms.CharField(widget=forms.MultipleHiddenInput)
+    numeros = forms.CharField(
+        label="Números das Celas",
+        help_text="Exemplo: 1, 2, 5 ou 1-20 (use vírgulas para separar e hífen para intervalos)",
+        widget=forms.TextInput(
+            attrs={"style": "width: 80%; min-width: 300px; padding: 5px;"}
+        ),
+    )
+
+
 class CasaPrisionalForm(forms.ModelForm):
     class Meta:
         model = CasaPrisional
@@ -316,3 +335,30 @@ class CasaPrisionalForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["cidade"].queryset = Cidade.objects.all().order_by("nome")
+
+
+class MovimentacaoForm(forms.ModelForm):
+    class Meta:
+        model = Movimentacao
+        fields = [
+            "data_entrada",
+            "data_saida",
+            "casa_prisional",
+            "pavilhao",
+            "galeria",
+            "cela",
+            "alojamento",
+        ]
+        widgets = {
+            "data_entrada": forms.DateInput(
+                attrs={"type": "date", "class": "form-control"}
+            ),
+            "data_saida": forms.DateInput(
+                attrs={"type": "date", "class": "form-control"}
+            ),
+            "casa_prisional": forms.Select(attrs={"class": "form-control"}),
+            "pavilhao": forms.Select(attrs={"class": "form-control"}),
+            "galeria": forms.Select(attrs={"class": "form-control"}),
+            "cela": forms.Select(attrs={"class": "form-control"}),
+            "alojamento": forms.Select(attrs={"class": "form-control"}),
+        }

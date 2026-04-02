@@ -173,6 +173,22 @@ class Galeria(models.Model):
     def nome_curto(self):
         return self.nome if self.nome else "-"
 
+    @property
+    def orcrim_predominante(self):
+        # Busca o indivíduo que mais aparece nesta galeria
+        from .models import Individuo  # Import interno para evitar import circular
+
+        contagem = (
+            Individuo.objects.filter(galeria=self)
+            .values("orcrim__nome")
+            .annotate(total=Count("id"))
+            .order_by("-total")
+            .first()
+        )
+        return (
+            contagem["orcrim__nome"] if contagem and contagem["orcrim__nome"] else "S/F"
+        )
+
     def __str__(self):
         # Mantém o padrão completo para buscas e Admin
         return f"{self.nome} - {self.casa_prisional.nome}"

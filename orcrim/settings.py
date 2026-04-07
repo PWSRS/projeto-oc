@@ -14,9 +14,9 @@ SECRET_KEY = "django-insecure-&v-ow&5y+fg2e2c0m#mfj#-)9pt%wfb%v6o)5pqq7eg61!izrv
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ["*"]
 # Substitua pelo endereço EXATO que aparece na barra do seu colega
-CSRF_TRUSTED_ORIGINS = ['https://sidney-impleadable-diurnally.ngrok-free.dev']
+CSRF_TRUSTED_ORIGINS = ["https://sidney-impleadable-diurnally.ngrok-free.dev"]
 
 
 # Application definition
@@ -111,10 +111,11 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 
-STATICFILES_DIRS = [
-    BASE_DIR / "controle/static",  # Certifique-se de que o caminho está correto
-]
+# STATICFILES_DIRS = [
+# BASE_DIR / "controle/static",  # Certifique-se de que o caminho está correto
+# ]
 
+STATICFILES_DIRS = []
 # Para produção
 STATIC_ROOT = BASE_DIR / "staticfiles"  # usado com collectstatic
 
@@ -122,16 +123,13 @@ STATIC_ROOT = BASE_DIR / "staticfiles"  # usado com collectstatic
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
-LOGIN_URL = 'login'  # O nome que você deu na sua path("contas/login/", ...)
-LOGIN_REDIRECT_URL = 'home'
-LOGOUT_REDIRECT_URL = 'login'
+LOGIN_URL = "login"  # O nome que você deu na sua path("contas/login/", ...)
+LOGIN_REDIRECT_URL = "home"
+LOGOUT_REDIRECT_URL = "login"
 
 AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend', # Padrão
+    "django.contrib.auth.backends.ModelBackend",  # Padrão
 ]
-
-
-
 
 
 # Default primary key field type

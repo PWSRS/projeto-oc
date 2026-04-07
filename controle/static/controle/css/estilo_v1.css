@@ -69,52 +69,53 @@ body {
     box-shadow: 0 0 10px rgba(220, 53, 69, 0.4);
 }
 
-/* Alertas Refatorados - Estilo Tech com Cores Vivas */
+/* --- ALERTAS REFATORADOS: CORES VIVAS E IDENTIFICÁVEIS --- */
 .alert {
-    backdrop-filter: blur(8px);
-    border-radius: 8px;
-    font-weight: 500;
+    backdrop-filter: blur(10px);
+    border-radius: 10px;
+    font-weight: 600; /* Texto um pouco mais grosso para leitura */
     margin-bottom: 20px;
     padding: 1rem 1.25rem;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    border: none !important; /* Removemos a borda fina padrão */
+    color: #ffffff !important; /* Texto branco puro para máximo contraste */
 }
 
-/* Sucesso - Verde Bootstrap */
+/* Sucesso - Verde Vibrante */
 .alert-success, .alert-glass-success {
-    background: rgba(25, 135, 84, 0.25) !important; /* Mais opaco */
-    border: 1px solid rgba(25, 135, 84, 0.5) !important;
-    border-left: 6px solid #198754 !important;
-    color: #d1e7dd !important;
-    box-shadow: inset 0 0 10px rgba(25, 135, 84, 0.2); /* Brilho interno */
+    background: linear-gradient(90deg, #145c32 0%, #198754 100%) !important;
+    border-left: 8px solid #2ecc71 !important;
+    box-shadow: 0 0 15px rgba(46, 204, 113, 0.3);
 }
 
-/* Perigo/Erro - Vermelho Bootstrap */
+/* Perigo/Erro - Vermelho Intenso */
 .alert-danger, .alert-glass-danger, .alert-glass-error {
-    background: rgba(220, 53, 69, 0.25) !important;
-    border: 1px solid rgba(220, 53, 69, 0.5) !important;
-    border-left: 6px solid #dc3545 !important;
-    color: #f8d7da !important;
-    box-shadow: inset 0 0 10px rgba(220, 53, 69, 0.2);
+    background: linear-gradient(90deg, #781c24 0%, #dc3545 100%) !important;
+    border-left: 8px solid #ff4f4f !important;
+    box-shadow: 0 0 15px rgba(220, 53, 69, 0.3);
 }
 
-/* Info - Azul Bootstrap */
+/* Info - Azul Elétrico */
 .alert-info, .alert-glass-info {
-    background: rgba(13, 202, 240, 0.25) !important;
-    border: 1px solid rgba(13, 202, 240, 0.5) !important;
-    border-left: 6px solid #0dcaf0 !important;
-    color: #caf0f8 !important;
-    box-shadow: inset 0 0 10px rgba(13, 202, 240, 0.2);
+    background: linear-gradient(90deg, #064b58 0%, #0dcaf0 100%) !important;
+    border-left: 8px solid #4fb9ff !important;
+    box-shadow: 0 0 15px rgba(13, 202, 240, 0.3);
 }
 
-/* Atenção - Amarelo Bootstrap */
+/* Atenção - Laranja/Amarelo Queimado */
 .alert-warning, .alert-glass-warning {
-    background: rgba(255, 193, 7, 0.25) !important;
-    border: 1px solid rgba(255, 193, 7, 0.5) !important;
-    border-left: 6px solid #ffc107 !important;
-    color: #fff3cd !important;
-    box-shadow: inset 0 0 10px rgba(255, 193, 7, 0.1);
+    background: linear-gradient(90deg, #856404 0%, #ffc107 100%) !important;
+    border-left: 8px solid #ffdb6e !important;
+    color: #ffffff !important; /* Mantido branco pelo tema dark */
 }
-/* Ajuste para o botão de fechar branco nos alertas escuros */
+
+/* Botão de fechar */
 .btn-close-white {
-    filter: invert(1) grayscale(100%) brightness(200%);
+    opacity: 0.8;
+    filter: brightness(0) invert(1);
 }
+.btn-close-white:hover {
+    opacity: 1;
+}
+
+

@@ -54,8 +54,8 @@
             <table class="table table-dark-tech table-hover align-middle mb-0 text-center">
                 <thead>
                     <tr>
-                        <th class="ps-4 text-start">CASA PRISIONAL</th>
-                        <th>POPULAÇÃO ATUAL</th>
+                        <th class="ps-4 text-start">CASA PRISIONAL / LOCAL</th>
+                        <th>POPULAÇÃO</th>
                         <th>GRUPO PREDOMINANTE</th>
                         <th class="pe-4">NÍVEL DE DOMÍNIO</th>
                     </tr>
@@ -66,21 +66,38 @@
                         <td class="ps-4 text-start">
                             <span class="text-white fw-bold">{{ galeria.nome }}</span>
                         </td>
-                        <td class="stats-number text-center">{{ galeria.total }}</td>
+                        <td class="stats-number">{{ galeria.total }}</td>
                         <td>
-                            <span class="badge bg-dark border border-info text-info-tech px-3">
-                                {{ galeria.dominio_sigla }}
-                            </span>
+                            {% if galeria.is_misto %}
+                                <span class="badge bg-dark border border-warning text-warning px-3">
+                                    <i class="fa-solid fa-circle-nodes me-1"></i> {{ galeria.dominio_sigla }}
+                                </span>
+                            {% else %}
+                                <span class="badge bg-dark border border-info text-info-tech px-3">
+                                    {{ galeria.dominio_sigla }}
+                                </span>
+                            {% endif %}
                         </td>
-                        <td class="pe-4" style="min-width: 250px;">
+                        <td class="pe-4" style="min-width: 220px;">
                             <div class="d-flex align-items-center gap-2">
-                                <div class="progress progress-tech flex-grow-1">
-                                    <div class="progress-bar {% if galeria.porcentagem >= 80 %}bg-danger-glow{% else %}bg-info-tech{% endif %}" 
-                                        role="progressbar" 
-                                        style="width: {{ galeria.porcentagem|stringformat:'f' }}%;">
-                                    </div>
+                                <div class="progress progress-tech flex-grow-1" style="height: 8px;">
+                                    {% if galeria.is_misto %}
+                                        {# Barra amarela discreta para áreas sem domínio absoluto #}
+                                        <div class="progress-bar bg-warning opacity-50" 
+                                             role="progressbar" 
+                                             style="width: {{ galeria.porcentagem|floatformat:0 }}%;">
+                                        </div>
+                                    {% else %}
+                                        {# Barra padrão (Azul ou Vermelha se for > 80%) #}
+                                        <div class="progress-bar {% if galeria.porcentagem >= 80 %}bg-danger-glow{% else %}bg-info-tech{% endif %}" 
+                                             role="progressbar" 
+                                             style="width: {{ galeria.porcentagem|floatformat:0 }}%;">
+                                        </div>
+                                    {% endif %}
                                 </div>
-                                <span class="percent-label">{{ galeria.porcentagem|floatformat:0 }}%</span>
+                                <span class="percent-label {% if galeria.is_misto %}text-warning{% endif %}" style="min-width: 40px;">
+                                    {{ galeria.porcentagem|floatformat:0 }}%
+                                </span>
                             </div>
                         </td>
                     </tr>
@@ -97,11 +114,12 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
+    // Configurações Globais do Chart.js
     Chart.defaults.color = 'rgba(255, 255, 255, 0.7)';
     Chart.defaults.font.family = "'JetBrains Mono', monospace";
     Chart.defaults.borderColor = 'rgba(255, 255, 255, 0.1)';
 
-    // Gráfico de Barras - Mantém a estatística geral por Orcrim
+    // Gráfico de Barras - Estatística Geral por Orcrim
     const ctxBar = document.getElementById('chartOrcrim').getContext('2d');
     new Chart(ctxBar, {
         type: 'bar',
@@ -125,7 +143,7 @@
         }
     });
 
-    // Gráfico de Pizza - Regime
+    // Gráfico de Rosca - Distribuição por Regime
     const ctxPie = document.getElementById('chartRegime').getContext('2d');
     new Chart(ctxPie, {
         type: 'doughnut',

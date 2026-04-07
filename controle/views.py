@@ -13,6 +13,7 @@ from django.http import HttpResponse
 from django.template.loader import render_to_string
 from django.contrib import messages
 from django.contrib.auth.models import User
+from .forms import UserProfileForm
 from django.contrib.auth.decorators import user_passes_test
 from django.views.generic import (
     ListView,
@@ -45,6 +46,20 @@ from .forms import (
 @login_required
 def home(request):
     return render(request, "home.html")
+
+
+@login_required
+def perfil_usuario(request):
+    if request.method == "POST":
+        form = UserProfileForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Perfil atualizado com sucesso!")
+            return redirect("perfil_usuario")
+    else:
+        form = UserProfileForm(instance=request.user)
+
+    return render(request, "registration/perfil.html", {"form": form})
 
 
 def registro(request):
@@ -532,33 +547,34 @@ def busca_por_cela(request):
             "orcrim", "casa_prisional", "galeria", "cela"
         ),
     }
-    return render(request, "orcrim/busca_por_cela.html", context)
+    return render(request, "casaprisional/busca_por_cela.html", context)
 
 
 def dashboard_estatistico(request):
     total_geral = Individuo.objects.count()
 
-    # --- 1. DADOS PARA O GRÁFICO DE BARRAS (ORCRIMS GERAL) ---
+    # --- 1. DADOS PARA O GRÁFICO DE BARRAS ---
     stats_orcrim = (
         Orcrim.objects.annotate(total=Count("individuo"))
         .filter(total__gt=0)
         .order_by("-total")
     )
 
-    # --- 2. DADOS PARA O GRÁFICO DE PIZZA (REGIMES GERAL) ---
+    # --- 2. DADOS PARA O GRÁFICO DE PIZZA ---
     stats_regime = (
         Individuo.objects.values("regime")
         .annotate(total=Count("id"))
         .order_by("-total")
     )
 
-    # --- 3. DADOS PARA A TABELA (DOMÍNIO POR GALERIA) ---
+    # --- 3. DADOS PARA A TABELA (LÓGICA APERFEIÇOADA) ---
     galerias = Galeria.objects.annotate(total_presos=Count("individuo")).filter(
         total_presos__gt=0
     )
 
     dados_galerias = []
     for gal in galerias:
+        # Pegamos a contagem de todas as ORCRIMs nesta galeria
         contagem_orcrim = (
             Individuo.objects.filter(galeria=gal)
             .values("orcrim__nome")
@@ -566,29 +582,39 @@ def dashboard_estatistico(request):
             .order_by("-total")
         )
 
-        predominante = contagem_orcrim[0] if contagem_orcrim else None
+        # Inicializamos variáveis padrão
+        sigla_dominante = "N/A"
+        porcentagem_dominio = 0
+        is_misto = False
 
-        if predominante and gal.total_presos > 0:
-            porcentagem_dominio = (predominante["total"] / gal.total_presos) * 100
-            sigla_dominante = (
-                predominante["orcrim__nome"] if predominante["orcrim__nome"] else "S/F"
-            )
-        else:
-            porcentagem_dominio = 0
-            sigla_dominante = "N/A"
+        if contagem_orcrim.exists():
+            # Pegamos o primeiro lugar
+            primeiro = contagem_orcrim[0]
 
-        # --- LÓGICA DE UNIDADE ADAPTATIVA ---
+            # Verificamos se existe um segundo lugar para comparar
+            if len(contagem_orcrim) > 1:
+                segundo = contagem_orcrim[1]
+
+                # SE houver empate exato entre o 1º e o 2º, é MISTO
+                if primeiro["total"] == segundo["total"]:
+                    sigla_dominante = "MISTO"
+                    is_misto = True
+                else:
+                    sigla_dominante = primeiro["orcrim__nome"] or "S/F"
+            else:
+                # Se só existe um grupo na galeria, o domínio é absoluto
+                sigla_dominante = primeiro["orcrim__nome"] or "S/F"
+
+            # Cálculo da porcentagem baseada no líder (mesmo que seja empate)
+            if gal.total_presos > 0:
+                porcentagem_dominio = (primeiro["total"] / gal.total_presos) * 100
+
+        # --- LÓGICA DE UNIDADE (MANTIDA) ---
         sigla_unidade = "S/U"
-
         if gal.pavilhao and gal.pavilhao.casa_prisional:
-            # Caso padrão: Galeria vinculada a Pavilhão que tem Casa Prisional
             sigla_unidade = gal.pavilhao.casa_prisional.sigla
         elif hasattr(gal, "casa_prisional") and gal.casa_prisional:
-            # Caso direto: Se você adicionou FK de CasaPrisional direto na Galeria
             sigla_unidade = gal.casa_prisional.sigla
-
-        # Se for o caso específico de Pelotas e estiver vindo vazio,
-        # você pode até forçar uma busca por nome ou deixar o S/U para identificar erros de cadastro.
 
         dados_galerias.append(
             {
@@ -596,6 +622,7 @@ def dashboard_estatistico(request):
                 "total": gal.total_presos,
                 "dominio_sigla": sigla_dominante,
                 "porcentagem": porcentagem_dominio,
+                "is_misto": is_misto,  # Enviamos essa flag para o template
             }
         )
 
@@ -605,7 +632,6 @@ def dashboard_estatistico(request):
         "dados_galerias": dados_galerias,
         "total_geral": total_geral,
     }
-
     return render(request, "orcrim/dashboard.html", context)
 
 

@@ -1,0 +1,154 @@
+/* --- CONFIGURAÇÃO BASE --- */
+body {
+    background: radial-gradient(circle at center, #1e272e 0%, #0f1418 100%);
+    color: #ecf0f1;
+    min-height: 100vh;
+    padding-top: 70px;
+    font-family: 'Inter', sans-serif; /* Sugestão de fonte limpa */
+}
+
+.glass-card {
+    background: rgba(44, 62, 80, 0.4);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+}
+
+.text-info-tech { color: #4fb9ff !important; }
+
+/* --- TABELA TECH --- */
+.table-dark-tech {
+    --bs-table-bg: transparent;
+    --bs-table-color: #ecf0f1;
+    --bs-table-hover-bg: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.table-dark-tech thead {
+    background: rgba(0, 0, 0, 0.3);
+    color: #4fb9ff;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+}
+
+.img-table {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border: 2px solid rgba(79, 185, 255, 0.3);
+    border-radius: 50%; /* Garante que a foto seja redonda */
+    transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.img-table:hover {
+    transform: scale(1.2);
+    border-color: #4fb9ff;
+    z-index: 10;
+}
+
+/* --- CAMPO DE BUSCA TECH --- */
+.search-tech {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid rgba(79, 185, 255, 0.2) !important;
+    color: #ffffff !important;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.search-tech::placeholder {
+    color: rgba(255, 255, 255, 0.4) !important;
+    font-style: italic;
+    font-size: 0.9rem;
+}
+
+.search-tech:focus {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    border-color: #4fb9ff !important;
+    box-shadow: 0 0 10px rgba(79, 185, 255, 0.4) !important;
+    outline: none;
+}
+
+/* --- PAGINAÇÃO --- */
+.page-link {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+    color: #4fb9ff;
+    transition: 0.3s;
+}
+
+.page-link:hover {
+    background: rgba(79, 185, 255, 0.15);
+    color: #fff;
+    border-color: #4fb9ff;
+}
+
+.page-item.active .page-link {
+    background: #4fb9ff;
+    border-color: #4fb9ff;
+    color: #000;
+    font-weight: bold;
+}
+
+/* --- MODAL E BOTÕES --- */
+.modal-content {
+    background: #1e272e;
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+}
+
+.btn-info-tech {
+    background-color: transparent;
+    border: 1px solid #4fb9ff !important;
+    color: #4fb9ff !important;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.btn-info-tech:hover {
+    background-color: #4fb9ff;
+    color: #000 !important;
+    box-shadow: 0 0 15px rgba(79, 185, 255, 0.5);
+}
+
+/* --- ALERTAS (MESSAGES) --- */
+.alert {
+    border-radius: 12px !important;
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    color: #ffffff !important; /* Texto sempre branco para leitura */
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    margin-bottom: 20px;
+    font-weight: 500;
+}
+
+.alert-success {
+    background-color: #198754 !important; /* Verde padrão Bootstrap sólido */
+    border-left: 8px solid #2ecc71 !important; /* Brilho neon na borda */
+}
+
+.alert-danger {
+    background-color: #bb2d3b !important; /* Vermelho sólido */
+    border-left: 8px solid #ff4f4f !important;
+}
+
+.alert-info {
+    background-color: #0d6efd !important; /* Azul sólido */
+    border-left: 8px solid #4fb9ff !important;
+}
+
+.alert-warning {
+    background-color: #ffca2c !important;
+    border-left: 8px solid #ff9f43 !important;
+    color: #000 !important; /* Texto preto para o fundo amarelo por acessibilidade */
+}
+
+/* Botão de fechar */
+.btn-close-white {
+    opacity: 0.8;
+    filter: brightness(0) invert(1);
+}
+.btn-close-white:hover {
+    opacity: 1;
+}

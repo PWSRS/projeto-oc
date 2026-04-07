@@ -107,6 +107,14 @@
             <strong>{{ user.first_name|default:user.username }}</strong>
           </span>
         </li>
+        <li><hr class="dropdown-divider border-secondary opacity-25"></li>
+        
+        <li>
+            <a class="dropdown-item text-white" href="{% url 'perfil_usuario' %}">
+                <i class="bi bi-gear me-2"></i> Meu Perfil
+            </a>
+        </li>
+        <li><hr class="dropdown-divider border-secondary opacity-25"></li>       
 
         <li class="nav-item">
           <a class="nav-link text-warning" href="{% url 'password_change' %}" title="Alterar Senha">

@@ -15,11 +15,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     {# Select2 CSS #}
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-
-    {# Estilo Personalizado #}
+    <link href="{% static 'controle/css/footer.css' %}?v=1.0" rel="stylesheet">
     {% block extra_head_css %}
-        <link href="{% static 'controle/css/geral.css' %}" rel="stylesheet">
-    {% endblock %} 
+        <link rel="stylesheet" href="{% static 'controle/css/estilo_v1.css' %}">
+    {% endblock %}
+  
 </head>
 
 <body class="d-flex flex-column h-100"> 
@@ -36,16 +36,16 @@
             <div id="messages-container">
                 {% if messages %}
                     {% for message in messages %}
-                        <div class="alert alert-glass-{{ message.tags|default:'info' }} alert-dismissible fade show animate__animated animate__fadeInDown" role="alert">
+                        {# No bloco de mensagens do seu base.html #}
+                        <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show animate__animated animate__fadeInDown" role="alert">
                             <div class="d-flex align-items-center">
                                 {% if message.tags == 'success' %}
-                                    <i class="bi bi-check-all me-2 fs-5"></i>
+                                    <i class="bi bi-check-circle-fill me-2 fs-5"></i>
                                 {% elif message.tags == 'error' or message.tags == 'danger' %}
-                                    <i class="bi bi-shield-exclamation me-2 fs-5"></i>
+                                    <i class="bi bi-exclamation-octagon-fill me-2 fs-5"></i>
                                 {% else %}
-                                    <i class="bi bi-info-circle me-2 fs-5"></i>
+                                    <i class="bi bi-info-circle-fill me-2 fs-5"></i>
                                 {% endif %}
-                                
                                 <div>{{ message }}</div>
                             </div>
                             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -54,14 +54,15 @@
                 {% endif %}
             </div>
 
-            {# 2. ERROS DE FORMULÁRIO (CAPTURA SILENCIOSA) #}
+            {# 2. ERROS DE FORMULÁRIO (VERSÃO AJUSTADA) #}
             {% if form.errors %}
                 <div class="alert alert-danger alert-glass-danger animate__animated animate__shakeX" role="alert">
                     <div class="d-flex align-items-center mb-2">
-                        <i class="bi bi-shield-exclamation me-2 fs-5"></i>
-                        <strong>Existem erros no preenchimento:</strong>
+                        {# Ícone de escudo/exclamação para erros críticos #}
+                        <i class="bi bi-shield-slash-fill me-2 fs-5"></i> 
+                        <strong class="text-uppercase" style="letter-spacing: 1px;">Falha na Validação</strong>
                     </div>
-                    <ul class="mb-0 small">
+                    <ul class="mb-0 small ps-3">
                         {% for field in form %}
                             {% for error in field.errors %}
                                 <li><strong>{{ field.label }}:</strong> {{ error }}</li>
@@ -85,7 +86,7 @@
     {# FOOTER #}
     <footer class="bg-dark text-white mt-auto p-3 text-center esconder-na-impressao">
         <div class="container-fluid">
-            <p class="mb-0">&copy; {% now "Y" %} SPG - ARI Sul. Todos os direitos reservados.</p>
+            <p class="mb-0">&copy; {% now "Y" %} - SPG - ARI Sul. Todos os direitos reservados.</p>
         </div>
     </footer>
     {% endif %}
@@ -107,17 +108,22 @@
     {% block extra_body_js %}
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Fecha todos os alertas automaticamente após 5 segundos
+            // Tempo para fechar (5 segundos)
             setTimeout(function() {
-                var alerts = document.querySelectorAll('.alert');
-                alerts.forEach(function(alertElement) {
-                    var bsAlert = new bootstrap.Alert(alertElement);
-                    bsAlert.close();
+                // Seleciona apenas alertas que NÃO sejam de perigo/erro
+                // Assim, o usuário tem tempo de ler o que preencheu errado no formulário
+                var alertsToClose = document.querySelectorAll('.alert:not(.alert-danger):not(.alert-glass-danger):not(.alert-glass-error)');
+                
+                alertsToClose.forEach(function(alertElement) {
+                    // Verifica se o alerta ainda está na tela antes de tentar fechar
+                    if (alertElement) {
+                        var bsAlert = new bootstrap.Alert(alertElement);
+                        bsAlert.close();
+                    }
                 });
             }, 5000);
         });
     </script>
     {% endblock %} 
-
 </body>
 </html>

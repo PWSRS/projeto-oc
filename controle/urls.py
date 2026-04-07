@@ -34,6 +34,7 @@ from controle.views import (
     perfil_individuo,
     excluir_movimentacao,
     editar_movimentacao,
+    perfil_usuario,
 )
 
 urlpatterns = [
@@ -43,6 +44,7 @@ urlpatterns = [
     path("selecionar-presidio/", views.selecionar_presidio, name="selecionar_presidio"),
     # --- GESTÃO DE USUÁRIOS E ADMINISTRAÇÃO ---
     path("contas/registro/", views.registro, name="registro"),
+    path("perfil_usuario/", views.perfil_usuario, name="perfil_usuario"),
     path("painel-aprovacao/", views.painel_aprovacao, name="painel_aprovacao"),
     path("usuarios-ativos/", views.listar_usuarios_ativos, name="usuarios_ativos"),
     path("aprovar/<int:user_id>/", views.aprovar_usuario, name="aprovar_usuario"),

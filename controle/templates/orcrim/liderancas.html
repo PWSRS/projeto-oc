@@ -20,58 +20,77 @@
     <div class="row g-4">
         {% for preso in liderancas %}
         <div class="col-md-6 col-lg-4 col-xl-3">
-            <div class="glass-card card-target p-3 h-100 position-relative">
+            <div class="glass-card card-target p-3 shadow-sm">
                 
-                <div class="{{ preso.get_hierarquia_color_class }} fw-bold">
-                    {{ preso.get_nivel_orcrim_display|upper }}
+                <div class="{{ preso.get_hierarquia_color_class }} fw-bold small mb-2">
+                    <i class="bi bi-diagram-3"></i> {{ preso.get_nivel_orcrim_display|upper }}
                 </div>
 
-                <div class="text-center mt-3 mb-3">
-                    <img src="{{ preso.foto_url }}" class="img-target mb-2 shadow-sm" alt="{{ preso.nome }}">
-                    <h6 class="mb-0 text-white fw-bold">{{ preso.nome|truncatechars:25 }}</h6>
-                    <span class="text-info-tech small">"{{ preso.alcunha|default:'Sem Alcunha' }}"</span>
+                <div class="text-center mb-3">
+                    <div class="position-relative d-inline-block">
+                        <img src="{{ preso.foto_url }}" class="img-target mb-2 shadow" alt="{{ preso.nome }}">
+                    </div>
+                    <div class="name-container">
+                        <h6 class="mb-0 text-white fw-bold lh-sm">
+                            {{ preso.nome|truncatechars:45 }}
+                        </h6>
+                        <span class="text-info-tech small italic">
+                            {% if preso.alcunha %}"{{ preso.alcunha }}"{% else %}&nbsp;{% endif %}
+                        </span>
+                    </div>
                 </div>
 
-                <hr class="border-secondary opacity-25">
+                <hr class="border-secondary opacity-25 my-2">
 
                 <div class="row g-2">
                     <div class="col-6">
-                        <p class="label-tech">ORCRIM</p>
+                        <p class="label-tech mb-1">ORCRIM</p>
                         <span class="badge w-100 border border-info text-info-tech bg-dark text-truncate d-block py-2" 
-                            title="{{ preso.orcrim.nome }}">
-                            <!-- {{ preso.orcrim.nome|default:"N/D"|upper }} -->
-                            {% firstof preso.orcrim.nome preso.ocrim.sigla "---" %}
+                              title="{{ preso.orcrim.nome }}">
+                            {% firstof preso.orcrim.nome preso.orcrim.sigla "---" %}
                         </span>
                     </div>
                     <div class="col-6">
-                        <p class="label-tech">Situação</p>
-                        <span class="badge w-100 d-block py-2 {{ preso.get_situacao_badge_class }}">
+                        <p class="label-tech mb-1">SITUAÇÃO</p>
+                        <span class="badge w-100 d-block py-2 text-truncate {{ preso.get_situacao_badge_class }}">
                             {{ preso.get_situacao_penal_display|upper }}
                         </span>
                     </div>
                     
                     <div class="col-12">
-                        <p class="label-tech">Unidade Prisional</p>
-                        <div class="p-2 glass-card bg-black-50 small">
+                        <p class="label-tech mb-1">UNIDADE PRISIONAL</p>
+                        <div class="p-2 glass-card bg-black-50 small unit-info">
                             {% if preso.casa_prisional %}
                                 <i class="bi bi-building"></i> {{ preso.casa_prisional.sigla }}
-                                {% if preso.galeria %} - {{ preso.galeria.nome }}{% endif %}
+                                {% if preso.pavilhao %}
+                                    <span class="opacity-50">|</span>
+                                    {{ preso.pavilhao.nome }}
+                                {% endif %}
+                                {% if preso.galeria %}
+                                    <span class="opacity-50">|</span>
+                                    {{ preso.galeria.nome }}
+                                {% endif %}
+                                {% if preso.cela %}
+                                    <span class="opacity-50">|</span>
+                                    Cela {{ preso.cela.numero }}
+                                {% endif %}
                             {% else %}
-                                <span class="text-undefined small mb-0">Não Custodiado</span>
+                                <span class="text-muted italic">Não Custodiado</span>
                             {% endif %}
                         </div>
                     </div>
                 </div>
 
-                <div class="mt-3">
-                    <a href="{% url 'individuo_detail' preso.pk %}" class="btn btn-sm btn-info-tech w-100">
-                        <i class="bi bi-file-earmark-person"></i> Detalhes
+                <div class="footer-card pt-3">
+                    <a href="{% url 'individuo_detail' preso.pk %}" class="btn btn-sm btn-outline-info w-100">
+                        <i class="bi bi-eye"></i> Visualizar Perfil
                     </a>
                 </div>
             </div>
         </div>
         {% empty %}
         <div class="col-12 text-center py-5">
+            <i class="bi bi-search fs-1 opacity-25 d-block mb-3"></i>
             <p class="text-muted">Nenhuma liderança cadastrada até o momento.</p>
         </div>
         {% endfor %}

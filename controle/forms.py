@@ -14,6 +14,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import get_user_model
 from django.dispatch import receiver
 from django.core.exceptions import ValidationError
+from django.contrib.auth.models import User
 
 
 # Obtém o modelo de usuário ativo (geralmente User ou CustomUser)
@@ -105,6 +106,59 @@ class CadastroUsuarioForm(UserCreationForm):
     def clean_last_name(self):
         sobrenome = self.cleaned_data.get("last_name")
         return sobrenome.upper() if sobrenome else sobrenome
+
+
+class UserProfileForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ["first_name", "last_name", "email"]
+        widgets = {
+            "first_name": forms.TextInput(
+                attrs={"class": "form-control bg-dark text-white border-secondary"}
+            ),
+            "last_name": forms.TextInput(
+                attrs={"class": "form-control bg-dark text-white border-secondary"}
+            ),
+            "email": forms.EmailInput(
+                attrs={"class": "form-control bg-dark text-white border-secondary"}
+            ),
+        }
+
+    def clean_email(self):
+        email = self.cleaned_data.get("email").lower()
+        dominio_oficial = "@bm.rs.gov.br"
+
+        # 1. Restringe ao domínio corporativo
+        if not email.endswith(dominio_oficial):
+            raise forms.ValidationError(
+                f"Acesso restrito. Utilize apenas o e-mail institucional {dominio_oficial}."
+            )
+
+        # 2. Verifica se o novo e-mail já pertence a OUTRO usuário
+        if User.objects.filter(email=email).exclude(pk=self.instance.pk).exists():
+            raise forms.ValidationError(
+                "Este e-mail institucional já está vinculado a outra conta."
+            )
+
+        return email
+
+    def clean_first_name(self):
+        nome = self.cleaned_data.get("first_name")
+        return nome.upper() if nome else nome
+
+    def clean_last_name(self):
+        sobrenome = self.cleaned_data.get("last_name")
+        return sobrenome.upper() if sobrenome else sobrenome
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        # Sincronização vital: Como seu login usa o e-mail,
+        # o username deve ser atualizado para o novo e-mail.
+        user.username = self.cleaned_data["email"].lower()
+
+        if commit:
+            user.save()
+        return user
 
 
 class EmailLoginForm(AuthenticationForm):

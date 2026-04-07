@@ -1,0 +1,11 @@
+footer.esconder-na-impressao {
+    padding: 0.5rem !important;
+    background-color: #0b0f12 !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+footer.esconder-na-impressao p {
+    font-size: 0.75rem !important;
+    color: rgba(255, 255, 255, 0.5) !important;
+    margin: 0 !important;
+}

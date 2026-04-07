@@ -58,11 +58,30 @@
                             {% endif %}
                         </td>
                         <td>
-                            {% if individuo.casa_prisional or individuo.galeria.nome or individuo.cela %}
-                            {% firstof individuo.casa_prisional.sigla individuo.casa_prisional.nome "---" %}<br>
-                                <span class="badge bg-opacity-10 bg-info text-info border border-info border-opacity-25">
-                                    {{ individuo.galeria.nome|default:"" }} | {{ individuo.cela|default:"" }} 
-                                </span>
+                            {% if individuo.casa_prisional %}
+                                {# Exibe a Unidade Prisional #}
+                                {% firstof individuo.casa_prisional.sigla individuo.casa_prisional.nome %}<br>
+                                
+                                {# Exibe os detalhes apenas se ao menos um existir #}
+                                {% if individuo.pavilhao or individuo.galeria or individuo.cela or individuo.alojamento %}
+                                    <span class="badge bg-opacity-10 bg-info text-info border border-info border-opacity-25">
+                                        {% if individuo.pavilhao %}{{ individuo.pavilhao.nome }}{% endif %}
+                                        
+                                        {% if individuo.galeria %}
+                                            {% if individuo.pavilhao %} | {% endif %}{{ individuo.galeria.nome }}
+                                        {% endif %}
+                                        
+                                        {% if individuo.cela %}
+                                            {% if individuo.pavilhao or individuo.galeria %} | {% endif %}Cela {{ individuo.cela }}
+                                        {% endif %}
+
+                                        {% if individuo.alojamento %}
+                                            {% if individuo.pavilhao or individuo.galeria or individuo.cela %} | {% endif %}{{ individuo.alojamento }}
+                                        {% endif %}
+                                    </span>
+                                {% endif %}
+                            {% else %}
+                                <span class="text-muted italic small">Não Custodiado</span>
                             {% endif %}
                         </td>
                         <td>

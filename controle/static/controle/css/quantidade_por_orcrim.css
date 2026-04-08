@@ -103,6 +103,10 @@ body {
     text-decoration: none;
     display: block;
     height: 100%;
+    
+    /* --- ALTERE ESTAS LINHAS --- */
+    padding: 1.5rem !important;  /* Diminuído de 4 ou 3 para 1.5 */
+    min-height: auto;
 }
 
 .card-orcrim:hover {
@@ -115,26 +119,36 @@ body {
 }
 
 .count-number {
-    font-size: 2.5rem;
+/* --- ALTERE AQUI --- */
+    font-size: 3.5rem;        /* Aumenta o tamanho do número da estatística */
     font-weight: 800;
     text-shadow: 0 0 10px rgba(79, 185, 255, 0.5);
+    margin: 15px 0;           /* Dá mais destaque ao número */
 }
 
 .orcrim-sigla {
-    letter-spacing: 2px;
-    border-bottom: 1px solid rgba(79, 185, 255, 0.3);
-    padding-bottom: 5px;
-    display: inline-block;
+    font-size: 1.5rem; /* Aumentar a fonte da Sigla */
+    height: 60px;      /* Força todos os títulos a terem o mesmo tamanho */
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .icon-box {
     background: rgba(0, 0, 0, 0.2);
     border-radius: 50%;
-    width: 50px;
-    height: 50px;
+    width: 40px;
+    height: 40px;
     display: flex;
     align-items: center;
     justify-content: center;
     margin: 0 auto 15px;
+    margin-bottom: 10px;
     border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Ajustar a sigla (TD5) */
+.text-white-50.small {
+    min-height: 20px !important; /* Remove aquele espaço sobrando */
+    margin-bottom: 10px !important;
 }

@@ -319,7 +319,8 @@ class IndividuoForm(forms.ModelForm):
             "alojamento": forms.Select(attrs={"class": "form-control"}),
             "observacao": forms.TextInput(attrs={"class": "form-control"}),
             "data_entrada_unidade": forms.DateInput(
-                attrs={"type": "date", "class": "form-control search-tech"}
+                format="%Y-%m-%d",
+                attrs={"type": "date", "class": "form-control search-tech"},
             ),
         }
 
@@ -405,10 +406,10 @@ class MovimentacaoForm(forms.ModelForm):
         ]
         widgets = {
             "data_entrada": forms.DateInput(
-                attrs={"type": "date", "class": "form-control"}
+                format="%Y-%m-%d", attrs={"type": "date", "class": "form-control"}
             ),
             "data_saida": forms.DateInput(
-                attrs={"type": "date", "class": "form-control"}
+                format="%Y-%m-%d", attrs={"type": "date", "class": "form-control"}
             ),
             "casa_prisional": forms.Select(attrs={"class": "form-control"}),
             "pavilhao": forms.Select(attrs={"class": "form-control"}),

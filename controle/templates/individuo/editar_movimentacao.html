@@ -14,10 +14,10 @@
                 <i class="fa-solid fa-pen-to-square me-2"></i>CORRIGIR MOVIMENTAÇÃO
             </h4>
             <div class="d-flex align-items-center">
-                <span class="badge bg-info-tech me-2">DETENTO</span>
+                <span class="badge bg-warning me-2">DETENTO</span>
                 <h5 class="text-white mb-0 uppercase">{{ mov.individuo.nome }}</h5>
                 {% if mov.individuo.alcunha %}
-                    <span class="text-muted ms-2 small">| VULGO: {{ mov.individuo.alcunha|upper }}</span>
+                    <span class="text-secondary ms-2 small">| VULGO: {{ mov.individuo.alcunha|upper }}</span>
                 {% endif %}
             </div>
         </div>
@@ -33,7 +33,7 @@
                 <div class="col-md-6 mb-3">
                     <label class="form-label text-info-tech small fw-bold">DATA DE SAÍDA</label>
                     {{ form.data_saida }}
-                    <div class="form-text text-muted small">Deixe em branco se for a localização atual.</div>
+                    <div class="form-text text-secondary small">Deixe em branco se for a localização atual.</div>
                 </div>
             </div>
 
@@ -60,7 +60,7 @@
             </div>
             
             <div class="mt-4 d-flex justify-content-between align-items-center">
-                <div class="text-muted small italic">
+                <div class="text-warning small italic">
                     <i class="fa-solid fa-circle-info me-1"></i> 
                     Alterar a data de entrada mudará a posição cronológica no histórico.
                 </div>

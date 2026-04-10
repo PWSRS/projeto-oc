@@ -5,7 +5,7 @@
 {% block title %}ARI SUL - Alterar Chave de Acesso{% endblock %}
 
 {% block extra_head_css %}
-    <link rel="stylesheet" href="{% static 'controle/css/registration/mudarsenha.css' %}">
+    <link rel="stylesheet" href="{% static 'controle/css/registration/mudar_senha.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -49,7 +49,7 @@
                 <button type="submit" class="btn btn-tech py-2">
                     CONFIRMAR ALTERAÇÃO
                 </button>
-                <a href="{% url 'home' %}" class="btn btn-link btn-sm text-muted text-decoration-none mt-2">
+                <a href="javascript:history.back()" class="btn btn-link btn-sm text-muted text-decoration-none mt-2">
                     <i class="fa-solid fa-arrow-left me-1"></i> Voltar ao Sistema
                 </a>
             </div>

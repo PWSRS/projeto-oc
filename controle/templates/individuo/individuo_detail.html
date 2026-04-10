@@ -17,7 +17,7 @@
                 <div class="card-header bg-dark bg-opacity-50 text-white py-3 border-bottom border-secondary text-center">
                     <h4 class="mb-0 fw-bold">
                         <i class="fa-solid fa-user-shield me-2 text-info-tech"></i>
-                        FICHA DE IDENTIFICAÇÃO: <span class="text-info-tech">{{ individuo.nome|upper }}</span>
+                        DETALHES DO INDIVÍDUO: <span class="text-info-tech">{{ individuo.nome|upper }}</span>
                     </h4>
                 </div>
 
@@ -56,7 +56,7 @@
                                     <dd>{{ individuo.data_nasc|date:"d/m/Y" }}</dd>
                                 </div>
                                 <div class="col-sm-12">
-                                    <dt>Alcunha / Vulgo</dt>
+                                    <dt>Alcunha</dt>
                                     <dd class="text-info-tech fw-bold">{{ individuo.alcunha|default:"SEM VULGO"|upper }}</dd>
                                 </div>
                                 <div class="col-sm-6">
@@ -80,7 +80,7 @@
                                     </dd>
                                 </div>
                                 <div class="col-sm-6">
-                                    <dt>Prontuário / Cód. Preso</dt>
+                                    <dt>Cód. Preso</dt>
                                     <dd class="font-monospace">{{ individuo.codigo_detento|default:"---" }}</dd>
                                 </div>
                                 <div class="col-sm-6">
@@ -88,7 +88,7 @@
                                     <dd>{{ individuo.get_regime_display|default:"NÃO DEFINIDO" }}</dd>
                                 </div>
                                 <div class="col-sm-12">
-                                    <dt>Localização Prisional / Custódia</dt>
+                                    <dt>Localização Prisional</dt>
                                     <dd>{{ individuo.casa_prisional|default:"-" }}</dd>
                                 </div>
                             </dl>
@@ -96,13 +96,13 @@
 
                         <div class="col-md-4 text-center">
                             <div class="orcrim-logo-box mx-auto {% if not individuo.orcrim.logo_orcrim %}logo-placeholder-box{% endif %}">
-                                <label class="text-info-tech small fw-bold mb-2 d-block">SÍMBOLO DA ORGANIZAÇÃO</label>
+                                <label class="text-info-tech small fw-bold mb-2 d-block">LOGO</label>
                                 {% if individuo.orcrim.logo_orcrim %}
                                     <img src="{{ individuo.orcrim.logo_orcrim.url }}" class="orcrim-logo-img rounded shadow-sm" alt="Logo">
                                 {% else %}
                                     <div class="py-4">
                                         <i class="fa-solid fa-shield-halved fa-4x mb-2"></i>
-                                        <p class="text-undefined small mb-0">NENHUMA LOGO CADASTRADA</p>
+                                        <p class="text-undefined small mb-0">Nenhuma logo cadastrada</p>
                                     </div>
                                 {% endif %}
                             </div>

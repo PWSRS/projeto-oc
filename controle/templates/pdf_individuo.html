@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <style>
         /* Configurações de Página */
-        @page { size: A4; margin: 1.2cm; }
+        @page { size: A4; margin: 0.5cm; }
         body { 
             font-family: 'Helvetica', 'Arial', sans-serif; 
             color: #1a1a1a; 
@@ -114,6 +114,40 @@
             text-align: center;
             background: white;
         }
+        /* O Retângulo Vermelho */
+        .alerta-box {
+            border: 1px solid #ff0000;
+            background: transparent !important;
+            color: #ff0000;
+            padding: 5px 5px;
+            margin: 5px auto;
+            max-width: 95%;
+            border-radius: 0px;
+            
+        }
+
+        /* Estilo do Título (Centralizado) */
+        .alerta-titulo {
+            text-align: center;
+            font-size: 0.85rem;
+            margin-bottom: 2px; /* Espaço mínimo para não "colar" na linha de baixo */
+            display: block;
+            width: 100%;
+        }
+
+        /* Estilo do Texto (Justificado) */
+        .alerta-texto {
+            text-align: justify;
+            text-justify: inter-word;
+            font-size: 0.70rem;
+            line-height: 1.3;
+            display: block;
+        }
+
+        /* Garantia do Negrito */
+        .alerta-box strong {
+            font-weight: 700;
+        }
         .status-atual { color: #d32f2f; font-weight: bold; }
         .status-vigente { color: #2e7d32; font-weight: bold; }
         
@@ -127,7 +161,7 @@
         <h2>Secretaria da Segurança Pública</h2>
         <h2>Brigada Militar - CRPM Sul</h2>
         <p>Agência Regional de Inteligência - ARI SUL</p>
-        <p>Ficha Individual</p>
+        <p>Informações do Indivíduo</p>
     </div>
 
     <div class="row clearfix">
@@ -139,7 +173,7 @@
             
             <div class="row clearfix">
                 <div class="campo" style="width: 48%; float: left;">
-                    <span class="label">Alcunha / Vulgo</span>
+                    <span class="label">Alcunha</span>
                     <div class="valor">{{ individuo.alcunha|default:"NADA CONSTA" }}</div>
                 </div>
                 <div class="campo" style="width: 48%; float: right;">
@@ -229,7 +263,7 @@
     </div>
     {% endif %}
 
-    <div class="secao-titulo">Histórico de Movimentações Recentes</div>
+    <div class="secao-titulo">Histórico das ùltimas Movimentações</div>
     <table class="tabela-historico">
         <thead>
             <tr>
@@ -266,9 +300,24 @@
     </table>
 
     <div class="footer">
-        DOCUMENTO RESERVADO - GERADO POR: {{ user.get_full_name|upper|default:user.username|upper }} 
-        EM {% now "d/m/Y H:i:s" %} - ARI SUL / BRIGADA MILITAR
-        <br><strong>USO EXCLUSIVO EM SERVIÇO</strong>
+        <div class="footer-info">
+            GERADO POR: {{ user.get_full_name|upper|default:user.username|upper }} 
+            EM {% now "d/m/Y H:i:s" %} - SIBM / BRIGADA MILITAR
+            <br><strong>USO EXCLUSIVO DA ARI SUL</strong>
+        </div>
+        <div class="alerta-box">
+            <div contenteditable="true">
+                <div class="alerta-titulo">
+                    DOCUMENTO PREPARATÓRIO - <strong>ACESSO RESTRITO</strong>
+                </div>
+                <div class="alerta-texto">
+                    Nos termos do Art. 7, § 3º da Lei nº 12.527/2011, os documentos utilizados como fundamento da tomada de decisão e do ato
+                    administrativo são de acesso restrito até a edição do respectivo ato. Também, forte no art. 2º, § 1º, da Lei 9.883/1999 o
+                    profissional de inteligência é responsável pela salvaguarda da informação contra o acesso de pessoas ou órgãos não autorizados.
+                </div>
+            </div>
+        </div>
+
     </div>
 
 </body>

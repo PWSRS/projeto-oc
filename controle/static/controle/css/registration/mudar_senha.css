@@ -1,0 +1,82 @@
+body { 
+    background: radial-gradient(circle at center, #1e272e 0%, #0f1418 100%); 
+    color: #ecf0f1;
+    min-height: 100vh;
+    padding-top: 70px;
+}
+.wrapper-centered { 
+    min-height: 90vh; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+}
+.glass-card {
+    background: rgba(44, 62, 80, 0.4);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    padding: 40px;
+    width: 100%;
+    max-width: 450px;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
+}
+.brand-icon {
+    width: 60px;
+    height: 60px;
+    background: #f39c12; /* Laranja para diferenciar de Login */
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    margin: 0 auto 20px;
+    box-shadow: 0 0 20px rgba(243, 156, 18, 0.3);
+}
+/* Estilização dos Inputs do Django */
+.form-control-dark {
+    background: rgba(0, 0, 0, 0.3) !important;
+    border: 1px solid #34495e !important;
+    color: #fff !important;
+    padding: 10px 12px;
+    font-size: 0.9rem;
+}
+.form-control-dark:focus {
+    background: rgba(0, 0, 0, 0.4) !important;
+    border-color: #f39c12 !important;
+    box-shadow: 0 0 8px rgba(243, 156, 18, 0.2) !important;
+}
+.btn-tech {
+    background: linear-gradient(45deg, #d35400, #f39c12);
+    border: none;
+    color: white;
+    letter-spacing: 1px;
+    transition: 0.4s;
+    font-weight: bold;
+}
+.btn-tech:hover {
+    filter: brightness(1.2);
+    transform: translateY(-1px);
+    color: white;
+}
+.form-label-tech {
+    color: #a5b1be !important;
+    font-size: 0.7rem;
+    letter-spacing: 1px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+.help-text-tech {
+    font-size: 0.65rem;
+    color: #7f8c8d;
+    margin-top: 5px;
+    display: block;
+    line-height: 1.2;
+}
+
+.btn-link{
+    color: #a5b1be !important;
+    font-size: 0.7rem;
+    letter-spacing: 1px;
+    font-weight: 600;
+    text-transform: uppercase;
+}

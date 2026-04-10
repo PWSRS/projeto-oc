@@ -1,0 +1,46 @@
+body { 
+    background: radial-gradient(circle at center, #1e272e 0%, #0f1418 100%); 
+    color: #ecf0f1; 
+    min-height: 100vh; 
+}
+.recovery-wrapper { 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    padding-top: 80px; 
+}
+.glass-card-recovery {
+    background: rgba(44, 62, 80, 0.4);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    padding: 35px;
+    width: 100%;
+    max-width: 400px;
+}
+
+/* 🟢 AJUSTE DE CONTRASTE AQUI 🟢 */
+.glass-card-recovery h5 { color: #ffffff; }
+.glass-card-recovery p { color: #cbd5e0 !important; } /* Texto de instrução mais claro */
+
+.form-label-sm { 
+    color: #cbd5e0 !important; /* Label claro igual ao Login */
+    font-size: 0.75rem; 
+    letter-spacing: 1px; 
+    font-weight: 700; 
+    margin-bottom: 6px; 
+}
+
+.form-control-custom { 
+    background-color: rgba(255, 255, 255, 0.9) !important; 
+    border: none !important; 
+    color: #1a202c !important;
+    font-weight: 500;
+}
+.btn-tech { 
+    background: linear-gradient(45deg, #2980b9, #3498db); 
+    border: none; color: white; font-weight: bold; 
+    transition: 0.3s; letter-spacing: 1px;
+    text-transform: uppercase;
+}
+.text-info-sm { color: #63b3ed !important; font-size: 0.8rem; font-weight: 600; }

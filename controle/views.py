@@ -695,7 +695,7 @@ def quantidade_individuos_por_orcrim(request):
     return render(request, "orcrim/quantidade_por_orcrim.html", {"dados": dados})
 
 
-# TODO View que lista o histórico de movimentações dos detentos,
+# View que lista o histórico de movimentações dos detentos,
 # mostrando as casas prisionais por onde passaram, as datas e os motivos das
 # transferências. Isso pode ser útil para análises de perfil e histórico de cada indivíduo.
 def perfil_individuo(request, pk):

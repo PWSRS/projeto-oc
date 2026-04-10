@@ -114,8 +114,13 @@
                 {% empty %}
                 <tr>
                     <td colspan="8" class="text-center py-5 text-info italic">
-                        <i class="fa-solid fa-database fa-3x mb-3 d-block opacity-25"></i>
-                        <p class="text-info-tech letter-spacing-1 mb-0 text-muted italic">Digite um nome para pesquisa.</p>
+                        {% if request.GET.urlencode %}
+                            <i class="fa-solid fa-database fa-3x mb-3 d-block opacity-25"></i>
+                            <p class="text-info-tech letter-spacing-1 mb-0 text-muted italic">Nenhum indivíduo localizado com os critérios informados.</p>
+                        {% else %}
+                            <i class="fa-solid fa-magnifying-glass-chart fa-3x mb-3 opacity-25"></i>
+                            <p class="text-info-tech letter-spacing-1 mb-0 text-muted italic">Digite um nome para pesquisa.</p>
+                        {% endif %}
                     </td>
                 </tr>
                 {% endfor %}

@@ -110,8 +110,13 @@
                     {% empty %}
                     <tr>
                         <td colspan="6" class="text-center py-5 text-info italic">
-                            <i class="fa-solid fa-magnifying-glass-chart fa-3x mb-3 opacity-25"></i>
-                            <p>Nenhum alvo localizado com os critérios informados.</p>
+                            {% if request.GET.urlencode %}
+                                <i class="fa-solid fa-magnifying-glass-chart fa-3x mb-3 opacity-25"></i>
+                                <p>Nenhum alvo localizado com os critérios informados.</p>
+                            {% else %}
+                                <i class="fa-solid fa-users-slash fa-3x mb-3 opacity-25"></i>
+                                <p>Não há alvos ativos no momento.</p>
+                            {% endif %}
                         </td>
                     </tr>
                     {% endfor %}

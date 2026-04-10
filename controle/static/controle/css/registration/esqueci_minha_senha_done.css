@@ -1,0 +1,70 @@
+body { 
+    background: radial-gradient(circle at center, #1e272e 0%, #0f1418 100%); 
+    color: #ecf0f1;
+    min-height: 100vh;
+}
+.wrapper-centered { 
+    min-height: 90vh; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+}
+.glass-card {
+    background: rgba(44, 62, 80, 0.4);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    padding: 40px;
+    width: 100%;
+    max-width: 500px;
+    text-align: center;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
+}
+.brand-icon {
+    width: 80px;
+    height: 80px;
+    background: rgba(52, 152, 219, 0.2);
+    color: #3498db;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    margin: 0 auto 25px;
+    border: 2px solid #3498db;
+    box-shadow: 0 0 25px rgba(52, 152, 219, 0.3);
+}
+.text-info-tech {
+    color: #4fb9ff !important;
+    letter-spacing: 1px;
+}
+.instruction-box {
+    background: rgba(0, 0, 0, 0.2);
+    border-left: 3px solid #3498db;
+    padding: 15px;
+    margin: 20px 0;
+    text-align: left;
+    font-size: 0.9rem;
+    color: #bdc3c7;
+}
+.btn-tech-outline {
+    border: 1px solid #3498db;
+    color: #3498db;
+    background: transparent;
+    letter-spacing: 1px;
+    transition: 0.4s;
+    font-weight: bold;
+}
+.btn-tech-outline:hover {
+    background: #3498db;
+    color: white;
+    box-shadow: 0 0 15px rgba(52, 152, 219, 0.4);
+}
+.security-footer {
+    margin-top: 25px;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #7f8c8d;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    padding-top: 15px;
+}

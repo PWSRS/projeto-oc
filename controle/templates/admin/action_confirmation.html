@@ -12,7 +12,7 @@
 
 {% block content %}
 <div id="content-main">
-    <p>Você está gerando celas para a galeria: <strong>{{ queryset.first.nome }}</strong></p>
+    <p>Você está gerando celas para a galeria: <strong class="badge bg-dark border border-secondary">{{ queryset.first.nome }}</strong></p>
     
     <form action="" method="post">
         {% csrf_token %}
@@ -31,7 +31,7 @@
         <input type="hidden" name="apply" value="True" />
 
         <div class="submit-row">
-            <input type="submit" value="CADASTRAR CELAS AGORA" class="default" />
+            <input type="submit" value="CADASTRAR CELAS AGORA" class="btn btn-success px-5 shadow-sm fw-bold" />
             <a href="#" onclick="window.history.back();" class="button cancel-link">Cancelar</a>
         </div>
     </form>

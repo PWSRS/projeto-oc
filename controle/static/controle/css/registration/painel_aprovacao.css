@@ -1,0 +1,47 @@
+body {
+    background: radial-gradient(circle at center, #1e272e 0%, #0f1418 100%);
+    color: #ecf0f1;
+    min-height: 100vh;
+    padding-top: 70px;
+}
+.glass-card {
+    background: rgba(44, 62, 80, 0.4);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+}
+.table-dark-tech {
+    --bs-table-bg: transparent;
+    --bs-table-color: #ecf0f1;
+    --bs-table-hover-bg: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+.text-info-tech { color: #4fb9ff !important; }
+
+.btn-action {
+    transition: 0.3s;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+/* Estilo Verde para Aprovar */
+.btn-aprovar-tech {
+    background: rgba(46, 204, 113, 0.15);
+    color: #2ecc71;
+    border: 1px solid rgba(46, 204, 113, 0.4);
+}
+.btn-aprovar-tech:hover {
+    background: #2ecc71;
+    color: #fff;
+    box-shadow: 0 0 15px rgba(46, 204, 113, 0.4);
+}
+/* Estilo Vermelho para Rejeitar */
+.btn-rejeitar-tech {
+    background: rgba(231, 76, 60, 0.1);
+    color: #e74c3c;
+    border: 1px solid rgba(231, 76, 60, 0.4);
+}
+.btn-rejeitar-tech:hover {
+    background: #e74c3c;
+    color: #fff;
+    box-shadow: 0 0 15px rgba(231, 76, 60, 0.4);
+}
